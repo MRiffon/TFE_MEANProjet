@@ -1,0 +1,24 @@
+{
+  "name": "mean",
+  "version": "1.0.0",
+  "description": "npm package mean application",
+  "main": "karma.conf.js",
+  "scripts": {
+    "test": "karma",
+    "start": "node server.js"
+  },
+  "author": "mriffon",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.15.0",
+    "cors": "^2.7.1",
+    "crypto": "0.0.3",
+    "express": "^4.13.4",
+    "express-jwt": "^3.3.0",
+    "express-validator": "^2.20.3",
+    "jsonwebtoken": "^5.7.0",
+    "mongoose": "^4.4.12",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
+  }
+}

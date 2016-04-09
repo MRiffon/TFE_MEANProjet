@@ -1,0 +1,4 @@
+<ul class="nav navbar-nav navbar-right">
+    <li ng-hide="isLogged"><a href="/login">Login</a></li>
+    <li ng-show="isLogged"><a href="/profil">{{ currentUser.username }}</a></li>
+</ul>
