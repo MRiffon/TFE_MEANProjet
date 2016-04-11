@@ -35,6 +35,7 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
         .state('profil', {
             url: '/profil',
             parent: 'dashboard',
-            templateUrl: 'views/profil.html'
+            templateUrl: 'views/profil.html',
+            controller: 'profilController'
         });
 });

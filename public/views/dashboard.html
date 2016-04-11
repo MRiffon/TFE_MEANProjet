@@ -4,7 +4,7 @@
             <div class="col-sm-3 col-md-2 sidebar">
                 <div class=text-center>
                     <h2 class=brand>Ani Theme <small>Free Edition</small></h2>
-                    <br> <a ui-sref=login class="btn btn-white btn-outline btn-rounded btn-sm">Logout</a>
+                    <br> <a ng-show="isLogged" ng-click="logout()" class="btn btn-white btn-outline btn-rounded btn-sm">Logout</a>
                 </div>
                 <ul class="nav nav-sidebar">
                     <li><a href="http://startreact.com/product/ani-theme/">Free React version</a></li>

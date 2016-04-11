@@ -9,6 +9,8 @@ var mongoose = require('mongoose');
 var db = require('./config/db.js');
 var passport = require('passport');
 var validator = require('express-validator');
+var favicon = require('serve-favicon');
+var path = require('path');
 
 require('./config/passport');
 
@@ -19,12 +21,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(validator());
+app.use(favicon(path.join(__dirname, 'public', 'img', 'favicon.ico')));
 app.use(function(err, req, res, next){
     if(err.name === 'UnauthorizedError'){
         res.status(401).json({"message": err.name + ' : ' + err.message});
     }
 });
+
 
 mongoose.connect(db.url);
 
