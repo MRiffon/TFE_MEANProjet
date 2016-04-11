@@ -7,7 +7,7 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
     $scope.user = {};
 
     dataFetch.getProfil().then(function(response){
-        $scope.user = response;
+        $scope.user = response.data;
     }, function(response){
         console.log(response);
     })

@@ -6,7 +6,7 @@ var path = require('path');
 var User = require('./models/user');
 var userHandler = require('./controllers/users_handler');
 var jwt = require('express-jwt');
-var authentication = jwt({ secret: 'MY_SECRET', user: 'payload'})
+var authentication = jwt({ secret: 'MY_SECRET', userProperty: 'payload'});
 
 module.exports = function(app){
 
@@ -29,7 +29,7 @@ module.exports = function(app){
             if(err){
                 res.send(err);
             }
-            res.json({message: 'Utilisateur bien supprimé !'});
+            res.json({message: 'Utilisateur bien supprimé !', user: user});
         });
     })
     .post('/api/users', userHandler.creation)
