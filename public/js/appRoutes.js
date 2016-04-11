@@ -8,7 +8,7 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
     $locationProvider.html5Mode(true);
 
     $urlRouterProvider
-        .when('/dashboard','/dashboard/profil')
+        .when('/dashboard','/dashboard/overview')
         .otherwise('/');
 
     $stateProvider
@@ -30,6 +30,13 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
             parent: 'base',
             templateUrl: 'views/dashboard.html',
             controller: 'dashboardController'
+        })
+
+        .state('overview', {
+            url: '/overview',
+            parent: 'dashboard',
+            templateUrl: 'views/overview.html',
+            controller: 'overviewController'
         })
 
         .state('profil', {

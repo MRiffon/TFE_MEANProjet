@@ -11,5 +11,6 @@ angular.module('app',
         'authentication',
         'loginCtrl',
         'profilCtrl',
-        'dashboardCtrl']
+        'dashboardCtrl',
+        'overviewCtrl']
 );
