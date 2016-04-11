@@ -3,11 +3,13 @@
  */
 angular.module('app',
         ['ngRoute',
+        'ui.router',
+        'ngAnimate',
         'appRoutes',
         'appRun',
         'dataFetching',
         'authentication',
         'loginCtrl',
         'profilCtrl',
-        'navigationCtrl']
+        'dashboardCtrl']
 );

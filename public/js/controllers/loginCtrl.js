@@ -16,7 +16,7 @@ angular.module('loginCtrl', []).controller('loginController', function($scope, $
                 var status = response.status;
                 var msgError = response.data.message;
                 if(status === 200){
-                    $location.path('/nav');
+                    $location.path('/dashboard');
                     console.log(response);
                 }
                 if(status === 401) {

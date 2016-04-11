@@ -3,24 +3,38 @@
  */
 
 
-angular.module('appRoutes', []).config(function($routeProvider, $locationProvider) {
+angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvider, $locationProvider) {
+
     $locationProvider.html5Mode(true);
 
-    $routeProvider
-        .when('/', {
+    $urlRouterProvider
+        .when('/dashboard','/dashboard/profil')
+        .otherwise('/');
+
+    $stateProvider
+        .state('base', {
+            "abstract": !0,
+            url: '',
+            templateUrl: 'views/base.html'
+        })
+
+        .state('login', {
+            url: '/',
+            parent: 'base',
             templateUrl: 'views/login.html',
             controller: 'loginController'
         })
 
-        .when('/nav', {
-            templateUrl: 'views/navigation.html',
-            controller: 'navigationController'
+        .state('dashboard', {
+            url: '/dashboard',
+            parent: 'base',
+            templateUrl: 'views/dashboard.html',
+            controller: 'dashboardController'
         })
 
-        .when('/profil', {
-            templateUrl: 'views/profil.html',
-            controller: 'profilController'
-        })
-
-        .otherwise({redirectTo: '/'});
+        .state('profil', {
+            url: '/profil',
+            parent: 'dashboard',
+            templateUrl: 'views/profil.html'
+        });
 });
