@@ -7,6 +7,7 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
     $scope.user = {};
 
     dataFetch.getProfil().then(function(response){
+        console.log(response);
         $scope.user = response.data;
     }, function(response){
         $location.path('/');

@@ -3,9 +3,11 @@
  */
 
 angular.module('appRun', []).run(function($rootScope, $location, log){
-    $rootScope.$on('$routeChangeStart', function(event, nextRoute, currentRoute){
-        if($location.path() === '/profil' && !log.loggedIn()){
-            $location.path('/');
+    $rootScope.$on('$locationChangeSuccess', function(){
+        if(!log.loggedIn()){
+            $rootScope.$evalAsync(function() {
+                $location.path('/');
+            });
         }
     });
 });

@@ -12,6 +12,7 @@ module.exports = function(app){
 
     app.use(function(req, res, next){
         next();
+        // todo sécuriser les apis
     })
 
     .get('/api/users', function(req, res){
