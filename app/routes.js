@@ -32,6 +32,10 @@ module.exports = function(app){
             res.json({message: 'Utilisateur bien supprimé !', user: user});
         });
     })
+    .get('/api/logout', function(req, res){
+        req.logOut();
+        res.redirect('/');
+    })
     .post('/api/users', userHandler.creation)
     .post('/api/login', userHandler.login)
     .get('/api/profil', authentication, userHandler.profilRead)
