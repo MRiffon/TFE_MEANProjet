@@ -50,5 +50,8 @@ app.use(function(err, req, res, next){
 // Gestion des routes/apis
 require('./app/routes.js')(app);
 
+// Gestion events socket.io
+require('./app/chat.js')(io);
+
 http.listen(port);
 console.log('Le serveur tourne sur le port ' + port);
