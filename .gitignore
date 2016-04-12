@@ -9,4 +9,6 @@ Thumbs.db
 .DS_Store?
 ._*
 
+.idea/
+
 *.log
