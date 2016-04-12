@@ -1,15 +1,24 @@
 /**
  * Created by Michaël on 29-03-16.
  */
+
 var express = require('express');
 var app = express();
+
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
 var cors = require("cors");
 var bodyParser = require("body-parser");
+
 var mongoose = require('mongoose');
 var db = require('./config/db.js');
+
 var passport = require('passport');
 var validator = require('express-validator');
+
 var favicon = require('serve-favicon');
+
 var path = require('path');
 
 require('./config/passport');
@@ -35,6 +44,6 @@ mongoose.connect(db.url);
 
 require('./app/routes.js')(app);
 
-app.listen(port);
+http.listen(port);
 
 console.log('Le serveur tourne sur le port ' + port);
