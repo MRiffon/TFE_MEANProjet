@@ -7,6 +7,25 @@ var User = require('../models/user');
 var passport = require('passport');
 
 module.exports = {
+    list: function(req, res){
+        User.find(function(err, users){
+            if(err){
+                res.send(err);
+            }
+            res.json(users);
+        });
+    },
+
+    delete: function(req, res){
+        User.remove({
+            _id: req.params.user_id
+        }, function(err, user){
+            if(err)
+                res.send(err);
+            res.json({message: 'Utilisateur bien supprimé !', user: user});
+        });
+    },
+
     login: function(req, res, next){
         passport.authenticate('local', function(err, user, info){
             var token;
@@ -54,7 +73,7 @@ module.exports = {
 
     profilRead: function(req, res){
         if(!req.payload._id){
-            res.status(401).json({"message": "Vous ne pouvez pas accéder à ce profil."});
+            res.status(401);
         } else {
             User.findById(req.payload._id).exec(function(err, user){
                 res.status(200).json(user);

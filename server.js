@@ -19,6 +19,10 @@ var mongoose = require('mongoose');
 var db = require('./config/db.js');
 mongoose.connect(db.url);
 
+// jwt secret config
+var configjwt = require('./config/jwt.js');
+app.set('secretjwt', configjwt.secret)
+
 var passport = require('passport');
 
 // Middleware aidant dans la validation dans les apis
@@ -32,6 +36,9 @@ var path = require('path');
 require('./config/passport');
 
 var port = process.env.PORT || 3000;
+
+// setup l'envirronnement node par défaut
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
