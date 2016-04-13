@@ -10,6 +10,8 @@ angular.module('dashboardCtrl', []).controller('dashboardController', function($
         return $http.get('/api/logout').then(function(){
             log.logout();
             $location.path('/');
+        }, function(response){
+            console.log(response);
         });
     }
 });

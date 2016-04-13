@@ -4,7 +4,7 @@
 
 var data = angular.module('dataFetching', []);
 
-data.service('dataFetch', dataFetch);
+data.factory('dataFetch', dataFetch);
 dataFetch.$inject = ['$http', 'log'];
 
 function dataFetch($http, log){

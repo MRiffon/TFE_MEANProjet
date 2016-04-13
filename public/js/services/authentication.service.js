@@ -4,7 +4,7 @@
 
 var auth = angular.module('authentication', []);
 
-auth.service('log', log);
+auth.factory('log', log);
 
 log.$inject = ['$http', '$window'];
 function log($http, $window){
