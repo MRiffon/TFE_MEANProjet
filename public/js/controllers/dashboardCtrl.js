@@ -13,5 +13,5 @@ angular.module('dashboardCtrl', []).controller('dashboardController', function($
         }, function(response){
             console.log(response);
         });
-    }
+    };
 });

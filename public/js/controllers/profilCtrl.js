@@ -10,5 +10,5 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
         $scope.user = response.data;
     }, function(response){
         $location.path('/');
-    })
+    });
 });
