@@ -1,5 +1,5 @@
 /**
- * Created by Michaël on 31-03-16.
+ * Created by Michaël and Martin on 31-03-16.
  */
 module.exports = function(config) {
     config.set({

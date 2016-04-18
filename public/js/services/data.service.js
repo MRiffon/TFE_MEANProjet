@@ -1,5 +1,5 @@
 /**
- * Created by Michaël on 08-04-16.
+ * Created by Michaël and Martin on 08-04-16.
  */
 
 var data = angular.module('dataFetching', []);

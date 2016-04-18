@@ -1,5 +1,5 @@
 /**
- * Created by Michaël on 30-03-16.
+ * Created by Michaël and Martin on 30-03-16.
  */
 angular.module('app',
         ['ui.router',

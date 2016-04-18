@@ -1,5 +1,5 @@
 /**
- * Created by Michaël on 02-04-16.
+ * Created by Michaël and Martin on 02-04-16.
  */
 
 var path = require('path');

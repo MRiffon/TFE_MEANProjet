@@ -1,5 +1,5 @@
 {
-  "name": "mean",
+  "name": "msmr",
   "version": "1.0.0",
   "description": "npm package mean application",
   "main": "karma.conf.js",

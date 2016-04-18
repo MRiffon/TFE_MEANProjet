@@ -1,5 +1,5 @@
 /**
- * Created by Michaël on 11-04-16.
+ * Created by Michaël and Martin on 11-04-16.
  */
 
 angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, log){

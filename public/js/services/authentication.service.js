@@ -1,5 +1,5 @@
 /**
- * Created by Michaël on 06-04-16.
+ * Created by Michaël and Martin on 06-04-16.
  */
 
 var auth = angular.module('authentication', []);
