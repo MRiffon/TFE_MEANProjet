@@ -6,6 +6,16 @@ module.exports = function(grunt){
 
     grunt.initConfig({
 
+        env: {
+            test: {
+                NODE_ENV: 'test'
+            },
+
+            dev: {
+                NODE_ENV: 'dev'
+            }
+        },
+
         nodemon: {
             dev: {
                 script: 'server.js'
@@ -24,8 +34,7 @@ module.exports = function(grunt){
             tasks: ['jshint'],
             options: {
                 interrupt: true,
-                reload: true,
-                debounce: 500
+                reload: true
             }
         },
 
@@ -52,5 +61,5 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-concurrent');
 
     grunt.registerTask('test', ['jshint', 'karma']);
-    grunt.registerTask('default', ['jshint', 'concurrent:run']);
+    grunt.registerTask('default', ['env:dev', 'jshint', 'concurrent:run']);
 };
