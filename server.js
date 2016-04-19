@@ -62,5 +62,8 @@ require('./app/routes.js')(app);
 // Gestion events socket.io
 require('./app/chat.js')(io);
 
+// Exports pour les tests d'api
+module.exports = app;
+
 http.listen(port);
 console.log('Le serveur tourne sur le port ' + port);

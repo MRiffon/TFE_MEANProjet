@@ -34,16 +34,22 @@ module.exports = function(grunt){
 
         watch: {
             files: ['<%= jshint.files %>'],
-            tasks: ['jshint'],
-            options: {
-                interrupt: true,
-                reload: true
-            }
+            tasks: ['jshint']
         },
 
         karma: {
             unit: {
                 configFile: 'karma.conf.js'
+            }
+        },
+
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'spec',
+                    clearRequireCache: true
+                },
+                src: ['./app/tests/*.js']
             }
         },
 
@@ -63,7 +69,8 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-mocha-test');
 
-    grunt.registerTask('test', ['env:test', 'jshint', 'karma']);
+    grunt.registerTask('test', ['env:test', 'jshint', 'karma', 'mochaTest']);
     grunt.registerTask('default', ['env:dev', 'jshint', 'concurrent:dev']);
 };
