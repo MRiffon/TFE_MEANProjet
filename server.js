@@ -1,5 +1,5 @@
 /**
- * Created by Michaël and Martin on 29-03-16.
+ * Created by Michaël and Martin on 29-03-16. calendar
  */
 
 // Initialisation du framework web Express
