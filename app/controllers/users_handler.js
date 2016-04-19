@@ -22,7 +22,7 @@ module.exports = {
         }, function(err, user){
             if(err)
                 res.send(err);
-            res.json({message: 'Utilisateur bien supprimé !', user: user});
+            res.json({message: 'Supprimé !', user: user});
         });
     },
 
