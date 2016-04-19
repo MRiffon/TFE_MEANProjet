@@ -12,13 +12,16 @@ module.exports = function(grunt){
             },
 
             dev: {
-                NODE_ENV: 'dev'
+                NODE_ENV: 'development'
             }
         },
 
         nodemon: {
             dev: {
-                script: 'server.js'
+                script: 'server.js',
+                options: {
+                    watch: ['server.js', 'app/**/*.js', 'app/*.js', 'config/**/*.js', 'config/*.js']
+                }
             }
         },
 
@@ -45,7 +48,7 @@ module.exports = function(grunt){
         },
 
         concurrent: {
-            run: {
+            dev: {
                 options: {
                     logConcurrentOutput: true
                 },
@@ -59,7 +62,8 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-env');
 
-    grunt.registerTask('test', ['jshint', 'karma']);
-    grunt.registerTask('default', ['env:dev', 'jshint', 'concurrent:run']);
+    grunt.registerTask('test', ['env:test', 'jshint', 'karma']);
+    grunt.registerTask('default', ['env:dev', 'jshint', 'concurrent:dev']);
 };

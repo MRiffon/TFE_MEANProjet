@@ -2,9 +2,15 @@
  * Created by Michaël and Martin on 29-03-16. chat
  */
 
+// setup l'environnement node par défaut
+//process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 // Initialisation du framework web Express
 var express = require('express');
 var app = express();
+
+// Chargement config environnement
+var config = require('./config/config.js');
 
 // Initialisation serveur http avec socket.io
 var http = require('http').Server(app);
@@ -16,8 +22,7 @@ var bodyParser = require("body-parser");
 
 // Setup, configuration et connection à la db MongoDB
 var mongoose = require('mongoose');
-var db = require('./config/db.js');
-mongoose.connect(db.url);
+mongoose.connect(config.db);
 
 // jwt secret config
 var configjwt = require('./config/jwt.js');
@@ -35,10 +40,7 @@ var path = require('path');
 
 require('./config/passport');
 
-var port = process.env.PORT || 3000;
-
-// setup l'envirronnement node par défaut
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+var port = config.port;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
