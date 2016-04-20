@@ -44,5 +44,12 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
             parent: 'dashboard',
             templateUrl: 'views/profil.html',
             controller: 'profilController'
+        })
+
+        .state('chatroom', {
+            url: '/chatroom',
+            parent: 'dashboard',
+            templateUrl: 'views/chat.html',
+            controller: 'chatController'
         });
 });

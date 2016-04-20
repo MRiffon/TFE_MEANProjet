@@ -3,7 +3,7 @@
  */
 
 // setup l'environnement node par défaut
-//process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Initialisation du framework web Express
 var express = require('express');
@@ -13,8 +13,8 @@ var app = express();
 var config = require('./config/config.js');
 
 // Initialisation serveur http avec socket.io
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 // cors pour les requêtes interdomaines (pour les fonts par exemple)
 var cors = require("cors");
@@ -65,5 +65,6 @@ require('./app/chat.js')(io);
 // Exports pour les tests d'api
 module.exports = app;
 
-http.listen(port);
-console.log('Le serveur tourne sur le port ' + port);
+server.listen(port, function(){
+    console.log('Le serveur tourne sur le port ' + port);
+});

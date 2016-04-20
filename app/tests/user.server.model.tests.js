@@ -4,8 +4,6 @@
 
 var app = require('../../server.js'),
     mongoose = require('mongoose'),
-    should = require('chai').should(),
-    expect = require('chai').expect,
     User = require('../models/user');
 
 var user;

@@ -4,7 +4,6 @@
 
 var app = require('../../server.js'),
     request = require('supertest'),
-    agent = require('superagent').agent(),
     mongoose = require('mongoose'),
     should = require('chai').should(),
     expect = require('chai').expect,
@@ -20,7 +19,7 @@ var nolog_user = {
     password: 'badpassword'
 };
 
-describe('Users Controller Unit Tests:', function(){
+describe('Users Non Authenticated requests:', function(){
 
     beforeEach(function(done){
         user = new User({
@@ -94,15 +93,6 @@ describe('Users Controller Unit Tests:', function(){
                 if(err) return done(err);
                 res.status.should.equal(401);
                 done();
-            });
-    });
-
-    it('should return the profil information of the logged user', function(done){
-        request(app)
-            .get('/api/profil')
-            .expect(200)
-            .end(function(err, res){
-                res.status.should.equal(200);
             });
     });
 
