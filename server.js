@@ -2,13 +2,16 @@
  * Created by Michaël and Martin on 29-03-16. calendar
  */
 
+// setup l'envirronnement node par défaut
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 // Initialisation du framework web Express
 var express = require('express');
 var app = express();
 
 // Initialisation serveur http avec socket.io
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 // cors pour les requêtes interdomaines (pour les fonts par exemple)
 var cors = require("cors");
@@ -16,8 +19,8 @@ var bodyParser = require("body-parser");
 
 // Setup, configuration et connection à la db MongoDB
 var mongoose = require('mongoose');
-var db = require('./config/db.js');
-mongoose.connect(db.url);
+var config = require('./config/config.js');
+mongoose.connect(config.db);
 
 // jwt secret config
 var configjwt = require('./config/jwt.js');
@@ -35,10 +38,7 @@ var path = require('path');
 
 require('./config/passport');
 
-var port = process.env.PORT || 3000;
-
-// setup l'envirronnement node par défaut
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+var port = config.port;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -60,5 +60,6 @@ require('./app/routes.js')(app);
 // Gestion events socket.io
 require('./app/chat.js')(io);
 
-http.listen(port);
-console.log('Le serveur tourne sur le port ' + port);
+server.listen(port, function(){
+    console.log('Le serveur tourne sur le port ' + port);
+});

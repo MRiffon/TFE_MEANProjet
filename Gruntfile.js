@@ -6,7 +6,7 @@ module.exports = function(grunt){
 
     grunt.initConfig({
 
-        env: {
+        /*env: {
             test: {
                 NODE_ENV: 'test'
             },
@@ -14,7 +14,7 @@ module.exports = function(grunt){
             dev: {
                 NODE_ENV: 'dev'
             }
-        },
+        },*/
 
         nodemon: {
             dev: {
@@ -61,5 +61,5 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-concurrent');
 
     grunt.registerTask('test', ['jshint', 'karma']);
-    grunt.registerTask('default', ['env:dev', 'jshint', 'concurrent:run']);
+    grunt.registerTask('default', ['jshint', 'concurrent:run']);
 };
