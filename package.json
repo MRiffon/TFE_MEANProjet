@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "body-parser": "^1.15.0",
+    "chai": "^3.5.0",
     "cors": "^2.7.1",
     "crypto": "0.0.3",
     "express": "^4.13.4",
@@ -22,11 +23,14 @@
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-env": "^0.4.4",
     "grunt-karma": "^0.12.2",
+    "grunt-mocha-test": "^0.12.7",
     "grunt-nodemon": "^0.4.2",
     "jshint-stylish": "^2.1.0",
     "jsonwebtoken": "^5.7.0",
     "karma": "^0.13.22",
+    "lodash": "^4.11.1",
     "mocha": "^2.4.5",
     "mongoose": "^4.4.12",
     "passport": "^0.3.2",
@@ -34,6 +38,7 @@
     "serve-favicon": "^2.3.0",
     "should": "^8.3.1",
     "socket.io": "^1.4.5",
+    "superagent": "^1.8.3",
     "supertest": "^1.2.0"
   }
 }
