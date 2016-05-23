@@ -6,19 +6,28 @@ module.exports = function(grunt){
 
     grunt.initConfig({
 
+
+
         env: {
             test: {
                 NODE_ENV: 'test'
             },
 
             dev: {
-                NODE_ENV: 'dev'
+                NODE_ENV: 'development'
+            },
+
+            prod: {
+                NODE_ENV: 'production'
             }
         },
 
         nodemon: {
             dev: {
-                script: 'server.js'
+                script: 'server.js',
+                options: {
+                    watch: ['server.js', 'app/**/*.js', 'app/*.js', 'config/**/*.js', 'config/*.js']
+                }
             }
         },
 
@@ -31,11 +40,7 @@ module.exports = function(grunt){
 
         watch: {
             files: ['<%= jshint.files %>'],
-            tasks: ['jshint'],
-            options: {
-                interrupt: true,
-                reload: true
-            }
+            tasks: ['jshint']
         },
 
         karma: {
@@ -44,12 +49,31 @@ module.exports = function(grunt){
             }
         },
 
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'spec',
+                    clearRequireCache: true
+                },
+                src: ['./app/tests/*.js']
+            }
+        },
+
         concurrent: {
-            run: {
+            dev: {
                 options: {
                     logConcurrentOutput: true
                 },
                 tasks: ['nodemon', 'watch']
+            }
+        },
+
+        forever: {
+            server: {
+                options: {
+                    index: 'server.js',
+                    logDir: '../../log'
+                }
             }
         }
     });
@@ -59,7 +83,14 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-env');
+    grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-forever');
 
-    grunt.registerTask('test', ['jshint', 'karma']);
-    grunt.registerTask('default', ['env:dev', 'jshint', 'concurrent:run']);
+    grunt.registerTask('test', ['env:test', 'jshint', 'karma']);
+    grunt.registerTask('dev', ['env:dev', 'jshint', 'concurrent:dev']);
+    
+    grunt.registerTask('prod-start', ['env:prod', 'forever:server:start']);
+    grunt.registerTask('prod-restart', ['env:prod', 'forever:server:restart']);
+    grunt.registerTask('prod-stop', ['env:prod', 'forever:server:stop']);
 };
