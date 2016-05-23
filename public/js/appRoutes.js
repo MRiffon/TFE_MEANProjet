@@ -15,41 +15,41 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
         .state('base', {
             "abstract": !0,
             url: '',
-            templateUrl: 'views/base.html'
+            templateUrl: './views/base.html'
         })
 
         .state('login', {
             url: '/',
             parent: 'base',
-            templateUrl: 'views/login.html',
+            templateUrl: './views/login.html',
             controller: 'loginController'
         })
 
         .state('dashboard', {
             url: '/dashboard',
             parent: 'base',
-            templateUrl: 'views/dashboard.html',
+            templateUrl: './views/dashboard.html',
             controller: 'dashboardController'
         })
 
         .state('overview', {
             url: '/overview',
             parent: 'dashboard',
-            templateUrl: 'views/overview.html',
+            templateUrl: './views/overview.html',
             controller: 'overviewController'
         })
 
         .state('profil', {
             url: '/profil',
             parent: 'dashboard',
-            templateUrl: 'views/profil.html',
+            templateUrl: './views/profil.html',
             controller: 'profilController'
         })
 
         .state('chatroom', {
             url: '/chatroom',
             parent: 'dashboard',
-            templateUrl: 'views/chat.html',
+            templateUrl: './views/chat.html',
             controller: 'chatController'
         });
 });
