@@ -11,5 +11,6 @@ angular.module('app',
         'loginCtrl',
         'profilCtrl',
         'dashboardCtrl',
-        'overviewCtrl']
+        'overviewCtrl',
+        'calendarCtrl']
 );
