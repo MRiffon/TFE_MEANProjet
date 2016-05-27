@@ -65,8 +65,9 @@ module.exports = {
             user.save(function(err){
                 if (err){
                     res.send(err);
+                } else {
+                    res.json(user);
                 }
-                res.json(user);
             });
         }
     },
