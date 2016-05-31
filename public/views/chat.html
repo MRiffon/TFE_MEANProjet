@@ -1,9 +1,10 @@
 <div>
+    <h2>Chat qui foire sa race</h2>
     <div class=jumbotron>
         <div class=container>
             <ul>
                 <li ng-repeat="message in messages">
-                    <span>{{message.username}}</span>
+                    <b>{{message.username}}</b>
                     <span>{{message.message}}</span>
                 </li>
             </ul>
@@ -11,7 +12,7 @@
             <form>
                 <div class=form-content>
                     <div class=form-group>
-                        <label>Messages</label>
+                        <label>Messages : </label>
                         <input type="text" id="chatMessages" placeholder="Votre message" ng-model="msg">
                     </div>
                     <div class=form-group>

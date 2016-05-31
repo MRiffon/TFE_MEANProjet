@@ -2,18 +2,18 @@
  * Created by Michaël on 20-04-16.
  */
 
-angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, dataFetch){
+angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, log){
     Socket.connect();
     
     $scope.users = [];
     $scope.messages = [];
+    $scope.currentUser = log.currentUser();
 
-    dataFetch.getProfil().then(function(response){
-        var username = response.data.username;
-    });
-
+    var username = $scope.currentUser.username;
+    
     $scope.sendMessage = function(msg){
         if(msg !== null && msg !== ''){
+            console.log('Message à envoyer : ' + msg);
             Socket.emit('message', {message: msg});
         }
         $scope.msg = '';
@@ -21,6 +21,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     
     Socket.emit('requestUsers', {});
 
+    console.log("Username a envoyer : " + username);
     Socket.emit('addUser', {username: username});
 
     Socket.on('users', function(data){
@@ -37,7 +38,6 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
     Socket.on('removeUser', function(data){
         $scope.users.splice($scope.users.indexOf(data.username), 1);
-        $scope.messages.push({username: data.username});
     });
     
     $scope.$on('$locationChangeStart', function(event){

@@ -9,7 +9,7 @@ module.exports = function(io){
         var username = '';
         console.log('A user has connected');
 
-        socket.on('requestUser', function(){
+        socket.on('requestUsers', function(){
             socket.emit('users', {users: users});
         });
 
@@ -18,17 +18,24 @@ module.exports = function(io){
         });
 
         socket.on('addUser', function(data){
+            console.log('Socket On AddUser');
             if(users.indexOf(data.username) == -1){
                 io.emit('addUser', {username: data.username});
+                console.log('user a ajouter : ' + data.username);
                 username = data.username;
                 users.push(data.username);
+                console.log(username);
             }
         });
+
+        console.log(users);
 
         socket.on('disconnect', function(){
             console.log(username + ' has disconnected');
             users.splice(users.indexOf(username), 1);
             io.emit('removeUser', {username: username});
         });
+
+        console.log(users);
     });
 };
