@@ -1,7 +1,13 @@
 <div>
-    <h2>Chat qui foire sa race</h2>
+    <h2>Chat de forain</h2>
     <div class=jumbotron>
         <div class=container>
+            <form name="selectRoomForm">
+                <label for="roomSelect"> Chatroom : </label>
+                <select name="roomSelect" id="roomSelect" ng-model="dataRooms.SelectedRoom"
+                        ng-options="option.room for option in dataRooms track by option.room">
+                </select><br>
+            </form>
             <ul>
                 <li ng-repeat="message in messages">
                     <b>{{message.username}}</b>

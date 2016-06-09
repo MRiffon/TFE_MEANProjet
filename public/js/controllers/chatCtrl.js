@@ -2,9 +2,15 @@
  * Created by Michaël on 20-04-16.
  */
 
-angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, log){
+angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, log, chatData){
     Socket.connect();
-    
+
+    $scope.dataRooms = {};
+    chatData.currentRooms().then(function(response){
+        $scope.dataRooms = response.data;
+        console.log($scope.dataRooms);
+    });
+
     $scope.users = [];
     $scope.messages = [];
     $scope.currentUser = log.currentUser();

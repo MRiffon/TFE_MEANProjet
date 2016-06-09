@@ -2,12 +2,12 @@
  * Created by Michaël and Martin on 08-04-16.
  */
 
-var data = angular.module('dataFetching', []);
+var data = angular.module('profilData', []);
 
-data.factory('dataFetch', dataFetch);
-dataFetch.$inject = ['$http', 'log'];
+data.factory('profilData', profilData);
+profilData.$inject = ['$http', 'log'];
 
-function dataFetch($http, log){
+function profilData($http, log){
 
     var getProfil = function(){
         return $http.get('/api/profil', {

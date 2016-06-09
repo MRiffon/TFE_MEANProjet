@@ -3,5 +3,5 @@
  */
 
 angular.module('overviewCtrl', []).controller('overviewController', function($scope, $location, $http, log){
-    //some code here
+    
 });

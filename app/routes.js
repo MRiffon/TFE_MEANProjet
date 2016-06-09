@@ -26,8 +26,10 @@ module.exports = function(app){
         req.logOut();
         res.redirect('/');
     })
+    // Api chat
     .post('/api/setupChat', chatRoomHandler.setup)
     .get('/api/getMsgs', chatRoomHandler.getMsgs)
+    .get('/api/getRooms', chatRoomHandler.getRooms)
 
     .get('*', function(req, res){
         res.sendFile(path.join(__dirname, '../public', 'index.html'));

@@ -36,5 +36,14 @@ module.exports = {
         }).exec(function(err, msgs){
             res.json(msgs);
         });
+    },
+    
+    getRooms: function(req, res){
+        ChatRoom.find(function(err, rooms){
+            if(err){
+                res.send(err);
+            }
+            res.json(rooms);
+        })
     }
 };
