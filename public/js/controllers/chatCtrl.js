@@ -18,7 +18,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         }
         $scope.msg = '';
     };
-    
+
     Socket.emit('requestUsers', {});
 
     console.log("Username a envoyer : " + username);

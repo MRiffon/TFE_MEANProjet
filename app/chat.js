@@ -2,14 +2,45 @@
  * Created by Michaël and Martin on 12-04-16.
  */
 
+var Chat = require('./models/chatroom');
+
 module.exports = function(io){
     var users = [];
 
     io.on('connection', function(socket){
-        var username = '';
-        console.log('A user has connected');
+        var defaultChat = 'Global';
+        var rooms = ['Global', 'Administratif'];
 
-        socket.on('requestUsers', function(){
+        socket.emit('setup', {rooms: rooms});
+
+        socket.on('new user', function(data){
+            data.room = defaultChat;
+            socket.join(defaultChat);
+            io.in(defaultChat).emit('user has joined', data);
+        });
+
+        socket.on('switch room', function(data){
+            socket.leave(data.oldChatRoom);
+            socket.join(data.newChatRoom);
+            io.in(data.oldChatRoom).emit('user has left', data);
+            io.in(data.newChatRoom).emit('user has joined', data);
+        });
+
+        socket.on('message', function(data){
+            var msg = new Chat({
+                created: new Date(),
+                username: data.username,
+                content: data.message,
+                room: data.room.toLowerCase()
+            });
+            msg.save(function(err, msg){
+                if(err)
+                    res.send(err);
+                io.in(msg.room).emit('message created', msg);
+            })
+        });
+
+        /*socket.on('requestUsers', function(){
             socket.emit('users', {users: users});
         });
 
@@ -18,24 +49,20 @@ module.exports = function(io){
         });
 
         socket.on('addUser', function(data){
-            console.log('Socket On AddUser');
             if(users.indexOf(data.username) == -1){
                 io.emit('addUser', {username: data.username});
                 console.log('user a ajouter : ' + data.username);
                 username = data.username;
                 users.push(data.username);
-                console.log(username);
+                console.log('users avant delete : ' + users);
             }
         });
-
-        console.log(users);
 
         socket.on('disconnect', function(){
             console.log(username + ' has disconnected');
             users.splice(users.indexOf(username), 1);
+            console.log('Users après delete : ' + users);
             io.emit('removeUser', {username: username});
-        });
-
-        console.log(users);
+        });*/
     });
 };

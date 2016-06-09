@@ -4,6 +4,7 @@
 
 var path = require('path');
 var userHandler = require('./controllers/users_handler');
+var chatRoomHandler = require('./controllers/chatrooms_handler');
 var jwt = require('express-jwt');
 var configjwt = require('../config/jwt.js');
 var authentication = jwt({ secret: configjwt.secret, userProperty: 'payload'});
@@ -25,6 +26,8 @@ module.exports = function(app){
         req.logOut();
         res.redirect('/');
     })
+    .post('/api/setupChat', chatRoomHandler.setup)
+    .get('/api/getMsgs', chatRoomHandler.getMsgs)
 
     .get('*', function(req, res){
         res.sendFile(path.join(__dirname, '../public', 'index.html'));
