@@ -12,5 +12,6 @@ angular.module('app',
         'profilCtrl',
         'dashboardCtrl',
         'overviewCtrl',
+        'ui.calendar',
         'calendarCtrl']
 );

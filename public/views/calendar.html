@@ -2,29 +2,15 @@
     <div class="row">
         <div class=jumbotron>
             <div class=container>
-                <table style="width:100%">
-                    <tr>
-                        <th>{{date}}</th>
-                        <th>Mardi</th>
-                        <th>Mercredi</th>
-                        <th>Jeudi</th>
-                        <th>Vendredi</th>
-                        <th>Samedi</th>
-                        <th>Dimanche</th>
-                    </tr>
-
-                    <tr>
-                        <td>Jill</td>
-                        <td>Smith</td>
-                        <td>50</td>
-                    </tr>
-                    <tr>
-                        <td>Eve</td>
-                        <td>Jackson</td>
-                        <td>94</td>
-                    </tr>
-                </table>
-            </div>
+                <div id="authorize-div" ng-show="checkAuth()" style="display: none">
+                    <span>Authorize access to Google Calendar API</span>
+                    Button for the user to click to initiate auth sequence
+                    <button id="authorize-button" ng-click="handleAuthClick(event)">
+                        Authorize
+                    </button>
+                </div>
+                <div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
+             </div>
         </div>
     </div>
 </div>
