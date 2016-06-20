@@ -1,0 +1,16 @@
+<div class="calendar-page">
+    <div class="row">
+        <div class=jumbotron>
+            <div class=container>
+                <div id="authorize-div" ng-show="checkAuth()" style="display: none">
+                    <span>Authorize access to Google Calendar API</span>
+                    Button for the user to click to initiate auth sequence
+                    <button id="authorize-button" ng-click="handleAuthClick(event)">
+                        Authorize
+                    </button>
+                </div>
+                <div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
+             </div>
+        </div>
+    </div>
+</div>

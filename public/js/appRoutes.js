@@ -44,5 +44,12 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
             parent: 'dashboard',
             templateUrl: 'views/profil.html',
             controller: 'profilController'
+        })
+
+        .state('calendar', {
+            url: '/calendar',
+            parent: 'dashboard',
+            templateUrl: 'views/calendar.html',
+            controller: 'calendarController'
         });
 });
