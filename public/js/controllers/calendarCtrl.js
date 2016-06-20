@@ -60,7 +60,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
      */
     function loadCalendarApi() {
         gapi.client.load('calendar', 'v3', listUpcomingEvents);
-    };
+    }
 
     /**
      * Print the summary and start datetime/date of the next ten events in
@@ -81,7 +81,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             $scope.events = resp.items;
             console.log($scope.events[0]);
         });
-    };
+    }
 
     /* event source that pulls from google.com */
     $scope.eventSource = {
