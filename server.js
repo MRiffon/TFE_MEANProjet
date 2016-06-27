@@ -1,5 +1,5 @@
 /**
- * Created by Michaël and Martin on 29-03-16. chat
+ * Created by Michaël and Martin on 29-03-16. 
  */
 
 // setup l'environnement node par défaut

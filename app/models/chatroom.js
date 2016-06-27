@@ -6,8 +6,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var chatRoomSchema = new Schema({
-    username: String,
-    content: String,
     room: String,
     created: Date
 });

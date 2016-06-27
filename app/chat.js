@@ -2,7 +2,8 @@
  * Created by Michaël and Martin on 12-04-16.
  */
 
-var Chat = require('./models/chatroom');
+var ChatRoom = require('./models/chatroom');
+var Message = require('./models/message');
 
 module.exports = function(io){
     var users = [];
@@ -15,6 +16,7 @@ module.exports = function(io){
 
         socket.on('new user', function(data){
             data.room = defaultChat;
+            console.log("ChatRoom : " + data.room);
             socket.join(defaultChat);
             io.in(defaultChat).emit('user has joined', data);
         });
@@ -22,16 +24,18 @@ module.exports = function(io){
         socket.on('switch room', function(data){
             socket.leave(data.oldChatRoom);
             socket.join(data.newChatRoom);
+            console.log("Change === " + data.newChatRoom);
             io.in(data.oldChatRoom).emit('user has left', data);
             io.in(data.newChatRoom).emit('user has joined', data);
         });
 
         socket.on('message', function(data){
-            var msg = new Chat({
+            console.log("ChatRoom === " + data);
+            var msg = new Message({
                 created: new Date(),
-                username: data.username,
+                sender: data.username,
                 content: data.message,
-                room: data.room.toLowerCase()
+                id_chatRoom: data.room._id
             });
             msg.save(function(err, msg){
                 if(err)

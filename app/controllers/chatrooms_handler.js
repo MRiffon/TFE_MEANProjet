@@ -4,18 +4,15 @@
 
 var mongoose = require('mongoose');
 var ChatRoom = require('../models/chatroom');
+var Message = require('../models/message');
 
 module.exports = {
     setup: function(req, res){
         var chat = [{
             created: new Date(),
-            username: 'Boot',
-            content: 'Bienvenue dans ce chat',
             room: 'Global'
         }, {
             created: new Date(),
-            username: 'Boot',
-            content: 'Bienvenue dans ce chat précis',
             room: 'Administratif'
         }];
 

@@ -1,5 +1,5 @@
 /**
- * Created by Michaël on 20-04-16.
+ * Created by Michaël and Martin on 20-04-16.
  */
 
 var socket = angular.module('Socket', []);
