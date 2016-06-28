@@ -15,13 +15,13 @@ module.exports = function(io){
 
         //listen for new users
         socket.on('new user', function(data){
-            data.room = defaultChat;
-            console.log("ChatRoom : " + data.room);
+            data.name = defaultChat;
+            console.log("ChatRoom : " + data);
             socket.join(defaultChat);
             io.in(defaultChat).emit('user has joined', data);
         });
 
-        socket.on('switch room', function(data){
+        socket.on('switch name', function(data){
             socket.leave(data.oldChatRoom);
             socket.join(data.newChatRoom);
             console.log("Change === " + data.newChatRoom);
@@ -30,17 +30,19 @@ module.exports = function(io){
         });
 
         socket.on('message', function(data){
-            console.log("ChatRoom === " + data.message);
+            console.log("Message === " + data.message);
             var msg = new Message({
                 created: new Date(),
                 sender: data.username,
                 content: data.message,
-                id_chatRoom: data.room._id
+                chatRoomName: data.room
             });
             msg.save(function(err, msg){
-                if(err)
+                if(err) {
                     res.send(err);
-                io.in(msg.id_chatRoom).emit('message created', msg);
+                } else {
+                    io.in(msg.id_chatRoom).emit('message sended', msg);
+                }
             })
         });
 

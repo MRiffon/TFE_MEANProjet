@@ -6,7 +6,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var chatRoomSchema = new Schema({
-    room: String,
+    name: String,
     created: Date
 });
 

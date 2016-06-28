@@ -9,7 +9,7 @@ var messageSchema = new Schema({
     created: Date,
     content: String,
     sender: String,
-    id_chatRoom: String
+    chatRoomName: String
 });
 
 module.exports = mongoose.model('message', messageSchema);

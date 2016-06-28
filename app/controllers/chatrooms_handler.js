@@ -10,10 +10,10 @@ module.exports = {
     setup: function(req, res){
         var chat = [{
             created: new Date(),
-            room: 'Global'
+            name: 'Global'
         }, {
             created: new Date(),
-            room: 'Administratif'
+            name: 'Administratif'
         }];
 
         for (var i = 0; i < chat.length; i++) {
@@ -29,7 +29,7 @@ module.exports = {
 
     getMsgs: function(req, res){
         ChatRoom.find({
-            'room': req.query.room.toLowerCase()
+            'room': req.query.name.toLowerCase()
         }).exec(function(err, msgs){
             res.json(msgs);
         });

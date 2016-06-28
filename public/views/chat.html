@@ -5,7 +5,7 @@
             <form name="selectRoomForm">
                 <label for="roomSelect"> Chatroom : </label>
                 <select name="roomSelect" id="roomSelect" ng-model="selectedRoom"
-                        ng-options="option.room for option in dataRooms track by option.room" ng-change="switchRoom()">
+                        ng-options="option.name for option in dataRooms track by option.name" ng-change="switchRoom()">
                 </select><br>
             </form>
             <ul>
