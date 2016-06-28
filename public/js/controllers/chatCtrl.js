@@ -9,12 +9,11 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     $scope.selectedRoom = '';
     $scope.dataRooms = {};
     chatData.userRooms().then(function(response){
-        $scope.dataRooms = response.data;
+        $scope.dataRooms = response;
         console.log($scope.dataRooms);
         $scope.selectedRoom = $scope.dataRooms[0];
         tempRoom = $scope.selectedRoom.room;
     });
-
     $scope.users = [];
     $scope.messages = [];
     $scope.currentUser = userData.currentUser();
