@@ -4,7 +4,7 @@
 
 var auth = angular.module('authentication', []);
 
-auth.factory('log', log);
+auth.factory('userData', log);
 
 log.$inject = ['$http', '$window'];
 function log($http, $window){
@@ -42,7 +42,8 @@ function log($http, $window){
 
             return {
                 email : payload.email,
-                username : payload.username
+                username : payload.username,
+                chatRooms : payload.chatRooms
             };
         }
     };

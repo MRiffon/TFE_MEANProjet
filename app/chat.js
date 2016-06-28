@@ -12,7 +12,7 @@ module.exports = function(io){
         var defaultChat = 'Global';
         var rooms = ['Global', 'Administratif'];
 
-        socket.emit('setup', {rooms: rooms});
+        //socket.emit('setup', {rooms: rooms});
 
         socket.on('new user', function(data){
             data.room = defaultChat;

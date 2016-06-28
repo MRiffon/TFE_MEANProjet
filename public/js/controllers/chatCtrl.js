@@ -2,21 +2,24 @@
  * Created by Michaël on 20-04-16.
  */
 
-angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, log, chatData){
+angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData){
     Socket.connect();
 
     var tempRoom = '';
     $scope.selectedRoom = '';
     $scope.dataRooms = {};
-    chatData.currentRooms().then(function(response){
+    chatData.userRooms().then(function(response){
         $scope.dataRooms = response.data;
+        console.log($scope.dataRooms);
         $scope.selectedRoom = $scope.dataRooms[0];
         tempRoom = $scope.selectedRoom.room;
     });
 
     $scope.users = [];
     $scope.messages = [];
-    $scope.currentUser = log.currentUser();
+    $scope.currentUser = userData.currentUser();
+    
+    console.log($scope.currentUser.chatRooms);
 
     var username = $scope.currentUser.username;
 

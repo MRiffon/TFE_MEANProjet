@@ -5,7 +5,7 @@
 var data = angular.module('profilData', []);
 
 data.factory('profilData', profilData);
-profilData.$inject = ['$http', 'log'];
+profilData.$inject = ['$http', 'userData'];
 
 function profilData($http, log){
 

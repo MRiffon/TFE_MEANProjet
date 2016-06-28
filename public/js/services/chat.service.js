@@ -6,15 +6,17 @@ var chat = angular.module('chatData', []);
 
 chat.factory('chatData', chatData);
 
-chatData.$inject = ['$http'];
+chatData.$inject = ['$http', 'userData'];
 
-function chatData($http){
+function chatData($http, userData){
     
-    var currentRooms = function(){
-        return $http.get('/api/getRooms');
+    var userRooms = function(){
+        return $http.get('/api/getRooms').then(function(response){
+            
+        });
     };
     
     return {
-        currentRooms: currentRooms
+        userRooms: userRooms
     };
 }

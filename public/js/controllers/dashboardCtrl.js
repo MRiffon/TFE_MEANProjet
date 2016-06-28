@@ -2,13 +2,13 @@
  * Created by Michaël and Martin on 11-04-16.
  */
 
-angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, log){
-    $scope.isLogged = log.loggedIn();
-    $scope.currentUser = log.currentUser();
+angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, userData){
+    $scope.isLogged = userData.loggedIn();
+    $scope.currentUser = userData.currentUser();
 
     $scope.logout = function(){
         return $http.get('/api/logout').then(function(){
-            log.logout();
+            userData.logout();
             $location.path('/');
         }, function(response){
             console.log(response);

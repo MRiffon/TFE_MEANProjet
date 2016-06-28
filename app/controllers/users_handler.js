@@ -5,6 +5,7 @@
 var mongoose = require('mongoose');
 var User = require('../models/user');
 var passport = require('passport');
+var ChatRoom = require('../models/chatroom');
 
 module.exports = {
     list: function(req, res){
@@ -62,11 +63,15 @@ module.exports = {
 
             user.makePassword(req.body.password);
 
+            user.chatRooms[0] = req.body.chatRooms[0];
+            user.chatRooms[1] = req.body.chatRooms[1];
+
             user.save(function(err){
                 if (err){
                     res.send(err);
+                } else {
+                    res.json(user);
                 }
-                res.json(user);
             });
         }
     },

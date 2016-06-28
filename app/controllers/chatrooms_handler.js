@@ -39,8 +39,9 @@ module.exports = {
         ChatRoom.find(function(err, rooms){
             if(err){
                 res.send(err);
+            } else {
+                res.json(rooms);
             }
-            res.json(rooms);
         })
     }
 };

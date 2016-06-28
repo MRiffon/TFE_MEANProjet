@@ -19,7 +19,8 @@ var userSchema = new Schema({
         required: true
     },
     hash: String,
-    salt: String
+    salt: String,
+    chatRooms: [String]
 });
 
 userSchema.methods.makePassword = function(password){
@@ -40,6 +41,7 @@ userSchema.methods.generateJwt = function(){
         _id: this._id,
         email: this.email,
         username: this.username,
+        chatRooms: this.chatRooms,
         expire: parseInt(expire.getTime() / 1000),
       }, configjwt.secret);
 };

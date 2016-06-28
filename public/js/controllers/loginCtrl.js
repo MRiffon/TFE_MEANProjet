@@ -2,7 +2,7 @@
  * Created by Michaël and Martin on 06-04-16.
  */
 
-angular.module('loginCtrl', []).controller('loginController', function($scope, $location, log){
+angular.module('loginCtrl', []).controller('loginController', function($scope, $location, userData){
 
     $scope.credentials = {
         email : "",
@@ -12,7 +12,7 @@ angular.module('loginCtrl', []).controller('loginController', function($scope, $
     $scope.onSubmit = function(isValid){
         $scope.submitted = true;
         if(isValid){
-            log.login($scope.credentials).then(function(response){
+            userData.login($scope.credentials).then(function(response){
                 var status = response.status;
                 var msgError = response.data.message;
                 if(status === 200){
