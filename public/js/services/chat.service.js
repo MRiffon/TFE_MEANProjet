@@ -20,11 +20,13 @@ function chatData($http, userData){
 
             for (i = 0; i < userRoomsId.length; i++){
                 for (j = 0; j < allRooms.length; j++){
-                    if (userRoomsId[i] === allRooms[j].room){
+                    console.log(allRooms[j]);
+                    if (userRoomsId[i] === allRooms[j]._id){
                         userRooms.push(allRooms[j]);
                     }
                 }
             }
+            console.log(userRooms);
             return userRooms;
         });
     };

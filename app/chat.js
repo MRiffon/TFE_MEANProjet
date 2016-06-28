@@ -10,10 +10,10 @@ module.exports = function(io){
 
     io.on('connection', function(socket){
         var defaultChat = 'Global';
-        var rooms = ['Global', 'Administratif'];
 
         //socket.emit('setup', {rooms: rooms});
 
+        //listen for new users
         socket.on('new user', function(data){
             data.room = defaultChat;
             console.log("ChatRoom : " + data.room);
@@ -30,7 +30,7 @@ module.exports = function(io){
         });
 
         socket.on('message', function(data){
-            console.log("ChatRoom === " + data);
+            console.log("ChatRoom === " + data.message);
             var msg = new Message({
                 created: new Date(),
                 sender: data.username,
@@ -40,16 +40,13 @@ module.exports = function(io){
             msg.save(function(err, msg){
                 if(err)
                     res.send(err);
-                io.in(msg.room).emit('message created', msg);
+                io.in(msg.id_chatRoom).emit('message created', msg);
             })
         });
 
+
         /*socket.on('requestUsers', function(){
             socket.emit('users', {users: users});
-        });
-
-        socket.on('message', function(data){
-            io.emit('message', {username: username, message: data.message});
         });
 
         socket.on('addUser', function(data){

@@ -3,24 +3,30 @@
  */
 
 angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData){
+
     Socket.connect();
 
     var tempRoom = '';
     $scope.selectedRoom = '';
     $scope.dataRooms = {};
+
     chatData.userRooms().then(function(response){
         $scope.dataRooms = response;
-        console.log($scope.dataRooms);
         $scope.selectedRoom = $scope.dataRooms[0];
         tempRoom = $scope.selectedRoom.room;
     });
     $scope.users = [];
     $scope.messages = [];
     $scope.currentUser = userData.currentUser();
-    
+
     console.log($scope.currentUser.chatRooms);
 
     var username = $scope.currentUser.username;
+
+    // new user enter in the room
+    Socket.emit('new user', {
+        username: username
+    });
 
     $scope.switchRoom = function(){
         console.log("TempRoom === " + tempRoom);
@@ -34,13 +40,14 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     };
 
     $scope.sendMessage = function(msg){
+        var message = {
+            message: msg,
+            room: $scope.selectedRoom,
+            sender: username
+        };
+        $scope.messages.push(message);
         if(msg !== null && msg !== ''){
-            console.log('Message à envoyer : ' + msg);
-            Socket.emit('message', {
-                message: msg,
-                room: $scope.selectedRoom,
-                sender: username
-            });
+            Socket.emit('message', message);
         }
         $scope.msg = '';
     };
