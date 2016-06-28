@@ -15,7 +15,9 @@ module.exports = function(io){
 
         //listen for new users
         socket.on('new user', function(data){
+            var username = data.username;
             data.name = defaultChat;
+            data.username = username;
             console.log("ChatRoom : " + data);
             socket.join(defaultChat);
             io.in(defaultChat).emit('user has joined', data);
@@ -41,7 +43,8 @@ module.exports = function(io){
                 if(err) {
                     res.send(err);
                 } else {
-                    io.in(msg.id_chatRoom).emit('message sended', msg);
+                    console.log("Serveur resend message : " + msg.content + " Dans la room : " + msg.chaptRoomName);
+                    io.in(msg.chatRoomName).emit('message sended', msg);
                 }
             })
         });

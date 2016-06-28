@@ -30,6 +30,10 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         username: username
     });
 
+    Socket.on('user has joined',function(data){
+        console.log("user has joined : " + data.username + ' + ' + data.name);
+    });
+
     $scope.switchRoom = function(){
         console.log("TempRoom === " + tempRoom);
         Socket.emit('switch name', {
