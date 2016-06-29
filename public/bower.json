@@ -27,8 +27,7 @@
     "angular-ui-router": "^0.2.18"
   },
   "devDependencies": {
-    "angular-material": "^1.0.7",
-    "angular-material-icons": "^0.7.0",
-    "angular-socket-io": "^0.7.0"
+    "angular-socket-io": "^0.7.0",
+    "ngstorage": "^0.3.10"
   }
 }

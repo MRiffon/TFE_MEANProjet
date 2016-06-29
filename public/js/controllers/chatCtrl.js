@@ -2,20 +2,23 @@
  * Created by Michaël on 20-04-16.
  */
 
-angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData){
+angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData, $sessionStorage){
 
     Socket.connect();
 
-    var tempRoom = '';
+    var tempRoom = {};
     $scope.selectedRoom = {};
     $scope.dataRooms = {};
+    $scope.$storage = $sessionStorage;
+    $scope.$storage = $sessionStorage.$default({
+        currentChatRoom: userData.currentUser().chatRooms[0]
+    });
 
     chatData.userRooms().then(function(response){
         console.log(response);
         $scope.dataRooms = response;
-        $scope.selectedRoom = $scope.dataRooms[0];
-        tempRoom = $scope.selectedRoom.name;
-        console.log(tempRoom);
+        $scope.selectedRoom = $scope.$storage.currentChatRoom;
+        tempRoom = $scope.selectedRoom;
     });
     $scope.users = [];
     $scope.messages = [];
@@ -27,24 +30,27 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
     // new user enter in the name
     Socket.emit('new user', {
-        username: username
+        username: username,
+        defaultChatRoom: $scope.$storage.currentChatRoom
     });
 
     Socket.on('user joined default',function(data){
-        console.log("user has joined default : " + data.username + ' + ' + data.name);
+        console.log("user has joined default : " + data.username + ' + ' + data.defaultChatRoom.name);
     });
 
     Socket.on('user has joined',function(data){
-        console.log("user has joined : " + data.username + ' + ' + data.name);
+        console.log("user has joined : " + data.username + ' + ' + data.newChatRoom);
     });
     Socket.on('user has left',function(data){
-        console.log("user has left : " + data.username + ' + ' + data.name);
+        console.log("user has left : " + data.username + ' + ' + data.oldChatRoom);
     });
 
     $scope.switchRoom = function(){
-        console.log("TempRoom === " + tempRoom);
+        $scope.$storage.currentChatRoom = $scope.selectedRoom;
+        console.log($scope.$storage.currentChatRoom);
+        console.log($sessionStorage);
         Socket.emit('switch room', {
-            oldChatRoom: tempRoom,
+            oldChatRoom: tempRoom.name,
             newChatRoom: $scope.selectedRoom.name,
             username: username
         });

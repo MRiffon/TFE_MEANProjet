@@ -10,6 +10,7 @@
   "author": "mriffon",
   "license": "ISC",
   "devDependencies": {
+    "angular-cookies": "^1.5.7",
     "body-parser": "^1.15.0",
     "chai": "^3.5.0",
     "cors": "^2.7.1",
@@ -33,6 +34,7 @@
     "lodash": "^4.11.1",
     "mocha": "^2.4.5",
     "mongoose": "^4.4.12",
+    "ngstorage": "^0.3.10",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "serve-favicon": "^2.3.0",

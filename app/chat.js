@@ -9,18 +9,17 @@ module.exports = function(io){
     var users = [];
 
     io.on('connection', function(socket){
-        var defaultChat = 'Global';
 
         //socket.emit('setup', {rooms: rooms});
 
         //listen for new users
         socket.on('new user', function(data){
-            var username = data.username;
-            data.name = defaultChat;
-            data.username = username;
-            console.log("ChatRoom : " + data);
-            socket.join(defaultChat);
-            io.in(defaultChat).emit('user joined default', data);
+            var defaultChat = data.defaultChatRoom;
+            console.log("DefaultChatRoom : " + data.defaultChatRoom);
+            console.log("ChatRoom : " + defaultChat.name);
+            console.log("data new user : " + data.username);
+            socket.join(defaultChat.name);
+            io.in(defaultChat.name).emit('user joined default', data);
         });
 
         socket.on('switch room', function(data){

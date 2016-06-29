@@ -15,5 +15,6 @@ angular.module('app', [
         'profilCtrl',
         'dashboardCtrl',
         'overviewCtrl',
-        'chatCtrl']
+        'chatCtrl',
+        'ngStorage']
 );
