@@ -87,6 +87,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         chatData.lastMessages($scope.$storage.currentChatRoom).then(function(response){
             console.log("inside lastmessages : " + $scope.selectedRoom.name);
             console.log("Message réponse : " + response);
+            $scope.messages = '';
             $scope.messages = response.data;
             console.log("Last messages : " + $scope.messages[0].content);
         });

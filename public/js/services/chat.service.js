@@ -9,7 +9,13 @@ chat.factory('chatData', chatData);
 chatData.$inject = ['$http', 'userData'];
 
 function chatData($http, userData){
-    
+
+    var messagesRoom = function(){
+        return $http.get('/api/getMsgs').then(function(response){
+            console.log();
+        });
+    };
+
     var userRooms = function(){
         return $http.get('/api/getRooms').then(function(response){
             var userRoomsName = userData.currentUser().chatRooms;
