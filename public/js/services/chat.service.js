@@ -25,6 +25,7 @@ function chatData($http, userData){
                     }
                 }
             }
+            //Renvoie un tableau contenant les objets Rooms.
             return userRooms;
         });
     };

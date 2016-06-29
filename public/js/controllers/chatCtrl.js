@@ -10,16 +10,24 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     $scope.selectedRoom = {};
     $scope.dataRooms = {};
     $scope.$storage = $sessionStorage;
-    $scope.$storage = $sessionStorage.$default({
-        currentChatRoom: userData.currentUser().chatRooms[0]
-    });
 
     chatData.userRooms().then(function(response){
         console.log(response);
         $scope.dataRooms = response;
+        console.log("datarooms après remplissage : " + $scope.dataRooms[0]);
+        $scope.$storage = $sessionStorage.$default({
+            currentChatRoom: $scope.dataRooms[0]
+        });
+        console.log("currentChatRoom de merde : " + $scope.$storage.currentChatRoom);
         $scope.selectedRoom = $scope.$storage.currentChatRoom;
         tempRoom = $scope.selectedRoom;
+
+        Socket.emit('new user', {
+            username: username,
+            defaultChatRoom: $scope.selectedRoom
+        });
     });
+
     $scope.users = [];
     $scope.messages = [];
     $scope.currentUser = userData.currentUser();
@@ -27,12 +35,8 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     console.log($scope.currentUser.chatRooms);
 
     var username = $scope.currentUser.username;
-
     // new user enter in the name
-    Socket.emit('new user', {
-        username: username,
-        defaultChatRoom: $scope.$storage.currentChatRoom
-    });
+
 
     Socket.on('user joined default',function(data){
         console.log("user has joined default : " + data.username + ' + ' + data.defaultChatRoom.name);
