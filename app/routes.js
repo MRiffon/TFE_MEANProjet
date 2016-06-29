@@ -27,7 +27,7 @@ module.exports = function(app){
     })
     // Api chat
     .post('/api/setupChat', chatRoomHandler.setup)
-    .get('/api/getMsgs', chatRoomHandler.getMsgs)
+    .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
 
     .get('*', function(req, res){

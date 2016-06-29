@@ -28,9 +28,10 @@ module.exports = {
     },
 
     getMsgs: function(req, res){
-        ChatRoom.find({
-            'room': req.query.name.toLowerCase()
-        }).exec(function(err, msgs){
+        console.log("log req : " + req);
+        Message.find({
+            'chatRoomName': req.body.name
+        }).sort({created:1}).exec(function(err, msgs){
             res.json(msgs);
         });
     },

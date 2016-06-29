@@ -26,10 +26,12 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
             username: username,
             defaultChatRoom: $scope.selectedRoom
         });
+        getLastMessage();
     });
 
     $scope.users = [];
     $scope.messages = [];
+
     $scope.currentUser = userData.currentUser();
 
     console.log($scope.currentUser.chatRooms);
@@ -58,6 +60,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
             newChatRoom: $scope.selectedRoom.name,
             username: username
         });
+        getLastMessage();
         tempRoom = $scope.selectedRoom;
     };
 
@@ -79,6 +82,15 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         $scope.messages.push(data);
         $scope.message = "";
     });
+
+    getLastMessage = function(){
+        chatData.lastMessages($scope.$storage.currentChatRoom).then(function(response){
+            console.log("inside lastmessages : " + $scope.selectedRoom.name);
+            console.log("Message réponse : " + response);
+            $scope.messages = response.data;
+            console.log("Last messages : " + $scope.messages[0].content);
+        });
+    };
 
     /*Socket.emit('requestUsers', {});
 

@@ -15,7 +15,7 @@ module.exports = function(io){
         //listen for new users
         socket.on('new user', function(data){
             var defaultChat = data.defaultChatRoom;
-            console.log("DefaultChatRoom : " + data.defaultChatRoom);
+            console.log("DefaultChatRoom : " + data.defaultChatRoom.name);
             console.log("ChatRoom : " + defaultChat.name);
             console.log("data new user : " + data.username);
             socket.join(defaultChat.name);
