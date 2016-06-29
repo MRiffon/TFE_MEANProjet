@@ -30,13 +30,20 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         username: username
     });
 
+    Socket.on('user joined default',function(data){
+        console.log("user has joined default : " + data.username + ' + ' + data.name);
+    });
+
     Socket.on('user has joined',function(data){
         console.log("user has joined : " + data.username + ' + ' + data.name);
+    });
+    Socket.on('user has left',function(data){
+        console.log("user has left : " + data.username + ' + ' + data.name);
     });
 
     $scope.switchRoom = function(){
         console.log("TempRoom === " + tempRoom);
-        Socket.emit('switch name', {
+        Socket.emit('switch room', {
             oldChatRoom: tempRoom,
             newChatRoom: $scope.selectedRoom.name,
             username: username
@@ -52,13 +59,13 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         };
         //$scope.messages.push(msg);
         if(msg !== null && msg !== ''){
-            Socket.emit('message', message);
+            Socket.emit('message sended', message);
         }
         $scope.msg = '';
     };
 
-    Socket.on('message sended', function(data){
-        console.log("Message renvoyé : " + data);
+    Socket.on('message dispatched', function(data){
+        console.log("Message renvoyé par le serveur: " + data.content);
         $scope.messages.push(data);
         $scope.message = "";
     });

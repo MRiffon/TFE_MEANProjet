@@ -20,10 +20,10 @@ module.exports = function(io){
             data.username = username;
             console.log("ChatRoom : " + data);
             socket.join(defaultChat);
-            io.in(defaultChat).emit('user has joined', data);
+            io.in(defaultChat).emit('user joined default', data);
         });
 
-        socket.on('switch name', function(data){
+        socket.on('switch room', function(data){
             socket.leave(data.oldChatRoom);
             socket.join(data.newChatRoom);
             console.log("Change === " + data.newChatRoom);
@@ -31,11 +31,11 @@ module.exports = function(io){
             io.in(data.newChatRoom).emit('user has joined', data);
         });
 
-        socket.on('message', function(data){
-            console.log("Message === " + data.message);
+        socket.on('message sended', function(data){
+            console.log("Message === " + data.message + " by " + data.sender);
             var msg = new Message({
                 created: new Date(),
-                sender: data.username,
+                sender: data.sender,
                 content: data.message,
                 chatRoomName: data.room
             });
@@ -43,8 +43,8 @@ module.exports = function(io){
                 if(err) {
                     res.send(err);
                 } else {
-                    console.log("Serveur resend message : " + msg.content + " Dans la room : " + msg.chaptRoomName);
-                    io.in(msg.chatRoomName).emit('message sended', msg);
+                    console.log("Serveur resend message : " + msg.content + " Dans la room : " + msg.chatRoomName + " by " + msg.sender);
+                    io.in(msg.chatRoomName).emit('message dispatched', msg);
                 }
             })
         });

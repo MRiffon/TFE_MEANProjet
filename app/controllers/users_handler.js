@@ -64,7 +64,6 @@ module.exports = {
             user.makePassword(req.body.password);
 
             user.chatRooms[0] = req.body.chatRooms[0];
-            user.chatRooms[1] = req.body.chatRooms[1];
 
             user.save(function(err){
                 if (err){
