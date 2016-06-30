@@ -24,10 +24,20 @@
     "angular-resource": "^1.5.3",
     "angular-mocks": "^1.5.3",
     "angular": "^1.5.3",
-    "angular-ui-router": "^0.2.18"
+    "angular-ui-router": "^0.2.18",
+    "jquery": "^2.1.4",
+    "angular-ui-calendar": "latest"
   },
   "devDependencies": {
     "angular-socket-io": "^0.7.0",
     "ngstorage": "^0.3.10"
+    "angular-material": "^1.0.7",
+    "angular-material-icons": "^0.7.0",
+    "angular-socket-io": "^0.7.0",
+    "fullcalendar": "^2.7.2"
+  },
+  "resolutions": {
+    "angular": "^1.5.3",
+    "fullcalendar": "2.3.1"
   }
 }

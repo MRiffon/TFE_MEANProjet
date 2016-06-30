@@ -46,6 +46,13 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
             controller: 'profilController'
         })
 
+        .state('calendar', {
+            url: '/calendar',
+            parent: 'dashboard',
+            templateUrl: 'views/calendar.html',
+            controller: 'calendarController'
+        })
+
         .state('chatroom', {
             url: '/chatroom',
             parent: 'dashboard',

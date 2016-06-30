@@ -7,7 +7,7 @@ module.exports = function(grunt){
     grunt.initConfig({
 
 
-        
+
         env: {
             test: {
                 NODE_ENV: 'test'
@@ -15,6 +15,10 @@ module.exports = function(grunt){
 
             dev: {
                 NODE_ENV: 'development'
+            },
+
+            prod: {
+                NODE_ENV: 'production'
             }
         },
 
@@ -62,6 +66,15 @@ module.exports = function(grunt){
                 },
                 tasks: ['nodemon', 'watch']
             }
+        },
+
+        forever: {
+            server: {
+                options: {
+                    index: 'server.js',
+                    logDir: '../../log'
+                }
+            }
         }
     });
 
@@ -72,7 +85,12 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-env');
     grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-forever');
 
-    grunt.registerTask('test', ['env:test', 'jshint', 'karma', 'mochaTest']);
-    grunt.registerTask('default', ['env:dev', 'jshint', 'concurrent:dev']);
+    grunt.registerTask('test', ['env:test', 'jshint', 'karma']);
+    grunt.registerTask('dev', ['env:dev', 'jshint', 'concurrent:dev']);
+    
+    grunt.registerTask('prod-start', ['env:prod', 'forever:server:start']);
+    grunt.registerTask('prod-restart', ['env:prod', 'forever:server:restart']);
+    grunt.registerTask('prod-stop', ['env:prod', 'forever:server:stop']);
 };

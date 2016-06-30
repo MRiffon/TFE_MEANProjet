@@ -1,20 +1,15 @@
 /**
- * Created by Michaël and Martin on 29-03-16. 
+ * Created by Michaël and Martin on 29-03-16.
+ * Created by Michaël and Martin on 29-03-16. chat
  */
-
-// setup l'environnement node par défaut
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Initialisation du framework web Express
 var express = require('express');
 var app = express();
 
-// Chargement config environnement
-var config = require('./config/config.js');
-
 // Initialisation serveur http avec socket.io
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 // cors pour les requêtes interdomaines (pour les fonts par exemple)
 var cors = require("cors");
@@ -22,7 +17,8 @@ var bodyParser = require("body-parser");
 
 // Setup, configuration et connection à la db MongoDB
 var mongoose = require('mongoose');
-mongoose.connect(config.db);
+var db = require('./config/db.js');
+mongoose.connect(db.url);
 
 // jwt secret config
 var configjwt = require('./config/jwt.js');
@@ -40,7 +36,10 @@ var path = require('path');
 
 require('./config/passport');
 
-var port = config.port;
+var port = process.env.PORT || 3000;
+
+// setup l'envirronnement node par défaut
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -62,9 +61,5 @@ require('./app/routes.js')(app);
 // Gestion events socket.io
 require('./app/chat.js')(io);
 
-// Exports pour les tests d'api
-module.exports = app;
-
-server.listen(port, function(){
-    console.log('Le serveur tourne sur le port ' + port);
-});
+http.listen(port);
+console.log('Le serveur tourne sur le port ' + port);
