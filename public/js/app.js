@@ -16,7 +16,7 @@ angular.module('app', [
         'dashboardCtrl',
         'overviewCtrl',
         'ui.calendar',
-        'calendarCtrl']
+        'calendarCtrl',
         'overviewCtrl',
         'chatCtrl',
         'ngStorage']
