@@ -80,6 +80,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         request.execute(function(resp) {
             $scope.events = resp.items;
             console.log($scope.events[0]);
+            console.log($scope.events[1]);
         });
     }
 
