@@ -18,11 +18,14 @@ function profilData($http, log){
     };
 
     updateProfil = function(user){
-        console.log("user à envoyer : " + user);
         return $http.put('/api/profil', user, {
             headers: {
                 Authorization: 'Bearer ' + log.getToken()
             }
+        }).then(function(response){
+            return response;
+        }).then(function(response){
+            return response;
         });
     };
 

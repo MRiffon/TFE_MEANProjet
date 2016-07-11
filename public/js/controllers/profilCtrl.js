@@ -8,11 +8,15 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
     $scope.userEdit = {};
     $scope.editStatus = false;
 
-    profilData.getProfil().then(function(response){
-        $scope.user = response.data;
-    }, function(response){
-        $location.path('/');
-    });
+    getProfilData = function(){
+        profilData.getProfil().then(function(response){
+            $scope.user = response.data;
+        }, function(response){
+            $location.path('/');
+        });
+    };
+
+    getProfilData();
 
     $scope.editOn = function(){
         $scope.editStatus = true;
@@ -24,22 +28,24 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
     };
 
     $scope.saveEdit = function(isValid){
-        console.log($scope.userEdit);
-        if(isValid && $scope.userEdit.password == $scope.userEdit.confirmPassword){
-            /*profilData.updateProfil($scope.userEdit).then(function(response){
+        if(isValid && $scope.userEdit.password === $scope.userEdit.confirmPassword){
+            profilData.updateProfil($scope.userEdit).then(function(response){
+                console.log("Response du serveur : " + response.data.message);
                 var status = response.status;
-                var msgError = response.data.message;
-                if(status === 200){
+
+                if(status === 200 && response.data.message === "Updated!"){
                     $scope.editOff();
+                    getProfilData();
                 }
-                if(status === 401){
+                if(status === 200 && response.data.name !== "" && response.data.name === "MongoError"){
                     $scope.dataEditProfilInvalid = true;
-                    $scope.msgError = msgError;
+                    $scope.msgError = "Impossible de mettre à jour dû à l'utilisation du username par un autre utilisateur";
                     $scope.userEdit.password = null;
                     $scope.userEdit.confirmPassword = null;
                 }
-            });*/
+            });
+        } else {
+            $scope.msgError = "Mot de passe différents !!";
         }
     };
-
 });

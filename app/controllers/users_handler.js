@@ -77,23 +77,28 @@ module.exports = {
 
     editProfil: function(req, res){
         if(!req.payload._id){
-            res.status(401);
-            console.log("401 backend")
+            res.status(401).json({message: "Authentication failure !"});
         } else {
             User.findById(req.payload._id).exec(function(err, user){
                 if(err){
                     res.send(err);
-                    console.log("err if findby")
                 } else {
-                    user.username = user.body.username;
-                    user.makePassword(user.body.password);
-                    user.firstname = user.body.firstname;
-                    user.lastname = user.body.lastname;
-
+                    for(var key in req.body){
+                        if(req.body.hasOwnProperty(key)){
+                            if(key === "password"){
+                                user.makePassword(req.body[key]);
+                            } else {
+                                user[key] = req.body[key];
+                            }
+                        }
+                    }
                     user.save(function(err){
-                        console.log("save put")
-                        if(err) 
+                        if(err) {
+                            console.log(err);
                             res.send(err);
+                        } else {
+                            res.status(200).json({message: 'Updated!'});
+                        }
                     });
                 }
             })
@@ -102,7 +107,7 @@ module.exports = {
 
     readProfil: function(req, res){
         if(!req.payload._id){
-            res.status(401);
+            res.status(401).json({message: "Authentication failure !"});
         } else {
             User.findById(req.payload._id).exec(function(err, user){
                 res.status(200).json(user);
