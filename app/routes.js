@@ -20,7 +20,8 @@ module.exports = function(app){
     .delete('/api/user/:user_id',userHandler.delete)
     .post('/api/users', userHandler.creation)
     .post('/api/login', userHandler.login)
-    .get('/api/profil', authentication, userHandler.profilRead)
+    .get('/api/profil', authentication, userHandler.readProfil)
+    .put('/api/profil', authentication, userHandler.editProfil)    
     .get('/api/logout', function(req, res){
         req.logOut();
         res.redirect('/');

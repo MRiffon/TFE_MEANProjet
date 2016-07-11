@@ -75,7 +75,32 @@ module.exports = {
         }
     },
 
-    profilRead: function(req, res){
+    editProfil: function(req, res){
+        if(!req.payload._id){
+            res.status(401);
+            console.log("401 backend")
+        } else {
+            User.findById(req.payload._id).exec(function(err, user){
+                if(err){
+                    res.send(err);
+                    console.log("err if findby")
+                } else {
+                    user.username = user.body.username;
+                    user.makePassword(user.body.password);
+                    user.firstname = user.body.firstname;
+                    user.lastname = user.body.lastname;
+
+                    user.save(function(err){
+                        console.log("save put")
+                        if(err) 
+                            res.send(err);
+                    });
+                }
+            })
+        }
+    },
+
+    readProfil: function(req, res){
         if(!req.payload._id){
             res.status(401);
         } else {

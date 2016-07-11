@@ -17,7 +17,17 @@ function profilData($http, log){
         });
     };
 
+    updateProfil = function(user){
+        console.log("user à envoyer : " + user);
+        return $http.put('/api/profil', user, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        });
+    };
+
     return {
-        getProfil: getProfil
+        getProfil: getProfil,
+        updateProfil: updateProfil
     };
 }

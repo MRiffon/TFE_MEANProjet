@@ -18,6 +18,8 @@ var userSchema = new Schema({
         type: String,
         required: true
     },
+    firstname: String,
+    lastname: String,
     hash: String,
     salt: String,
     chatRooms: [String]

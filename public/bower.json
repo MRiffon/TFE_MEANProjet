@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "angular-socket-io": "^0.7.0",
-    "ngstorage": "^0.3.10"
+    "ngstorage": "^0.3.10",
     "angular-material": "^1.0.7",
     "angular-material-icons": "^0.7.0",
     "angular-socket-io": "^0.7.0",

@@ -1,0 +1,10 @@
+.profil-content{
+    padding-left: 30px;
+    width: 300px;
+    clear: both;
+}
+
+.profil-content input{
+    width: 100%;
+    clear: both;
+}
