@@ -8,3 +8,7 @@
     width: 100%;
     clear: both;
 }
+
+.user-avatar{
+    border-radius: 10%;
+}

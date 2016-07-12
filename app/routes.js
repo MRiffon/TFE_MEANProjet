@@ -9,7 +9,7 @@ var jwt = require('express-jwt');
 var configjwt = require('../config/jwt.js');
 var authentication = jwt({ secret: configjwt.secret, userProperty: 'payload'});
 
-module.exports = function(app){
+module.exports = function(app, upload){
 
     app.use(function(req, res, next){
         next();
@@ -30,6 +30,17 @@ module.exports = function(app){
     .post('/api/setupChat', chatRoomHandler.setup)
     .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
+        
+    // Api upload de files
+    .post('/api/upload', function(req, res){
+        upload(req, res, function(err){
+            if(err) {
+                res.json({error_code:1,err_desc:err});
+            } else {
+                res.json({error_code:0,err_desc:null});
+            }
+        })
+    })
 
     .get('*', function(req, res){
         res.sendFile(path.join(__dirname, '../public', 'index.html'));

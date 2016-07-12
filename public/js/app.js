@@ -19,5 +19,6 @@ angular.module('app', [
         'calendarCtrl',
         'overviewCtrl',
         'chatCtrl',
-        'ngStorage']
+        'ngStorage',
+        'ngFileUpload']
 );

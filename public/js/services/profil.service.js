@@ -24,7 +24,7 @@ function profilData($http, log){
             }
         }).then(function(response){
             return response;
-        }).then(function(response){
+        }).catch(function(response){
             return response;
         });
     };

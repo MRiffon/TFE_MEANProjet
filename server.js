@@ -9,6 +9,21 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var express = require('express');
 var app = express();
 
+// Upload de files
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './uploads/avatar/')
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname)
+    }
+});
+
+var upload = multer({
+    storage: storage
+}).single('file');
+
 // Chargement config environnement
 var config = require('./config/config.js');
 
@@ -57,7 +72,7 @@ app.use(function(err, req, res, next){
 });
 
 // Gestion des routes/apis
-require('./app/routes.js')(app);
+require('./app/routes.js')(app, upload);
 
 // Gestion events socket.io
 require('./app/chat.js')(io);
