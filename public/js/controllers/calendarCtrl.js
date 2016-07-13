@@ -2,7 +2,7 @@
  * Created by Martouf on 26-05-16.
  */
 
-angular.module('calendarCtrl', []).controller('calendarController', function($scope, $location, $http){
+angular.module('calendarCtrl', []).controller('calendarController', function($scope, $location, $http, uiCalendarConfig){
     var CLIENT_ID = '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com';
     var SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
@@ -11,6 +11,12 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
     var m = date.getMonth();
     var y = date.getFullYear();
     $scope.events = [];
+    $scope.isCalendarLoaded = false;
+
+    /* event sources array*/
+    $scope.eventSources = [];
+    //$scope.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
+
     /**
      * Handle response from authorization server.
      *
@@ -33,13 +39,16 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
      * Check if current user has authorized this application.
      */
     $scope.checkAuth = function() {
-        gapi.auth.authorize(
-            {
-                'client_id': CLIENT_ID,
-                'scope': SCOPES.join(' '),
-                'immediate': true
-            }, handleAuthResult);
-        return true;
+        if (gapi.auth != undefined && $scope.isCalendarLoaded == false){
+            $scope.isCalendarLoaded = true;
+            gapi.auth.authorize(
+                {
+                    'client_id': CLIENT_ID,
+                    'scope': SCOPES.join(' '),
+                    'immediate': true
+                }, handleAuthResult);
+            return true;
+        }
 };
 
     /**
@@ -78,18 +87,21 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         });
 
         request.execute(function(resp) {
-            $scope.events = resp.items;
-            console.log($scope.events[0]);
-            console.log($scope.events[1]);
+            var events = resp.items;
+            console.log(events[0]);
+
+            for (var i = 0; i < events.length; i++){
+                var singleEvent = {title : events[i].summary,
+                                start : new Date(events[i].start.dateTime)};
+                console.log(singleEvent.title);
+                $scope.events.push(singleEvent);
+            }
+            console.log("Après le for " + $scope.events);
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
+
+
         });
     }
-
-    /* event source that pulls from google.com */
-    $scope.eventSource = {
-       events: [],
-        color: 'black',     // an option!
-        textColor: 'yellow' // an option!
-    };
 
     /* event source that calls a function on every view switch */
     $scope.eventsF = function (start, end, timezone, callback) {
@@ -100,15 +112,6 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         callback(events);
     };
 
-    $scope.calEventsExt = {
-        /*color: '#f00',
-        textColor: 'yellow',
-        events: [
-            {type:'party',title: 'Lunch',start: new Date(y, m, d, 12, 0),end: new Date(y, m, d, 14, 0),allDay: false},
-            {type:'party',title: 'Lunch 2',start: new Date(y, m, d, 12, 0),end: new Date(y, m, d, 14, 0),allDay: false},
-            {type:'party',title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
-        ]*/
-    };
     /* alert on eventClick */
     $scope.alertOnEventClick = function( date, jsEvent, view){
         $scope.alertMessage = (date.title + ' was clicked ');
@@ -182,6 +185,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         }
     };
 
+
     $scope.changeLang = function() {
         if($scope.changeTo === 'Hungarian'){
             $scope.uiConfig.calendar.dayNames = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
@@ -193,7 +197,5 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             $scope.changeTo = 'Hungarian';
         }
     };
-    /* event sources array*/
-    $scope.eventSources = [$scope.events, $scope.eventSource, $scope.eventsF];
-    $scope.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
+
 });
