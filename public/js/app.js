@@ -19,5 +19,8 @@ angular.module('app', [
         'calendarCtrl',
         'overviewCtrl',
         'chatCtrl',
-        'ngStorage']
+        'ngStorage',
+        'ngAnimate',
+        'ui.bootstrap',
+        'modalCtrl']
 );

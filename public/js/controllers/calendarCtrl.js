@@ -2,7 +2,7 @@
  * Created by Martouf on 26-05-16.
  */
 
-angular.module('calendarCtrl', []).controller('calendarController', function($scope, $location, $http, uiCalendarConfig){
+angular.module('calendarCtrl', []).controller('calendarController', function($scope, $location, $http, uiCalendarConfig, $uibModal, $log){
     var CLIENT_ID = '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com';
     var SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
@@ -98,8 +98,6 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             }
             console.log("Après le for " + $scope.events);
             uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
-
-
         });
     }
 
@@ -146,14 +144,17 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             className: ['openSesame']
         });
     };
+
     /* remove event */
     $scope.remove = function(index) {
         $scope.events.splice(index,1);
     };
+
     /* Change View */
     $scope.changeView = function(view,calendar) {
         uiCalendarConfig.calendars[calendar].fullCalendar('changeView',view);
     };
+
     /* Change View */
     $scope.renderCalender = function(calendar) {
         if(uiCalendarConfig.calendars[calendar]){
@@ -181,10 +182,13 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             eventClick: $scope.alertOnEventClick,
             eventDrop: $scope.alertOnDrop,
             eventResize: $scope.alertOnResize,
-            eventRender: $scope.eventRender
+            eventRender: $scope.eventRender,
+            dayClick : function(date, jsEvent, view){
+                console.log("Clic sur : " + date.format());
+                $scope.open();
+            }
         }
     };
-
 
     $scope.changeLang = function() {
         if($scope.changeTo === 'Hungarian'){
@@ -196,6 +200,35 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             $scope.uiConfig.calendar.dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             $scope.changeTo = 'Hungarian';
         }
+    };
+
+    /**
+     * Partie de code pour le popup modal
+     */
+
+    $scope.items = ['item1', 'item2', 'item3'];
+
+    $scope.animationsEnabled = true;
+
+    $scope.open = function (size) {
+
+        var modalInstance = $uibModal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: '../views/modals/calendarEventModalView.html',
+            controller: 'ModalCalendarCtrl',
+            size: size,
+            resolve: {
+                items: function () {
+                    return $scope.items;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selected = selectedItem;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
     };
 
 });
