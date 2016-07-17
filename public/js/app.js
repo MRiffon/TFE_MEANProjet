@@ -20,5 +20,6 @@ angular.module('app', [
         'overviewCtrl',
         'chatCtrl',
         'ngStorage',
-        'ngFileUpload']
+        'ngFileUpload',
+        'dcbImgFallback']
 );

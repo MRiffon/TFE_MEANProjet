@@ -5,6 +5,8 @@
 angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, userData){
     $scope.isLogged = userData.loggedIn();
     $scope.currentUser = userData.currentUser();
+    $scope.urlImg = "./img/clients/avatar/" + $scope.currentUser._id + ".jpg";
+    console.log($scope.urlImg);
 
     $scope.logout = function(){
         return $http.get('/api/logout').then(function(){

@@ -3,22 +3,45 @@
     <h1>Profil</h1>
     <div class=jumbotron>
         <div class=container>
-            <div ng-hide="editStatus">
-                <h3>Informations générales</h3><hr>
-                <div class="profil-content">
-                    <b>Nom d'utilisateur : </b>{{user.username}}<br>
-                    <b>E-mail : </b>{{user.email}}<br>
-                    <b>Nom : </b>{{user.firstname}}<br>
-                    <b>Prénom : </b>{{user.lastname}}<br>
+            <div class="panel-body">
+                <div class="row">
+                    <div ng-hide="editStatus">
+                        <div class="col-md-9 col-lg-5">
+                            <h3>Informations générales</h3>
+                            <table class="table table-user-information">
+                                <tbody>
+                                <tr>
+                                    <td>Username :</td>
+                                    <td>{{user.username}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Email :</td>
+                                    <td>{{user.email}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nom : </td>
+                                    <td>{{user.firstname}}</td>
+                                </tr>
+
+                                <tr>
+                                <tr>
+                                    <td>Prénom : </td>
+                                    <td>{{user.lastname}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <br><p> <a class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" href="#" ng-click="editOn()">EDITER PROFIL</a></p>
+                        </div>
+                    </div>
                 </div>
-                <br><p> <a class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" href="#" ng-click="editOn()">EDITER PROFIL</a></p>
             </div>
+
             <div ng-show="editStatus">
                 <h3>Editer votre profil</h3>
                 <hr>
                 <div class="col-md-3">
                     <div class="text-center">
-                        <img src="./img/MEAN_img.png" class="user-avatar" alt="avatar">
+                        <img ng-src="{{ urlImg }}" fallback-src="./img/photo-default-th.png" loading-src class="user-avatar">
                         <h6>Choisissez une image différente...</h6>
                         <form name="uploadImageForm" role="form" ng-submit="uploadImg(uploadImageForm.$valid)" novalidate>
 
@@ -59,12 +82,12 @@
 
                                     <div class="form-group">
                                         <b>Nouveau mot de passe : </b>
-                                        <input class="form-control" type="password" id="password" name="password" placeholder="new password" ng-model="userEdit.password" ng-required="false" ng-minlength="8">
+                                        <input class="form-control" type="password" id="password" name="password" placeholder="Nouveau mot de passe" ng-model="userEdit.password" ng-required="false" ng-minlength="8">
                                     </div>
 
                                     <div class="form-group">
                                         <b>Confirmer mot de passe : </b>
-                                        <input class="form-control" type="password" id="confirmPassword" name="confirmPassword" placeholder="confirm new password" ng-model="userEdit.confirmPassword" ng-required="false" ng-minlength="8">
+                                        <input class="form-control" type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmer mot de passe" ng-model="userEdit.confirmPassword" ng-required="false" ng-minlength="8">
                                     </div>
                                     <br>
 

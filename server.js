@@ -13,7 +13,7 @@ var app = express();
 var multer = require('multer');
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, './uploads/avatar/')
+        cb(null, './public/img/clients/avatar/')
     },
     filename: function(req, file, cb){
         cb(null, file.originalname)

@@ -11,6 +11,8 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
     getProfilData = function(){
         profilData.getProfil().then(function(response){
             $scope.user = response.data;
+            $scope.urlImg = "./img/clients/avatar/" + $scope.user._id + ".jpg";
+            console.log($scope.urlImg);
         }, function(response){
             $location.path('/');
         });
@@ -27,6 +29,7 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
         $scope.successImgUpload = false;
         $scope.failedImgUpload = false;
         $scope.displayUpload = false;
+        $scope.msgError = "";
 
     };
 
@@ -44,7 +47,7 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
                 }
                 if(status === 200 && response.data.name !== "" && response.data.name === "MongoError"){
                     $scope.dataEditProfilInvalid = true;
-                    $scope.msgError = "Impossible de mettre à jour dû à l'utilisation du username par un autre utilisateur";
+                    $scope.msgError = "Username déjà utilisé !";
                     $scope.userEdit.password = null;
                     $scope.userEdit.confirmPassword = null;
                 }
@@ -63,7 +66,7 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
 
     uploadImage = function(file){
         var splitFileName = file.name.split(".");
-        var fileExtension = splitFileName[1];
+        var fileExtension = "jpg";
         renameImage(file, $scope.user._id + '.' + fileExtension);
         Upload.upload({
             url: '/api/upload',
@@ -73,6 +76,7 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
                 $scope.successImgUpload = true;
                 $location.path('/dashboard/profil');
             } else {
+                console.log("Error uplaod : " + response.data.err_desc);
                 $scope.failedImgUpload = true;
             }
         }, function(response){
