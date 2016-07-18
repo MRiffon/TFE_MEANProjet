@@ -1,6 +1,7 @@
 /**
  * Created by Michaël and Martin on 30-03-16.
  */
+
 angular.module('app', [
         'ui.router',
         'ngAnimate',
@@ -19,5 +20,6 @@ angular.module('app', [
         'calendarCtrl',
         'overviewCtrl',
         'chatCtrl',
-        'ngStorage']
+        'ngStorage',
+        'adminCtrl']
 );

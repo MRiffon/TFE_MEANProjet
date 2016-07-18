@@ -2,7 +2,6 @@
  * Created by Michaël and Martin on 04-04-16.
  */
 
-
 angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 
     $locationProvider.html5Mode(true);
@@ -58,5 +57,12 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
             parent: 'dashboard',
             templateUrl: './views/chat.html',
             controller: 'chatController'
+        })
+
+        .state('administration', {
+            url: '/administration',
+            parent: 'dashboard',
+            templateUrl: './views/administration.html',
+            controller: 'adminController'
         });
 });

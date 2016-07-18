@@ -18,6 +18,16 @@ var userSchema = new Schema({
         type: String,
         required: true
     },
+    status: {
+        type: String,
+        default: "Active",
+        required: true
+    },
+    role: {
+        type: String,
+        required: true,
+        default: "User"
+    },
     hash: String,
     salt: String,
     chatRooms: [String]
@@ -42,6 +52,7 @@ userSchema.methods.generateJwt = function(){
         email: this.email,
         username: this.username,
         chatRooms: this.chatRooms,
+        role: this.role,
         expire: parseInt(expire.getTime() / 1000),
       }, configjwt.secret);
 };

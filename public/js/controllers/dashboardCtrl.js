@@ -5,6 +5,7 @@
 angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, userData){
     $scope.isLogged = userData.loggedIn();
     $scope.currentUser = userData.currentUser();
+    $scope.isAdmin = userData.isAdmin();
 
     $scope.logout = function(){
         return $http.get('/api/logout').then(function(){

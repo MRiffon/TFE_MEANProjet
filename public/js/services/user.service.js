@@ -43,6 +43,8 @@ function log($http, $window){
             return {
                 email : payload.email,
                 username : payload.username,
+                role : payload.role,
+                status : payload.status,
                 chatRooms : payload.chatRooms
             };
         }
@@ -56,6 +58,17 @@ function log($http, $window){
             return response;
         });
     };
+    
+    isAdmin = function(user){
+        var token = getToken();
+        var payload = token.split('.')[1];
+        payload = $window.atob(payload);
+        payload = JSON.parse(payload);
+        
+        if(payload.role === "Admin"){
+            return true;
+        } return false;
+    };
 
     return {
         saveToken : saveToken,
@@ -63,6 +76,7 @@ function log($http, $window){
         logout : logout,
         loggedIn : loggedIn,
         currentUser : currentUser,
-        login : login
+        login : login,
+        isAdmin : isAdmin
     };
 }
