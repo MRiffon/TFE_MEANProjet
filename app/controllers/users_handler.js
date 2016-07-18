@@ -8,12 +8,17 @@ var passport = require('passport');
 
 module.exports = {
     list: function(req, res){
-        User.find(function(err, users){
-            if(err){
-                res.send(err);
-            }
-            res.json(users);
-        });
+        if(req.payload.role !== "Admin") {
+            res.redirect('/');
+            res.status(401).end();
+        } else {
+            User.find(function(err, users){
+                if(err){
+                    res.send(err);
+                }
+                res.json(users);
+            });
+        }
     },
 
     delete: function(req, res){
@@ -78,7 +83,7 @@ module.exports = {
 
     profilRead: function(req, res){
         if(!req.payload._id){
-            res.status(401);
+            res.status(401).end();
         } else {
             User.findById(req.payload._id).exec(function(err, user){
                 res.status(200).json(user);

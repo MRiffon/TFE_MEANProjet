@@ -21,5 +21,6 @@ angular.module('app', [
         'overviewCtrl',
         'chatCtrl',
         'ngStorage',
-        'adminCtrl']
+        'adminCtrl',
+        'adminData']
 );

@@ -3,7 +3,44 @@
     <h1>Administration</h1>
     <div class=jumbotron>
         <div class=container>
-            KEKEKEKEKE
+            <h2>Utilisateurs</h2><hr>
+
+            <div class="btn-toolbar">
+                <button class="btn btn-primary">Nouvel utilisateur</button>
+                <button class="btn">Import</button>
+                <button class="btn">Export</button>
+            </div><br>
+
+            <div class="well">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Nom</th>
+                        <th style="">Prénom</th>
+                        <th style="">Statut</th>
+                        <th style="">Rôle</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="user in users">
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.status }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>
+                            <a href="user.html"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a href="#myModal" role="button" data-toggle="modal"><i class="glyphicon glyphicon-remove"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

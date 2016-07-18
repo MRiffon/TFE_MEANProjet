@@ -12,24 +12,13 @@ var configjwt = require('../config/jwt.js');
 var authentication = jwt({ secret: configjwt.secret, userProperty: 'payload'});
 
 module.exports = function(app){
-
-    // Protection des apis sur base d'un role
-    function requireRole(role){
-        return function(req, res, next){
-            if(req.payload && req.payload.role === role){
-                next();
-            } else {
-                res.send(403);
-            }
-        }
-    }
-
+    
     app.use(function(req, res, next){
         next();
     })
 
     // Api user/auth/sess
-    .get('/api/users', userHandler.list)
+    .get('/api/users', authentication, userHandler.list)
     .delete('/api/users/:user_id',userHandler.delete)
     .post('/api/users', userHandler.creation)
     .post('/api/login', userHandler.login)

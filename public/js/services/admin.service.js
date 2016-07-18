@@ -8,6 +8,19 @@ admin.factory('adminData', adminData);
 
 adminData.$inject = ['$http', 'userData'];
 
-function adminData($http, userData){
+function adminData($http, log){
     
+    var allUsers = function(){
+        return $http.get('/api/users', {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
+            return response;
+        });
+    };
+    
+    return {
+        allUsers : allUsers
+    };
 }
