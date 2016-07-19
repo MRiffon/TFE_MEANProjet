@@ -12,7 +12,6 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
     $scope.timeUnityReminder = "";
     $scope.durationReminder = 0;
     $scope.events = [];
-    $scope.editEvent = {};
     $scope.isAppAuthorized = false;
     /* event sources array*/
     $scope.eventSources = [];
@@ -40,18 +39,6 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         callback(events);
     };
 
-    /* alert on eventClick */
-    $scope.alertOnEventClick = function( date, jsEvent, view){
-        $scope.alertMessage = (date.title + ' was clicked ');
-    };
-    /* alert on Drop */
-    $scope.alertOnDrop = function(event, delta, revertFunc, jsEvent, ui, view){
-        $scope.alertMessage = ('Event Droped to make dayDelta ' + delta);
-    };
-    /* alert on Resize */
-    $scope.alertOnResize = function(event, delta, revertFunc, jsEvent, ui, view ){
-        $scope.alertMessage = ('Event Resized to make dayDelta ' + delta);
-    };
     /* add and removes an event source of choice */
     $scope.addRemoveEventSource = function(sources,source) {
         var canAdd = 0;
@@ -109,12 +96,21 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
                 center: '',
                 right: 'today prev,next'
             },
-            eventClick: $scope.alertOnEventClick,
+            eventClick: function(calEvent, jsEvent, view){
+                console.log(calEvent);
+                $scope.items = {
+                    calEvent : calEvent
+                };
+                $scope.open();
+            },
             eventDrop: $scope.alertOnDrop,
             eventResize: $scope.alertOnResize,
             eventRender: $scope.eventRender,
             dayClick : function(date, jsEvent, view){
                 console.log("Clic sur : " + date.format());
+                $scope.items = {
+                    date: date
+                };
                 $scope.open();
             }
         }
@@ -137,14 +133,18 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
      */
 
     $scope.animationsEnabled = true;
-
     $scope.open = function (size) {
 
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
             templateUrl: '../views/modals/calendarEventModalView.html',
-            controller: 'ModalCalendarCtrl',
-            size: size
+            controller: 'modalCalendarController',
+            size: size,
+            resolve: {
+                items: function () {
+                return $scope.items;
+                }
+            }
         });
 
         modalInstance.result.then(function (selectedItem) {

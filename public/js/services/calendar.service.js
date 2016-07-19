@@ -6,9 +6,9 @@ var calendar = angular.module('calendarData', []);
 
 calendar.factory('calendarData', calendarData);
 
-calendar.$inject = ['uiCalendarConfig', '$q'];
+calendar.$inject = ['$q'];
 
-function calendarData(uiCalendarConfig, $q) {
+function calendarData($q) {
     var deferred = $q.defer();
 
     var loadEvents = function(isAppAuthorized){
@@ -22,7 +22,7 @@ function calendarData(uiCalendarConfig, $q) {
     var checkAuth = function (isAppAuthorized) {
         var CLIENT_ID = '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com';
         var SCOPES = ["https://www.googleapis.com/auth/calendar"];
-        if (gapi.auth != undefined && isAppAuthorized == false) {
+        if (gapi.auth !== undefined && isAppAuthorized == false) {
             gapi.auth.authorize(
                 {
                     'client_id': CLIENT_ID,
@@ -84,18 +84,92 @@ function calendarData(uiCalendarConfig, $q) {
 
         request.execute(function(resp) {
             var events = resp.items;
+            console.log(events[1]);
             var formattedEvents = [];
             for (var i = 0; i < events.length; i++){
-                var singleEvent = {title : events[i].summary,
-                    start : new Date(events[i].start.dateTime)};
-                console.log(singleEvent.title);
+                var singleEvent = {
+                    title : events[i].summary,
+                    start : new Date(events[i].start.dateTime),
+                    end : new Date(events[i].end.dateTime),
+                    description : events[i].description,
+                    location : events[i].location,
+                    reminders : events[i].reminders,
+                    id : events[i].id
+                };
+                console.log(singleEvent);
                 formattedEvents.push(singleEvent);
             }
             deferred.resolve(formattedEvents);
         });
     }
 
+    function sendEvent (event, typeRequest) {
+        if(event.durationReminder != undefined){
+            console.log('Y a des minutes');
+            var minutes = calculateReminderTime(event.timeUnityReminder, event.durationReminder);
+            var reminders = {
+                useDefault: false,
+                overrides: [{
+                    method: 'popup',
+                    minutes: minutes
+                }]
+            };
+        }
+
+
+        var body = {
+            'calendarId': 'primary',
+            'summary': event.title,
+            'start': {dateTime: event.start},
+            'end': { dateTime: event.end},
+            'description': event.description,
+            'reminders': reminders,
+            'location': event.location,
+            'eventId': ''
+        };
+        var request = {};
+        if (typeRequest === 'insert'){
+            request = gapi.client.calendar.events.insert(body);
+        }
+        else if(typeRequest === 'update'){
+            body.eventId = event.id;
+            request = gapi.client.calendar.events.update(body);
+        }
+
+
+        request.execute(function(resp) {
+            console.log(resp);
+        });
+    }
+
+    function calculateReminderTime(reminderUnity, durationReminder){
+        if(reminderUnity === 'Minutes'){
+            return durationReminder;
+        }
+        if(reminderUnity === 'Heures'){
+            return durationReminder * 60;
+        }
+        if(reminderUnity ==='Jours'){
+            return durationReminder * 1440;
+        }
+    }
+
+    function deleteEvent(eventId){
+        var body = {
+            'calendarId': 'primary',
+            'eventId': eventId
+        };
+
+        request = gapi.client.calendar.events.delete(body);
+        request.execute(function(resp) {
+            console.log(resp);
+        });
+
+    }
+
     return {
-        loadEvents : loadEvents
+        loadEvents : loadEvents,
+        sendEvent : sendEvent,
+        deleteEvent : deleteEvent
     }
 }

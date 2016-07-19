@@ -1,34 +1,51 @@
 
 <div class="modal-header">
-    <h3 class="modal-title">Nouvel évènement</h3>
+    <h3 class="modal-title">{{title}}</h3>
 </div>
-<div class="modal-body">
-    <form name="editEventForm" role="form" novalidate class="form-horizontal col-lg-1">
+<form name="editEventForm" role="form" ng-submit="saveEvent(editEventForm.$valid)" novalidate class="form-horizontal col-lg-1">
+    <div class="modal-body">
         <div class="form-content">
             <div class="form-group">
                 <b>Titre :</b>
-                <input class="form-control" type="text" id="eventTitle" name="eventTitle" placeholder="Titre de l'évènement" ng-model="editEvent.title" ng-required="true">
+                <input class="form-control" type="text" id="title" name="title" ng-value="items.calEvent.title" ng-model="editEvent.title" ng-required="true   ">
+                <span ng-show="editEventForm.title.$invalid && submitted">Titre requis !</span>
             </div>
 
             <div class="form-group">
                 <b>Description :</b>
-                <input class="form-control" type="text" id="eventDescription" name="eventDescription" placeholder="Description de l'évènement" ng-model="editEvent.description" ng-required="false">
+                <input class="form-control" type="text" id="description" name="description" ng-value="items.calEvent.description" ng-model="editEvent.description" ng-required="false">
+            </div>
+
+            <div class="form-group">
+                <b>Créneau :</b>
+                <div class="form-group row">
+                    <div class="col-sm-1">
+                        <span>De</span>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control" type="time" id="startTime" name="startTime" ng-model="times.startTime" ng-value="times.startTime">
+                    </div>
+                    <div class="col-sm-1">
+                        <span> à </span>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control" type="time" id="endTime" name="endTime" ng-model="times.endTime" ng-value=" times.endTime">
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
                 <b>Rappel :</b>
                 <div class="form-group row">
                     <div class="col-md-2">
-                        <input class="form-control" type="number" id="eventReminder" name="eventReminder" ng-model="durationReminder" ng-required="false" min="0">
+                        <input class="form-control" type="number" id="eventReminder" name="eventReminder" ng-model="editEvent.durationReminder" ng-value="editEvent.reminders.overrides[0].minutes" ng-required="false" min="0">
                     </div>
                     <div class="col-md-3">
-                        <select class="form-control" id="timeUnity" name="timeUnity" ng-model="timeUnityReminder">
-                            <option>Minutes</option>
-                            <option>Heures</option>
-                            <option>Jours</option>
+                        <select class="form-control" id="timeUnityReminder" name="timeUnityReminder" ng-options="item for item in timeOptions" ng-model="editEvent.timeUnityReminder">
                         </select>
                     </div>
                 </div>
+                <span ng-show="editEventForm.eventReminder.$error.min && submitted">Durée de temps négative invalide !</span>
             </div>
 
             <div class="form-group">
@@ -36,9 +53,9 @@
                 <input class="form-control" type="text" id="eventLocation" name="eventLocation" placeholder="Lieu" ng-model="editEvent.location" ng-required="false"    >
             </div>
         </div>
-    </form>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="saveEvent()">OK</button>
-    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-</div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit">OK</button>
+        <button class="btn btn-primary" ng-click="deleteEvent()" ng-show="editButton">Supprimer</button>
+    </div>
+</form>
