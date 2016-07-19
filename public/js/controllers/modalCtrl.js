@@ -19,4 +19,9 @@ angular.module('modalCtrl', []).controller('ModalCalendarCtrl', function ($scope
     $scope.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
+
+    $scope.saveEvent = function(){
+        console.log("event title :" + $scope.editEvent.title);
+    }
+
 });

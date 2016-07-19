@@ -2,104 +2,34 @@
  * Created by Martouf on 26-05-16.
  */
 
-angular.module('calendarCtrl', []).controller('calendarController', function($scope, $location, $http, uiCalendarConfig, $uibModal, $log){
-    var CLIENT_ID = '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com';
-    var SCOPES = ["https://www.googleapis.com/auth/calendar"];
+angular.module('calendarCtrl', []).controller('calendarController', function($scope, calendarData, $location, $http, uiCalendarConfig, $uibModal, $log){
 
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
+    $scope.date = new Date();
+    var d = $scope.date.getDate();
+    var m = $scope.date.getMonth();
+    var y = $scope.date.getFullYear();
+    $scope.currentDateTime = new Date('yyyy-MM-ddThh:mm');
+    $scope.timeUnityReminder = "";
+    $scope.durationReminder = 0;
     $scope.events = [];
-    $scope.isCalendarLoaded = false;
-
+    $scope.editEvent = {};
+    $scope.isAppAuthorized = false;
     /* event sources array*/
     $scope.eventSources = [];
-    //$scope.eventSources2 = [$scope.calEventsExt, $scope.eventsF, $scope.events];
 
-    /**
-     * Handle response from authorization server.
-     *
-     * @param {Object} authResult Authorization result.
-     */
-    function handleAuthResult(authResult) {
-        var authorizeDiv = document.getElementById('authorize-div');
-        if (authResult && !authResult.error) {
-            // Hide auth UI, then load client library.
-            authorizeDiv.style.display = 'none';
-            loadCalendarApi();
-        } else {
-            // Show auth UI, allowing the user to initiate authorization by
-            // clicking authorize button.
-            authorizeDiv.style.display = 'inline';
+    $scope.getEvents = function(){
+        if($scope.isAppAuthorized === false){
+            calendarData.loadEvents($scope.isAppAuthorized).then(function(response){
+                $scope.events = response;
+                uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
+            });
+            $scope.isAppAuthorized = true;
         }
-    }
-
-    /**
-     * Check if current user has authorized this application.
-     */
-    $scope.checkAuth = function() {
-        if (gapi.auth != undefined && $scope.isCalendarLoaded == false){
-            $scope.isCalendarLoaded = true;
-            gapi.auth.authorize(
-                {
-                    'client_id': CLIENT_ID,
-                    'scope': SCOPES.join(' '),
-                    'immediate': true
-                }, handleAuthResult);
-            return true;
-        }
-};
-
-    /**
-     * Initiate auth flow in response to user clicking authorize button.
-     *
-     * @param {Event} event Button click event.
-     */
-    $scope.handleAuthClick = function(event) {
-        gapi.auth.authorize(
-            {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
-            handleAuthResult);
-        return false;
     };
 
-    /**
-     * Load Google Calendar client library. List upcoming events
-     * once client library is loaded.
-     */
-    function loadCalendarApi() {
-        gapi.client.load('calendar', 'v3', listUpcomingEvents);
-    }
-
-    /**
-     * Print the summary and start datetime/date of the next ten events in
-     * the authorized user's calendar. If no events are found an
-     * appropriate message is printed.
-     */
-    function listUpcomingEvents () {
-        var request = gapi.client.calendar.events.list({
-            'calendarId': 'primary',
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': 10,
-            'orderBy': 'startTime'
-        });
-
-        request.execute(function(resp) {
-            var events = resp.items;
-            console.log(events[0]);
-
-            for (var i = 0; i < events.length; i++){
-                var singleEvent = {title : events[i].summary,
-                                start : new Date(events[i].start.dateTime)};
-                console.log(singleEvent.title);
-                $scope.events.push(singleEvent);
-            }
-            console.log("Après le for " + $scope.events);
-            uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
-        });
-    }
+    $scope.handleAuthClick = function(){
+        calendarData.handleAuthClick();
+    };
 
     /* event source that calls a function on every view switch */
     $scope.eventsF = function (start, end, timezone, callback) {
@@ -206,8 +136,6 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
      * Partie de code pour le popup modal
      */
 
-    $scope.items = ['item1', 'item2', 'item3'];
-
     $scope.animationsEnabled = true;
 
     $scope.open = function (size) {
@@ -216,12 +144,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             animation: $scope.animationsEnabled,
             templateUrl: '../views/modals/calendarEventModalView.html',
             controller: 'ModalCalendarCtrl',
-            size: size,
-            resolve: {
-                items: function () {
-                    return $scope.items;
-                }
-            }
+            size: size
         });
 
         modalInstance.result.then(function (selectedItem) {
@@ -230,5 +153,4 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
-
 });
