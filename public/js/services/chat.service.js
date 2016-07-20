@@ -39,7 +39,7 @@ function chatData($http, userData){
     var lastMessages = function(room){
         console.log("room : " + room.name);
         return $http.post('/api/getMsgs', room).then(function(response){
-            console.log("response service last message : " + response.data[0].content);
+            console.log("response service lastMessage : " + response.data[0].content);
             return response;
         });
     };

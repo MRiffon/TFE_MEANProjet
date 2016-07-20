@@ -4,8 +4,6 @@
 
 angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData, $sessionStorage){
 
-    Socket.connect();
-
     var tempRoom = {};
     $scope.selectedRoom = {};
     $scope.dataRooms = {};
@@ -90,26 +88,33 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         });
     };
 
-    /*Socket.emit('requestUsers', {});
+    Socket.on('userConnected', function(data){
+        $scope.users.push(data.username);
+        console.log('New Users connected : ' + $scope.users);
+    });
 
-    console.log("Username a envoyer : " + username);
+    Socket.on('userDisconnected', function(data){
+        $scope.users.splice($scope.users.indexOf(data.username), 1);
+        console.log('Users after disconnected : ' + $scope.users);
+    });
+
+    Socket.emit('requestUsers', {});
+
+    Socket.on('listUsers', function(data){
+        $scope.users = data.users;
+        console.log('Liste des users : ' + $scope.users);
+    });
+
+    /*console.log("Username a envoyer : " + username);
     Socket.emit('addUser', {username: username});
 
-    Socket.on('users', function(data){
-        $scope.users = data.users;
-    });
+
 
     Socket.on('message', function(data){
         $scope.messages.push(data);
     });
 
-    Socket.on('addUser', function(data){
-        $scope.users.push(data.username);
-    });
 
-    Socket.on('removeUser', function(data){
-        $scope.users.splice($scope.users.indexOf(data.username), 1);
-    });
     
     $scope.$on('$locationChangeStart', function(event){
         Socket.disconnect(true);

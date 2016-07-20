@@ -6,8 +6,8 @@ var auth = angular.module('authentication', []);
 
 auth.factory('userData', log);
 
-log.$inject = ['$http', '$window'];
-function log($http, $window){
+log.$inject = ['$http', '$window', 'Socket'];
+function log($http, $window, Socket){
 
     var saveToken = function(token){
         $window.localStorage['mean-token'] = token;
@@ -17,8 +17,10 @@ function log($http, $window){
         return $window.localStorage['mean-token'];
     };
 
-    logout = function(){
+    logout = function(username){
         $window.localStorage.removeItem('mean-token');
+
+        Socket.emit('userDisconnected', {username : username});
     };
 
     var loggedIn = function(){
@@ -29,6 +31,10 @@ function log($http, $window){
             payload = token.split('.')[1];
             payload = $window.atob(payload);
             payload = JSON.parse(payload);
+            
+            Socket.connect();
+            Socket.emit('userConnected', {username: payload.username});
+            
             return payload.expire > Date.now()/1000;
         } else return false;
     };

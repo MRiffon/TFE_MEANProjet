@@ -8,7 +8,7 @@ angular.module('dashboardCtrl', []).controller('dashboardController', function($
 
     $scope.logout = function(){
         return $http.get('/api/logout').then(function(){
-            userData.logout();
+            userData.logout(userData.currentUser().username);
             $location.path('/');
         }, function(response){
             console.log(response);

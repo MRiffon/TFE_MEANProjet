@@ -45,26 +45,26 @@ module.exports = function(io){
             })
         });
 
-
-        /*socket.on('requestUsers', function(){
-            socket.emit('users', {users: users});
+        socket.on('requestUsers', function(){
+            socket.emit('listUsers', {users: users});
         });
 
-        socket.on('addUser', function(data){
+        // Signal nouvel utilisateur connecté
+        socket.on('userConnected', function(data){
             if(users.indexOf(data.username) == -1){
-                io.emit('addUser', {username: data.username});
-                console.log('user a ajouter : ' + data.username);
+                // envoi signal à tout le monde
+                io.emit('userConnected', {username: data.username});
                 username = data.username;
                 users.push(data.username);
-                console.log('users avant delete : ' + users);
+                console.log('Liste des users connectés après connexion : ' + users);
             }
         });
 
-        socket.on('disconnect', function(){
-            console.log(username + ' has disconnected');
-            users.splice(users.indexOf(username), 1);
-            console.log('Users après delete : ' + users);
-            io.emit('removeUser', {username: username});
-        });*/
+        socket.on('userDisconnected', function(data){
+            console.log(data.username + ' has disconnected');
+            users.splice(users.indexOf(data.username), 1);
+            console.log('Users après disconnect : ' + users);
+            io.emit('userDisconnected', {username: data.username});
+        });
     });
 };
