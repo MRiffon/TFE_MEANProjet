@@ -67,7 +67,7 @@ function chatData($http, userData){
             return response;
         });
     };
-    
+    console.log(jnvfff);
     return {
         userRooms: userRooms,
         lastMessages: lastMessages,
