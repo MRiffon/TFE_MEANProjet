@@ -83,5 +83,23 @@ module.exports = {
                 res.status(200).json(user);
             });
         }
+    },
+
+    updateChatrooms: function(req, res){
+        User.findOne({username : req.body.username}).exec(function(err, user){
+            if(err){
+                res.send(err);
+            } else {
+                user.chatRooms.push(req.body.chatRoom);
+                user.save(function(err){
+                    if(err) {
+                        console.log(err);
+                        res.send(err);
+                    } else {
+                        res.status(200).json({message: 'Updated!'});
+                    }
+                })
+            }
+        })
     }
 };

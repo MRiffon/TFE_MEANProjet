@@ -19,5 +19,7 @@ angular.module('app', [
         'calendarCtrl',
         'overviewCtrl',
         'chatCtrl',
-        'ngStorage']
+        'ngStorage',
+        'luegg.directives',
+        'ui.bootstrap']
 );

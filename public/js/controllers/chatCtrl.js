@@ -13,7 +13,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     chatData.userRooms().then(function(response){
         console.log(response);
         $scope.allRooms = response;
-        console.log("datarooms après remplissage : " + $scope.allRooms.globalRooms[0]);
+        console.log("datarooms après remplissage : " + $scope.allRooms.globalRooms);
         $scope.$storage = $sessionStorage.$default({
             currentChatRoom: $scope.allRooms.globalRooms[0]
         });
@@ -67,12 +67,14 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     };
     
     $scope.getPrivateRoom = function(user){
-        console.log('getprivateRoom scope : ' + $scope.allRooms.privateRooms.length);
+        console.log($scope.allRooms.privateRooms.length);
         for(var i = 0; i < $scope.allRooms.privateRooms.length; i++){
             console.log('getprivateRoom scope : ' + $scope.allRooms.privateRooms[i].name);
             var temp = $scope.allRooms.privateRooms[i].name.split('_');
+            console.log(temp);
             if(temp.indexOf(user) !== -1){
-                $scope.switchRoom($scope.allRooms.private[i]);
+                console.log("index trouvé, ca switch direct");
+                $scope.switchRoom($scope.allRooms.privateRooms[i]);
                 return;
             }
         }
@@ -83,9 +85,18 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
             created : new Date()
         };
 
-        $scope.allRooms.privateRooms.push(newRoom);
+        //$scope.allRooms.privateRooms.push(newRoom);
         chatData.createPrivateRoom(newRoom).then(function(response){
             console.log('Rooms created : ' + response);
+            chatData.updateRoomsUser({
+                username : userData.currentUser().username,
+                chatRoom: newRoom.name
+            }).then(function(response){
+                chatData.updateRoomsUser({
+                    username : user,
+                    chatRoom: newRoom.name
+                });
+            });
             $scope.switchRoom(newRoom);
         });
     };
@@ -114,6 +125,12 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
             $scope.messages = '';
             $scope.messages = response.data;
         });
+    };
+    
+    $scope.isUrself = function(username){
+        if(userData.currentUser().username !== username){
+            return true;
+        } return false;
     };
 
     Socket.on('userConnected', function(data){

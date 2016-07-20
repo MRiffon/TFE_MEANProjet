@@ -10,12 +10,6 @@ chatData.$inject = ['$http', 'userData'];
 
 function chatData($http, userData){
 
-    var messagesRoom = function(){
-        return $http.get('/api/getMsgs').then(function(response){
-            console.log();
-        });
-    };
-
     var userRooms = function(){
         return $http.get('/api/getRooms').then(function(response){
             var userRoomsName = userData.currentUser().chatRooms;
@@ -52,10 +46,12 @@ function chatData($http, userData){
 
         for(var i = 0; i < userRooms.length; i++){
             if(userRooms[i].type === 'Global'){
+                console.log('GlobalRooms added : ' + userRooms[i]);
                 allRooms.globalRooms.push(userRooms[i]);
             } else if(userRooms[i].type === 'Group'){
                 allRooms.groupRooms.push(userRooms[i]);
             } else if(userRooms[i].type === 'Private'){
+                console.log('PrivateRooms added : ' + userRooms[i]);
                 allRooms.privateRooms.push(userRooms[i]);
             }
         }
@@ -67,10 +63,17 @@ function chatData($http, userData){
             return response;
         });
     };
-    console.log(jnvfff);
+    
+    updateRoomsUser = function(req){
+        return $http.put('/api/updateRooms', req).then(function(response){
+            return response;
+        });
+    };
+
     return {
         userRooms: userRooms,
         lastMessages: lastMessages,
-        createPrivateRoom : createPrivateRoom
+        createPrivateRoom : createPrivateRoom,
+        updateRoomsUser : updateRoomsUser
     };
 }
