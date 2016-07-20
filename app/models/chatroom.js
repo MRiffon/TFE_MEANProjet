@@ -7,7 +7,8 @@ var Schema = mongoose.Schema;
 
 var chatRoomSchema = new Schema({
     name: String,
-    created: Date
+    created: Date,
+    type: String
 });
 
 module.exports = mongoose.model('ChatRoom', chatRoomSchema);

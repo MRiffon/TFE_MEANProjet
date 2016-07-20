@@ -29,6 +29,7 @@ module.exports = function(app){
     .post('/api/setupChat', chatRoomHandler.setup)
     .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
+    .post('/api/newRoom', chatRoomHandler.newRoom)
 
     .get('*', function(req, res){
         res.sendFile(path.join(__dirname, '../public', 'index.html'));

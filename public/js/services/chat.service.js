@@ -32,20 +32,45 @@ function chatData($http, userData){
                 }
             }
             //Renvoie un tableau contenant les objets Rooms.
-            return userRooms;
+            return fillInRooms(userRooms);
         });
     };
 
     var lastMessages = function(room){
         console.log("room : " + room.name);
         return $http.post('/api/getMsgs', room).then(function(response){
-            console.log("response service lastMessage : " + response.data[0].content);
+            return response;
+        });
+    };
+
+    function fillInRooms(userRooms){
+        var allRooms = {
+            globalRooms : [],
+            groupRooms : [],
+            privateRooms : []
+        };
+
+        for(var i = 0; i < userRooms.length; i++){
+            if(userRooms[i].type === 'Global'){
+                allRooms.globalRooms.push(userRooms[i]);
+            } else if(userRooms[i].type === 'Group'){
+                allRooms.groupRooms.push(userRooms[i]);
+            } else if(userRooms[i].type === 'Private'){
+                allRooms.privateRooms.push(userRooms[i]);
+            }
+        }
+        return allRooms;
+    }
+    
+    createPrivateRoom = function(room){
+        return $http.post('/api/newRoom', room).then(function(response){
             return response;
         });
     };
     
     return {
         userRooms: userRooms,
-        lastMessages: lastMessages
+        lastMessages: lastMessages,
+        createPrivateRoom : createPrivateRoom
     };
 }

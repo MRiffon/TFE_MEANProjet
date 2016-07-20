@@ -10,10 +10,12 @@ module.exports = {
     setup: function(req, res){
         var chat = [{
             created: new Date(),
-            name: 'Global'
+            name: 'Global',
+            type: 'Global'
         }, {
             created: new Date(),
-            name: 'Administratif'
+            name: 'Administratif',
+            type: 'Global'
         }];
 
         for (var i = 0; i < chat.length; i++) {
@@ -44,5 +46,19 @@ module.exports = {
                 res.json(rooms);
             }
         })
+    },
+
+    newRoom: function(req, res){
+        var newRoom = new ChatRoom();
+
+        newRoom.name = req.body.name;
+        newRoom.type = req.body.type;
+        newRoom.created = new Date();
+
+        newRoom.save(function(err, chat){
+            if(err)
+                res.send(err);
+            res.json(chat);
+        });
     }
 };

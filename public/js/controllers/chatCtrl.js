@@ -6,18 +6,20 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
     var tempRoom = {};
     $scope.selectedRoom = {};
-    $scope.dataRooms = {};
     $scope.$storage = $sessionStorage;
+    $scope.chatRoomName = '';
+    $scope.allRooms = {};
 
     chatData.userRooms().then(function(response){
         console.log(response);
-        $scope.dataRooms = response;
-        console.log("datarooms après remplissage : " + $scope.dataRooms[0]);
+        $scope.allRooms = response;
+        console.log("datarooms après remplissage : " + $scope.allRooms.globalRooms[0]);
         $scope.$storage = $sessionStorage.$default({
-            currentChatRoom: $scope.dataRooms[0]
+            currentChatRoom: $scope.allRooms.globalRooms[0]
         });
         console.log("currentChatRoom de merde : " + $scope.$storage.currentChatRoom);
         $scope.selectedRoom = $scope.$storage.currentChatRoom;
+        $scope.chatRoomName = $scope.selectedRoom.name;
         tempRoom = $scope.selectedRoom;
 
         Socket.emit('new user', {
@@ -49,7 +51,9 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         console.log("user has left : " + data.username + ' + ' + data.oldChatRoom);
     });
 
-    $scope.switchRoom = function(){
+    $scope.switchRoom = function(room){
+        $scope.selectedRoom = room;
+        $scope.chatRoomName = $scope.selectedRoom.name;
         $scope.$storage.currentChatRoom = $scope.selectedRoom;
         console.log($scope.$storage.currentChatRoom);
         console.log($sessionStorage);
@@ -60,6 +64,30 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         });
         getLastMessage();
         tempRoom = $scope.selectedRoom;
+    };
+    
+    $scope.getPrivateRoom = function(user){
+        console.log('getprivateRoom scope : ' + $scope.allRooms.privateRooms.length);
+        for(var i = 0; i < $scope.allRooms.privateRooms.length; i++){
+            console.log('getprivateRoom scope : ' + $scope.allRooms.privateRooms[i].name);
+            var temp = $scope.allRooms.privateRooms[i].name.split('_');
+            if(temp.indexOf(user) !== -1){
+                $scope.switchRoom($scope.allRooms.private[i]);
+                return;
+            }
+        }
+
+        var newRoom = {
+            name : userData.currentUser().username + '_' + user,
+            type : 'Private',
+            created : new Date()
+        };
+
+        $scope.allRooms.privateRooms.push(newRoom);
+        chatData.createPrivateRoom(newRoom).then(function(response){
+            console.log('Rooms created : ' + response);
+            $scope.switchRoom(newRoom);
+        });
     };
 
     $scope.sendMessage = function(msg){
