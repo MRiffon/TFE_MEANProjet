@@ -7,10 +7,9 @@ var Message = require('./models/message');
 
 module.exports = function(io){
     var users = [];
+    var usersSocket = [];
 
     io.on('connection', function(socket){
-
-        //socket.emit('setup', {rooms: rooms});
 
         //listen for new users
         socket.on('new user', function(data){
@@ -51,6 +50,7 @@ module.exports = function(io){
 
         // Signal nouvel utilisateur connecté
         socket.on('userConnected', function(data){
+            usersSocket[data.username] = socket;
             if(users.indexOf(data.username) == -1){
                 // envoi signal à tout le monde
                 io.emit('userConnected', {username: data.username});
@@ -60,11 +60,18 @@ module.exports = function(io){
             }
         });
 
+        // Signal d'un utilisateur qui a déconnecté
         socket.on('userDisconnected', function(data){
             console.log(data.username + ' has disconnected');
             users.splice(users.indexOf(data.username), 1);
             console.log('Users après disconnect : ' + users);
             io.emit('userDisconnected', {username: data.username});
+        });
+        
+        // Notif à un certain utilisateur qu'une room le concernant a été créée
+        socket.on('notif-newRoom', function(data){
+            console.log('notif-newRoom serverside : ' + data);
+            usersSocket[data.username].emit('newRoom', data.chatRoom);
         });
     });
 };

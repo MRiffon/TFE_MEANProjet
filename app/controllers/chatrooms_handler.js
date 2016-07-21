@@ -55,10 +55,10 @@ module.exports = {
         newRoom.type = req.body.type;
         newRoom.created = new Date();
 
-        newRoom.save(function(err, chat){
+        newRoom.save(function(err){
             if(err)
                 res.send(err);
-            res.json(chat);
+            res.json(newRoom);
         });
     }
 };

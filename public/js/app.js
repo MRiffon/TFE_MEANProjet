@@ -9,7 +9,7 @@ angular.module('app', [
         'appRun',
         'profilData',
         'chatData',
-        'authentication',
+        'userData',
         'Socket',
         'loginCtrl',
         'profilCtrl',
@@ -20,6 +20,5 @@ angular.module('app', [
         'overviewCtrl',
         'chatCtrl',
         'ngStorage',
-        'luegg.directives',
-        'ui.bootstrap']
+        'luegg.directives']
 );

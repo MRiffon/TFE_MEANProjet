@@ -2,13 +2,13 @@
  * Created by Michaël and Martin on 06-04-16.
  */
 
-var auth = angular.module('authentication', []);
+var auth = angular.module('userData', []);
 
-auth.factory('userData', log);
+auth.factory('userData', userData);
 
-log.$inject = ['$http', '$window', 'Socket'];
-function log($http, $window, Socket){
-
+userData.$inject = ['$http', '$window', 'Socket'];
+function userData($http, $window, Socket){
+    
     var saveToken = function(token){
         $window.localStorage['mean-token'] = token;
     };
@@ -46,11 +46,13 @@ function log($http, $window, Socket){
             payload = $window.atob(payload);
             payload = JSON.parse(payload);
 
-            return {
+            var userInfos = {
                 email : payload.email,
                 username : payload.username,
                 chatRooms : payload.chatRooms
             };
+
+            return userInfos;
         }
     };
 

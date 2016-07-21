@@ -18,7 +18,6 @@
                 <form>
                     <div class=form-content>
                         <div class=form-group>
-
                             <input type="text" id="chatMessages" placeholder="Votre message" ng-model="msg" class="form-control" style="resize:none">
                         </div>
                     </div>
@@ -43,7 +42,7 @@
                     </ul>
                     <h4>Utilisateurs</h4>
                     <ul class="nav">
-                        <li ng-repeat="user in users">
+                        <li ng-repeat="user in users track by $index">
                             <a ng-show="isUrself(user)" ng-click="getPrivateRoom(user)">{{user}}</a>
                         </li>
                     </ul>

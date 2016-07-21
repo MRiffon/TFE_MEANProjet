@@ -6,13 +6,13 @@ var chat = angular.module('chatData', []);
 
 chat.factory('chatData', chatData);
 
-chatData.$inject = ['$http', 'userData'];
+chatData.$inject = ['$http', 'userData', '$sessionStorage'];
 
-function chatData($http, userData){
+function chatData($http, userData, $sessionStorage){
 
     var userRooms = function(){
         return $http.get('/api/getRooms').then(function(response){
-            var userRoomsName = userData.currentUser().chatRooms;
+            var userRoomsName = $sessionStorage.user.chatRooms;
             var userRooms = [];
             var allRooms = response.data;
             var i;
@@ -25,13 +25,13 @@ function chatData($http, userData){
                     }
                 }
             }
+
             //Renvoie un tableau contenant les objets Rooms.
             return fillInRooms(userRooms);
         });
     };
 
     var lastMessages = function(room){
-        console.log("room : " + room.name);
         return $http.post('/api/getMsgs', room).then(function(response){
             return response;
         });
@@ -55,6 +55,7 @@ function chatData($http, userData){
                 allRooms.privateRooms.push(userRooms[i]);
             }
         }
+
         return allRooms;
     }
     
@@ -64,7 +65,7 @@ function chatData($http, userData){
         });
     };
     
-    updateRoomsUser = function(req){
+    updateRoomsUsers = function(req){
         return $http.put('/api/updateRooms', req).then(function(response){
             return response;
         });
@@ -74,6 +75,6 @@ function chatData($http, userData){
         userRooms: userRooms,
         lastMessages: lastMessages,
         createPrivateRoom : createPrivateRoom,
-        updateRoomsUser : updateRoomsUser
+        updateRoomsUsers : updateRoomsUsers
     };
 }

@@ -86,19 +86,17 @@ module.exports = {
     },
 
     updateChatrooms: function(req, res){
-        User.findOne({username : req.body.username}).exec(function(err, user){
+        User.find({ username: {$in: req.body.users}}).exec(function(err, users){
             if(err){
                 res.send(err);
             } else {
-                user.chatRooms.push(req.body.chatRoom);
-                user.save(function(err){
-                    if(err) {
-                        console.log(err);
-                        res.send(err);
-                    } else {
-                        res.status(200).json({message: 'Updated!'});
-                    }
-                })
+                for( var i = 0; i < users.length; i++){
+                    users[i].chatRooms.push(req.body.chatRoom);
+                    users[i].save(function(err){
+                        if(err)
+                            res.send(err);
+                    })
+                }
             }
         })
     }

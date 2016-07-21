@@ -2,7 +2,7 @@
  * Created by Michaël and Martin on 06-04-16.
  */
 
-angular.module('loginCtrl', []).controller('loginController', function($scope, $location, userData){
+angular.module('loginCtrl', []).controller('loginController', function($scope, $location, userData, $sessionStorage){
 
     $scope.credentials = {
         email : "",
@@ -17,6 +17,7 @@ angular.module('loginCtrl', []).controller('loginController', function($scope, $
                 var msgError = response.data.message;
                 if(status === 200){
                     $location.path('/dashboard');
+                    $sessionStorage.user = userData.currentUser();
                 }
                 if(status === 401) {
                     $scope.dataLoginInvalid = true;
