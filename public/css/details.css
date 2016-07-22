@@ -4,3 +4,7 @@
         border-left: 1px solid #3ca2e0;
     }
 }
+
+.linkPointer {
+    cursor: pointer
+}

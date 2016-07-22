@@ -30,20 +30,21 @@
                 <div class="sidebar-nav-nav-fixed pull-right affix">
                     <h4>Chatrooms</h4>
                     <ul class="nav">
-                        <li ng-repeat="room in allRooms.globalRooms">
-                            <a ng-click="switchRoom(room)">{{room.name}}</a>
+                        <li ng-repeat="room in userRooms.globalRooms">
+                            <a ng-click="switchRoom(room)" class="linkPointer">{{room.name}}</a>
                         </li>
                     </ul>
                     <h4>Groupes</h4>
                     <ul class="nav">
-                        <li ng-repeat="room in allRooms.groupRooms">
-                            <a ng-click="switchRoom(room)">{{room.name}}</a>
+                        <li><a ng-click="open()" class="linkPointer">ADD</a></li>
+                        <li ng-repeat="room in userRooms.groupRooms track by $index">
+                            <a ng-click="switchRoom(room)" class="linkPointer">{{room.name}}</a>
                         </li>
                     </ul>
                     <h4>Utilisateurs</h4>
                     <ul class="nav">
                         <li ng-repeat="user in users track by $index">
-                            <a ng-show="isUrself(user)" ng-click="getPrivateRoom(user)">{{user}}</a>
+                            <a ng-show="isUrself(user)" ng-click="getPrivateRoom(user)" class="linkPointer">{{user}}</a>
                         </li>
                     </ul>
                 </div>

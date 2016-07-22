@@ -19,7 +19,6 @@ function userData($http, $window, Socket){
 
     logout = function(username){
         $window.localStorage.removeItem('mean-token');
-
         Socket.emit('userDisconnected', {username : username});
     };
 

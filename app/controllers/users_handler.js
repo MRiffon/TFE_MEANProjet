@@ -90,7 +90,7 @@ module.exports = {
             if(err){
                 res.send(err);
             } else {
-                for( var i = 0; i < users.length; i++){
+                for(var i = 0; i < users.length; i++){
                     users[i].chatRooms.push(req.body.chatRoom);
                     users[i].save(function(err){
                         if(err)

@@ -2,7 +2,7 @@
  * Created by Michaël and Martin on 20-04-16.
  */
 
-angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData, $sessionStorage){
+angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData, $sessionStorage, $uibModal){
 
     console.log('USER : ' + $sessionStorage.user.chatRooms);
 
@@ -10,15 +10,15 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     $scope.selectedRoom = {};
     $scope.$storage = $sessionStorage;
     $scope.chatRoomName = '';
-    $scope.allRooms = {};
+    $scope.userRooms = {};
 
     chatData.userRooms().then(function(response){
         console.log(response);
-        $scope.allRooms = response;
+        $scope.userRooms = response;
         $scope.$storage = $sessionStorage.$default({
-            currentChatRoom: $scope.allRooms.globalRooms[0]
+            currentChatRoom: $scope.userRooms.globalRooms[0]
         });
-        console.log("currentChatRoom de merde : " + $scope.$storage.currentChatRoom);
+        console.log($scope.$storage.currentChatRoom);
         $scope.selectedRoom = $scope.$storage.currentChatRoom;
         $scope.chatRoomName = getRoomName($scope.selectedRoom);
         tempRoom = $scope.selectedRoom;
@@ -33,9 +33,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     $scope.users = [];
     $scope.messages = [];
 
-    $scope.currentUser = userData.currentUser();
-
-    var username = $scope.currentUser.username;
+    var username = $sessionStorage.user.username;
     // new user enter in the name
 
     $scope.switchRoom = function(room){
@@ -52,11 +50,12 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     };
     
     $scope.getPrivateRoom = function(user){
-        for(var i = 0; i < $scope.allRooms.privateRooms.length; i++){
-            var temp = $scope.allRooms.privateRooms[i].name.split('_');
+        console.log($scope.userRooms.privateRooms);
+        for(var i = 0; i < $scope.userRooms.privateRooms.length; i++){
+            var temp = $scope.userRooms.privateRooms[i].name.split('_');
             if(temp.indexOf(user) !== -1){
                 console.log("index trouvé, ca switch direct");
-                $scope.switchRoom($scope.allRooms.privateRooms[i]);
+                $scope.switchRoom($scope.userRooms.privateRooms[i]);
                 return;
             }
         }
@@ -67,10 +66,10 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
             created : new Date()
         };
 
-        chatData.createPrivateRoom(newRoom).then(function(response){
-            $scope.allRooms.privateRooms.push(response.data);
-            $scope.$storage.user.chatRooms.push(newRoom.name);
-            chatData.updateRoomsUsers({
+        chatData.createNewRoom(newRoom).then(function(response){
+            //$scope.userRooms.privateRooms.push(response.data);
+            //$scope.$storage.user.chatRooms.push(response.data.name);
+            chatData.updateUsersRoom({
                 users : [
                     userData.currentUser().username,
                     user
@@ -79,8 +78,11 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
             });
 
             Socket.emit('notif-newRoom', {
-                username: user,
-                chatRoom: response.data
+                users: [
+                    user
+                ],
+                chatRoom: response.data,
+                typeRoom : 'Private'
             });
 
             $scope.switchRoom(newRoom);
@@ -101,11 +103,39 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     };
 
     $scope.isUrself = function(username){
-        if(userData.currentUser().username !== username){
-            return true;
-        } return false;
+        if(username !== undefined){
+            if($sessionStorage.user.username !== username){
+                return true;
+            } return false;
+        }
     };
+    
+    $scope.animationsEnabled = true;
+    $scope.open = function (size) {
 
+        $scope.items = {
+            users : Object.create($scope.users),
+            groupChatRooms : $scope.userRooms.groupRooms,
+            currentUserRooms : $scope.$storage.user.chatRooms
+        };
+
+        var modalInstance = $uibModal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: '../views/modals/addGroupModalView.html',
+            controller: 'modalAddGroupController',
+            size: size,
+            resolve: {
+                items: function () {
+                    return $scope.items;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selected = selectedItem;
+        });
+    };
+    
     // Fonctions internes
     getLastMessage = function(){
         chatData.lastMessages($scope.$storage.currentChatRoom).then(function(response){
@@ -129,8 +159,17 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
     // Socket events
     Socket.on('newRoom', function(data){
-        console.log('newRoom Socket clientside : ' + data);
-        $scope.allRooms.privateRooms.push(data);
+        console.log('newRoom Socket clientside : ' + data.chatRoom);
+        if(data.typeRoom === 'Private'){
+            $scope.userRooms.privateRooms.push(data.chatRoom);
+        } else if(data.typeRoom === 'Group') {
+            console.log(data.chatRoom);
+            $scope.userRooms.groupRooms.push(data.chatRoom);
+        }
+        if($scope.$storage.user.chatRooms.indexOf(data.chatRoom.name) == -1){
+            $scope.$storage.user.chatRooms.push(data.chatRoom.name);
+        }
+
     });
 
     Socket.on('message dispatched', function(data){

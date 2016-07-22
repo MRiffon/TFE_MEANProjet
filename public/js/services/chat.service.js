@@ -18,7 +18,7 @@ function chatData($http, userData, $sessionStorage){
             var i;
             var j;
 
-            for (i = 0; i < userRoomsName.length; i++){
+            for (i = 0; i < allRooms.length; i++){
                 for (j = 0; j < allRooms.length; j++){
                     if (userRoomsName[i] === allRooms[j].name){
                         userRooms.push(allRooms[j]);
@@ -27,6 +27,7 @@ function chatData($http, userData, $sessionStorage){
             }
 
             //Renvoie un tableau contenant les objets Rooms.
+            console.log(fillInRooms(userRooms));
             return fillInRooms(userRooms);
         });
     };
@@ -37,35 +38,34 @@ function chatData($http, userData, $sessionStorage){
         });
     };
 
-    function fillInRooms(userRooms){
-        var allRooms = {
+    function fillInRooms(allRooms){
+        var userRooms = {
             globalRooms : [],
             groupRooms : [],
             privateRooms : []
         };
 
-        for(var i = 0; i < userRooms.length; i++){
-            if(userRooms[i].type === 'Global'){
-                console.log('GlobalRooms added : ' + userRooms[i]);
-                allRooms.globalRooms.push(userRooms[i]);
-            } else if(userRooms[i].type === 'Group'){
-                allRooms.groupRooms.push(userRooms[i]);
-            } else if(userRooms[i].type === 'Private'){
-                console.log('PrivateRooms added : ' + userRooms[i]);
-                allRooms.privateRooms.push(userRooms[i]);
+        for(var i = 0; i < allRooms.length; i++){
+            if(allRooms[i].type === 'Global'){
+                userRooms.globalRooms.push(allRooms[i]);
+            } else if(allRooms[i].type === 'Group'){
+                userRooms.groupRooms.push(allRooms[i]);
+            } else if(allRooms[i].type === 'Private'){
+                console.log('PrivateRooms added : ' + allRooms[i]);
+                userRooms.privateRooms.push(allRooms[i]);
             }
         }
 
-        return allRooms;
+        return userRooms;
     }
-    
-    createPrivateRoom = function(room){
+
+    createNewRoom = function(room){
         return $http.post('/api/newRoom', room).then(function(response){
             return response;
         });
     };
-    
-    updateRoomsUsers = function(req){
+
+    updateUsersRoom = function(req){
         return $http.put('/api/updateRooms', req).then(function(response){
             return response;
         });
@@ -74,7 +74,7 @@ function chatData($http, userData, $sessionStorage){
     return {
         userRooms: userRooms,
         lastMessages: lastMessages,
-        createPrivateRoom : createPrivateRoom,
-        updateRoomsUsers : updateRoomsUsers
+        createNewRoom : createNewRoom,
+        updateUsersRoom : updateUsersRoom
     };
 }

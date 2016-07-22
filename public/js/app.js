@@ -20,5 +20,7 @@ angular.module('app', [
         'overviewCtrl',
         'chatCtrl',
         'ngStorage',
-        'luegg.directives']
+        'luegg.directives',
+        'addGroupModalCtrl',
+        'ui.bootstrap']
 );
