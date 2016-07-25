@@ -25,6 +25,7 @@ module.exports = function(app){
     .post('/api/users', userHandler.creation)
     .post('/api/login', userHandler.login)
     .get('/api/profil', authentication, userHandler.profilRead)
+    .put('/api/profil', authentication, userHandler.editProfil)
     .get('/api/logout', function(req, res){
         req.logOut();
         res.redirect('/');

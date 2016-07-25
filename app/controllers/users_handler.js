@@ -61,7 +61,7 @@ module.exports = {
         if(errors){
             res.send(errors);
         } else {
-            
+
             user.username = req.body.username;
             user.email = req.body.email;
 
@@ -83,6 +83,36 @@ module.exports = {
                     res.status(200).json({message: 'Created!'});
                 }
             });
+        }
+    },
+
+    editProfil: function(req, res){
+        if(req.payload.role !== 'Admin'){
+            res.status(401).json({message: "Not Admin !"});
+        } else {
+            User.findById(req.body._id).exec(function(err, user){
+                if(err){
+                    res.send(err);
+                } else {
+                    for(var key in req.body){
+                        if(req.body.hasOwnProperty(key)){
+                            if(key === "password"){
+                                user.makePassword(req.body[key]);
+                            } else {
+                                user[key] = req.body[key];
+                            }
+                        }
+                    }
+                    user.save(function(err){
+                        if(err) {
+                            console.log(err);
+                            res.send(err);
+                        } else {
+                            res.status(200).json({message: 'Updated!'});
+                        }
+                    });
+                }
+            })
         }
     },
 

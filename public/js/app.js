@@ -26,5 +26,6 @@ angular.module('app', [
         'errorCtrl',
         'unauthorizedCtrl',
         'addUserModalCtrl',
-        'ui.bootstrap']
+        'ui.bootstrap',
+        'angular-confirm']
 );

@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <b>Département :</b>
                     <select class="form-control" id="department" name="department" ng-options="option.name for option in departments track by option.name" ng-model="selectedDepartment" ng-required="true">
-                    </select>
+                </select>
                     <span ng-show="addUserForm.department.$invalid && submitted">Département requis !</span>
                 </div>
             </div>

@@ -39,11 +39,31 @@ function adminData($http, log){
             return response;
         });
     };
+
+    deleteUser = function(user){
+        return $http.delete('/api/users/'+user._id).then(function(response){
+            return response;
+        }).catch(function(response){
+            return response;
+        });
+    };
+
+    updateUser = function(user){
+        return $http.put('/api/profil', user, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
+            return response;
+        });
+    };
     
     return {
         allUsers : allUsers,
         allDepartments : allDepartments,
         allStatus : allStatus,
-        createUser : createUser
+        createUser : createUser,
+        deleteUser : deleteUser,
+        updateUser : updateUser
     };
 }
