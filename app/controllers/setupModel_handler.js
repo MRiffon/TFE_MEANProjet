@@ -53,8 +53,6 @@ module.exports = {
             name: 'Inactive'
         }, {
             name: 'Licenced'
-        }, {
-            name: 'Developper'
         }];
 
         for (var i = 0; i < status.length; i++) {

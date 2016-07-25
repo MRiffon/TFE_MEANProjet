@@ -22,5 +22,7 @@ angular.module('app', [
         'chatCtrl',
         'ngStorage',
         'adminCtrl',
-        'adminData']
+        'adminData',
+        'errorCtrl',
+        'unauthorizedCtrl']
 );

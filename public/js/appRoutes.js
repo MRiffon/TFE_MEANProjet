@@ -63,6 +63,34 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
             url: '/administration',
             parent: 'dashboard',
             templateUrl: './views/administration.html',
-            controller: 'adminController'
+            controller: 'adminController',
+            resolve: {
+                auth: function($q, userData){
+                    var deferred = $q.defer();
+                    if(userData.currentUser() && userData.currentUser().role === 'Admin'){
+                        console.log('isAdmin');
+                        deferred.resolve();
+                    } else {
+                        console.log('NotAdmin');
+                        deferred.reject({redirectTo: 'unauthorized'});
+                    }
+
+                    return deferred.promise;
+                }
+            }
+        })
+
+        .state('error', {
+            url: '/error',
+            parent: 'dashboard',
+            templateUrl: './views/states/error.html',
+            controller: 'errorController'
+        })
+
+        .state('unauthorized', {
+            url: '/unauthorized',
+            parent: 'dashboard',
+            templateUrl: './views/states/unauthorized.html',
+            controller: 'unauthorizedController'
         });
 });
