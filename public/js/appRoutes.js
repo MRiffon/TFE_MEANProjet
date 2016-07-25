@@ -68,10 +68,8 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
                 auth: function($q, userData){
                     var deferred = $q.defer();
                     if(userData.currentUser() && userData.currentUser().role === 'Admin'){
-                        console.log('isAdmin');
                         deferred.resolve();
                     } else {
-                        console.log('NotAdmin');
                         deferred.reject({redirectTo: 'unauthorized'});
                     }
 

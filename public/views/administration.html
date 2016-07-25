@@ -6,7 +6,7 @@
             <h2>Utilisateurs</h2><hr>
 
             <div class="btn-toolbar">
-                <button class="btn btn-primary">Nouvel utilisateur</button>
+                <button class="btn btn-primary" ng-click="open()">Nouvel utilisateur</button>
                 <button class="btn">Import</button>
                 <button class="btn">Export</button>
             </div><br>
@@ -18,10 +18,8 @@
                         <th>#</th>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>Nom</th>
-                        <th style="">Prénom</th>
                         <th style="">Statut</th>
-                        <th style="">Rôle</th>
+                        <th style="">Département</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -29,12 +27,9 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.firstname }}</td>
-                        <td>{{ user.lastname }}</td>
                         <td>{{ user.status }}</td>
-                        <td>{{ user.role }}</td>
+                        <td>{{ user.department }}</td>
                         <td>
-                            <a href="user.html"><i class="glyphicon glyphicon-pencil"></i></a>
                             <a href="#myModal" role="button" data-toggle="modal"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                     </tr>

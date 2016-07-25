@@ -24,5 +24,7 @@ angular.module('app', [
         'adminCtrl',
         'adminData',
         'errorCtrl',
-        'unauthorizedCtrl']
+        'unauthorizedCtrl',
+        'addUserModalCtrl',
+        'ui.bootstrap']
 );

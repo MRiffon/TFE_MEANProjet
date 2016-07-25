@@ -20,7 +20,30 @@ function adminData($http, log){
         });
     };
     
+    var allDepartments = function(){
+        return $http.get('/api/departments').then(function(response){
+            return response;
+        });
+    };
+
+    var allStatus = function(){
+        return $http.get('/api/status').then(function(response){
+            return response;
+        });
+    };
+    
+    createUser = function(user){
+        return $http.post('/api/users', user).then(function(response){
+            return response;
+        }).catch(function(response){
+            return response;
+        });
+    };
+    
     return {
-        allUsers : allUsers
+        allUsers : allUsers,
+        allDepartments : allDepartments,
+        allStatus : allStatus,
+        createUser : createUser
     };
 }

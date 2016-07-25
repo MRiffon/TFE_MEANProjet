@@ -5,7 +5,6 @@
 angular.module('appRun', []).run(function($rootScope, $location, userData, $state){
     'use strict';
     $rootScope.$on('$locationChangeSuccess', function(event){
-        console.log('Success event : ' + event);
         if(!userData.loggedIn()){
             $rootScope.$evalAsync(function() {
                 $location.path('/');
@@ -15,7 +14,6 @@ angular.module('appRun', []).run(function($rootScope, $location, userData, $stat
 
     $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
         event.preventDefault();
-        console.log('Error event : ' + error);
         if (error.redirectTo) {
             $state.go(error.redirectTo);
         } else {

@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h3 class="modal-title">Nouvel utilisateur</h3>
+</div>
+<div class="row">
+    <div class="col-sm-1"></div>
+    <form name="addUserForm" role="form" ng-submit="saveUser(addUserForm.$valid)" novalidate class="form-horizontal col-md-10">
+        <div class="modal-body">
+            <div class="form-content">
+                <div class="form-group">
+                    <b>Username :</b>
+                    <input class="form-control" type="text" id="username" name="username" ng-model="addUser.username" ng-required="true">
+                    <span ng-show="addUserForm.username.$invalid && submitted">Username requis !</span>
+                </div>
+                <div class="form-group">
+                    <b>Email :</b>
+                    <input class="form-control" type="email" id="email" name="email" ng-model="addUser.email" ng-required="true">
+                    <span ng-show="addUserForm.email.$invalid && submitted">Email invalide requise !</span>
+                </div>
+                <div class="form-group">
+                    <b>Département :</b>
+                    <select class="form-control" id="department" name="department" ng-options="option.name for option in departments track by option.name" ng-model="selectedDepartment" ng-required="true">
+                    </select>
+                    <span ng-show="addUserForm.department.$invalid && submitted">Département requis !</span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <span ng-show="dataLoginInvalid">{{ msgError }}</span>
+            <button class="btn btn-primary" type="submit">Créer</button>
+        </div>
+    </form>
+    <div class="col-md-1"></div>
+</div>

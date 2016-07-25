@@ -5,6 +5,7 @@
 var mongoose = require('mongoose');
 var Status = require('../models/status');
 var Role = require('../models/role');
+var Department = require('../models/department');
 var ChatRoom = require('../models/chatroom');
 
 module.exports = {
@@ -64,5 +65,27 @@ module.exports = {
             });
         }
         res.send('Status initiated !');
+    },
+
+    setupDepartments: function(req, res){
+        var departments = [{
+            name: 'Support'
+        }, {
+            name: 'Administratif'
+        }, {
+            name: 'R&D'
+        }, {
+            name: 'Direction'
+        }];
+
+        for (var i = 0; i < departments.length; i++) {
+            var newDepartments = new Department(departments[i]);
+            newDepartments.save(function(err, savedDepartments) {
+                if(err)
+                    res.send(err);
+                console.log(savedDepartments);
+            });
+        }
+        res.send('Departments initiated !');
     }
 };

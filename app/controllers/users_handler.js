@@ -56,18 +56,23 @@ module.exports = {
 
         req.checkBody("username", "Nom utilisateur invalide").notEmpty();
         req.checkBody("email", "Email invalide").notEmpty().isEmail();
-        req.checkBody("password", "Password invalide").notEmpty().len(8,30);
 
         var errors = req.validationErrors();
         if(errors){
             res.send(errors);
         } else {
+            
             user.username = req.body.username;
             user.email = req.body.email;
 
-            user.makePassword(req.body.password);
+            if(req.body.password === ''){
+                user.makePassword('password');
+            } else {
+                user.makePassword(req.body.password);
+            }
 
-            user.role = req.body.role;
+            //user.role = req.body.role;
+            user.department = req.body.department;
 
             user.chatRooms[0] = req.body.chatRooms[0];
 
@@ -75,7 +80,7 @@ module.exports = {
                 if (err){
                     res.send(err);
                 } else {
-                    res.json(user);
+                    res.status(200).json({message: 'Created!'});
                 }
             });
         }

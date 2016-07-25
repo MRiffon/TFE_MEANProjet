@@ -25,8 +25,12 @@ var userSchema = new Schema({
     },
     role: {
         type: String,
-        required: true,
-        default: "User"
+        default: "User",
+        required: true
+    },
+    department: {
+        type: String,
+        required: true
     },
     hash: String,
     salt: String,
