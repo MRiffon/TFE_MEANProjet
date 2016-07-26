@@ -21,6 +21,38 @@ module.exports = {
         }
     },
 
+    search: function(req, res){
+        if(req.payload.role !== 'Admin'){
+            res.status(401).end();
+        } else {
+            if(req.body.type === 'Status'){
+                User.find({ status: req.body.infosToSearch }).exec(function(err, users){
+                    if(err){
+                        res.send(err);
+                    } else {
+                        res.status(200).json(users);
+                    }
+                })
+            } else if(req.body.type === 'Department'){
+                User.find({ department: req.body.infosToSearch }).exec(function(err, users){
+                    if(err){
+                        res.send(err);
+                    } else {
+                        res.status(200).json(users);
+                    }
+                })
+            } else {
+                User.find({ username: req.body.infosToSearch }).exec(function(err, user){
+                    if(err) {
+                        res.send(err);
+                    } else {
+                        res.status(200).json(user);
+                    }
+                })
+            }
+        }
+    },
+
     delete: function(req, res){
         if(req.payload.role !== 'Admin'){
             res.status(401).end();
@@ -95,10 +127,16 @@ module.exports = {
     },
 
     editProfil: function(req, res){
-        if(req.payload.role !== 'Admin' || req.payload._id !== req.body._id){
+        if(!req.payload._id){
             res.status(401).end();
-        } else if(req.payload === 'Admin' || req.payload._id === req.body._id){
-            User.findById(req.body._id).exec(function(err, user){
+        } else {
+            var requete = '';
+            if(req.payload.role === 'Admin'){
+                requete = req.body._id;
+            } else {
+                requete = req.payload._id;
+            }
+            User.findById(requete).exec(function(err, user){
                 if(err){
                     res.send(err);
                 } else {

@@ -23,6 +23,7 @@ module.exports = function(app){
 
     // Api user/auth/sess
     .get('/api/users', authentication, userHandler.list)
+    .post('/api/searchUsers', authentication, userHandler.search)
     .delete('/api/users/:user_id', authentication, userHandler.delete)
     .post('/api/users', authentication, userHandler.creation)
     .post('/api/login', userHandler.login)

@@ -5,11 +5,34 @@
         <div class=container>
             <h2>Utilisateurs</h2><hr>
 
+
             <div class="btn-toolbar">
                 <button class="btn btn-primary" ng-click="open()">Nouvel utilisateur</button>
                 <button class="btn">Import</button>
                 <button class="btn">Export</button>
             </div><br>
+            <div class="">
+                <form name="searchUsersForm" role="form" ng-submit="searchResults(searchUsersForm.$valid)" novalidate>
+                    <div class=form-content>
+                        <div class=form-group row>
+                            <div class="col-md-4">
+                                <select ng-required="true" class="form-control" id="typeSearch" name="typeSearch" ng-options="option for option in searchOptions track by option" ng-model="typeSearch" ng-change="changeTypeSearch(typeSearch)"></select>
+                            </div>
+                            <div class="col-md-5">
+                                <select ng-show="searchStatus" class="form-control" id="status" name="status" ng-options="option.name for option in status track by option.name" ng-model="infosToSearch" ng-required="true"></select>
+                                <select ng-show="searchDepartment" class="form-control" id="department" name="department" ng-options="option.name for option in departments track by option.name" ng-model="infosToSearch" ng-required="true"></select>
+                                <input ng-show="searchUsername" type="text" id="username" name="username" class="form-control" placeholder="Votre recherche" ng-model="infosToSearch" ng-required="true">
+                            </div>
+                            <div>
+                                <button type="submit" name="submit" class="btn btn-primary">Rechercher</button>
+                            </div>
+                            <span ng-show="searchUsersForm.status.$invalid && submitted && searchStatus">Statut requis !</span>
+                            <span ng-show="searchUsersForm.department.$invalid && submitted && searchDepartment">Département requis !</span>
+                            <span ng-show="searchUsersForm.username.$invalid && submitted && searchUsername">Username requis !</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
             <div class="well">
                 <table class="table">
@@ -39,6 +62,7 @@
                 </table>
                 <pagination uib-pagination total-items="totalUsers" ng-model="currentPage" items-per-page="itemsPerPage" ng-change="pageChanged()"></pagination>
             </div>
+
         </div>
     </div>
 </div>

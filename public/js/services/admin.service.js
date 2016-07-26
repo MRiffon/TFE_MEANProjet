@@ -19,6 +19,16 @@ function adminData($http, log){
             return response;
         });
     };
+
+    var searchedUsers = function(infos){
+        return $http.post('/api/searchUsers', infos, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
+            return response;
+        });
+    };
     
     var allDepartments = function(){
         return $http.get('/api/departments').then(function(response){
@@ -68,6 +78,7 @@ function adminData($http, log){
     
     return {
         allUsers : allUsers,
+        searchedUsers : searchedUsers,
         allDepartments : allDepartments,
         allStatus : allStatus,
         createUser : createUser,
