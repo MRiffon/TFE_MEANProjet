@@ -8,7 +8,7 @@ var passport = require('passport');
 
 module.exports = {
     list: function(req, res){
-        if(req.payload.role !== "Admin") {
+        if(req.payload.role !== 'Admin') {
             res.redirect('/');
             res.status(401).end();
         } else {
@@ -22,13 +22,17 @@ module.exports = {
     },
 
     delete: function(req, res){
-        User.remove({
-            _id: req.params.user_id
-        }, function(err, user){
-            if(err)
-                res.send(err);
-            res.json({message: 'Supprimé !', user: user});
-        });
+        if(req.payload.role !== 'Admin'){
+            res.status(401).end();
+        } else {
+            User.remove({
+                _id: req.params.user_id
+            }, function(err, user){
+                if(err)
+                    res.send(err);
+                res.json({message: 'Supprimé !', user: user});
+            });
+        }
     },
 
     login: function(req, res, next){
@@ -52,44 +56,48 @@ module.exports = {
     },
 
     creation: function(req, res){
-        var user = new User();
-
-        req.checkBody("username", "Nom utilisateur invalide").notEmpty();
-        req.checkBody("email", "Email invalide").notEmpty().isEmail();
-
-        var errors = req.validationErrors();
-        if(errors){
-            res.send(errors);
+        if(req.payload.role !== 'Admin') {
+            res.status(401).end();
         } else {
+            var user = new User();
 
-            user.username = req.body.username;
-            user.email = req.body.email;
+            req.checkBody("username", "Nom utilisateur invalide").notEmpty();
+            req.checkBody("email", "Email invalide").notEmpty().isEmail();
 
-            if(req.body.password === ''){
-                user.makePassword('password');
+            var errors = req.validationErrors();
+            if(errors){
+                res.send(errors);
             } else {
-                user.makePassword(req.body.password);
-            }
 
-            //user.role = req.body.role;
-            user.department = req.body.department;
+                user.username = req.body.username;
+                user.email = req.body.email;
 
-            user.chatRooms[0] = req.body.chatRooms[0];
-
-            user.save(function(err){
-                if (err){
-                    res.send(err);
+                if(req.body.password === ''){
+                    user.makePassword('password');
                 } else {
-                    res.status(200).json({message: 'Created!'});
+                    user.makePassword(req.body.password);
                 }
-            });
+
+                //user.role = req.body.role;
+                user.department = req.body.department;
+
+                user.chatRooms[0] = req.body.chatRooms[0];
+
+                user.save(function(err){
+                    if (err){
+                        res.send(err);
+                    } else {
+                        res.status(200).json({message: 'Created!'});
+                    }
+                });
+            }
         }
     },
 
     editProfil: function(req, res){
-        if(req.payload.role !== 'Admin'){
-            res.status(401).json({message: "Not Admin !"});
-        } else {
+        if(req.payload.role !== 'Admin' || req.payload._id !== req.body._id){
+            res.status(401).end();
+        } else if(req.payload === 'Admin' || req.payload._id === req.body._id){
             User.findById(req.body._id).exec(function(err, user){
                 if(err){
                     res.send(err);

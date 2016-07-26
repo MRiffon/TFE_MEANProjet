@@ -33,7 +33,11 @@ function adminData($http, log){
     };
     
     createUser = function(user){
-        return $http.post('/api/users', user).then(function(response){
+        return $http.post('/api/users', user, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
             return response;
         }).catch(function(response){
             return response;
@@ -41,7 +45,11 @@ function adminData($http, log){
     };
 
     deleteUser = function(user){
-        return $http.delete('/api/users/'+user._id).then(function(response){
+        return $http.delete('/api/users/'+user._id, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
             return response;
         }).catch(function(response){
             return response;

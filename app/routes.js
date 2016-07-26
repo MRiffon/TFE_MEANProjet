@@ -11,6 +11,8 @@ var departmentsHandler = require('./controllers/department_handler');
 var statusHandler = require('./controllers/status_handler');
 var jwt = require('express-jwt');
 var configjwt = require('../config/jwt.js');
+
+// permet de vérifier l'authenication d'un user avant d'utiliser une API, pas utile pour toute
 var authentication = jwt({ secret: configjwt.secret, userProperty: 'payload'});
 
 module.exports = function(app){
@@ -21,8 +23,8 @@ module.exports = function(app){
 
     // Api user/auth/sess
     .get('/api/users', authentication, userHandler.list)
-    .delete('/api/users/:user_id',userHandler.delete)
-    .post('/api/users', userHandler.creation)
+    .delete('/api/users/:user_id', authentication, userHandler.delete)
+    .post('/api/users', authentication, userHandler.creation)
     .post('/api/login', userHandler.login)
     .get('/api/profil', authentication, userHandler.profilRead)
     .put('/api/profil', authentication, userHandler.editProfil)

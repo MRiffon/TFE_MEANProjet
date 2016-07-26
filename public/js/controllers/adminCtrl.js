@@ -6,43 +6,57 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
     var users = [];
     $scope.selectedDepartments = [];
     $scope.selectedStatus = [];
+    $scope.itemsPerPage = 8;
+    $scope.currentPage = 1;
 
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+    };
+
+    $scope.pageChanged = function() {
+        console.log('Page changed to: ' + $scope.currentPage);
+    };
+
+    // Chargement des infos pour lister
     adminData.allUsers().then(function(response){
         $scope.users = response.data;
         users = $scope.users;
-    }, function(response){
-        console.log(response);
-    });
+        $scope.totalUsers = users.length;
 
-    adminData.allDepartments().then(function(response){
-        $scope.departments = response.data;
+        adminData.allDepartments().then(function(response){
+            $scope.departments = response.data;
 
-        for(var i = 0; i < users.length; i++){
-            for (var j = 0; j < $scope.departments.length; j++){
-                if(users[i].department === $scope.departments[j].name){
-                    $scope.selectedDepartments[i] = $scope.departments[j];
+            for(var i = 0; i < users.length; i++){
+                for (var j = 0; j < $scope.departments.length; j++){
+                    if(users[i].department === $scope.departments[j].name){
+                        $scope.selectedDepartments[i] = $scope.departments[j];
+                    }
                 }
             }
-        }
-        console.log($scope.selectedDepartments);
-    }, function(response){
-        console.log(response);
-    });
+            console.log($scope.selectedDepartments);
+        }, function(response){
+            console.log(response);
+        });
 
-    adminData.allStatus().then(function(response){
-        $scope.status = response.data;
+        adminData.allStatus().then(function(response){
+            $scope.status = response.data;
 
-        for(var i = 0; i < users.length; i++){
-            for (var j = 0; j < $scope.status.length; j++){
-                if(users[i].status === $scope.status[j].name){
-                    $scope.selectedStatus[i] = $scope.status[j];
+            for(var i = 0; i < users.length; i++){
+                for (var j = 0; j < $scope.status.length; j++){
+                    if(users[i].status === $scope.status[j].name){
+                        $scope.selectedStatus[i] = $scope.status[j];
+                    }
                 }
             }
-        }
+        }, function(response){
+            console.log(response);
+        });
+
     }, function(response){
         console.log(response);
     });
 
+    // Gestion de l'update du status ou département
     $scope.updateUser = function(user, type, toUpdate){
         if(type === 'department'){
             user.department = toUpdate.name;
@@ -58,10 +72,13 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         });
     };
 
+    // Suppression d'un user avec confirmation
     $scope.deleteUser = function(user){
         adminData.deleteUser(user);
+        alert(user.username + ' a bien été supprimé !');
     };
 
+    // Gestion de la modal pour la création d'un user
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
 
