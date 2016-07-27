@@ -16,7 +16,6 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
 
     adminData.allDepartments().then(function(response){
         $scope.departments = response.data;
-        console.log($scope.departments);
     }, function(response){
         console.log(response);
     });
@@ -25,7 +24,9 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
         $scope.submitted = true;
         if(isValid){
             $scope.addUser.department = $scope.selectedDepartment.name;
-            adminData.createUser($scope.addUser).then(function(response){
+            var addUser = [];
+            addUser.push($scope.addUser);
+            adminData.createUser(addUser).then(function(response){
                 var msg = response.data.message;
                 if(msg === 'Created!'){
                     $uibModalInstance.close();

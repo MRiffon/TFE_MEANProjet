@@ -34,7 +34,10 @@
     "angular-material": "^1.0.7",
     "angular-material-icons": "^0.7.0",
     "fullcalendar": "^2.7.2",
-    "angular-confirm-modal": "^1.2.5"
+    "angular-confirm-modal": "^1.2.5",
+    "ng-csv": "^0.3.6",
+    "angular-sanitize": "^1.5.8",
+    "angular-csv-import": "^0.0.36"
   },
   "resolutions": {
     "angular": "^1.5.3",

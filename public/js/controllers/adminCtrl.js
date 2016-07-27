@@ -2,8 +2,7 @@
  * Created by micka on 18-07-16.
  */
 
-angular.module('adminCtrl', []).controller('adminController', function($scope, adminData, $uibModal) {
-    var users = [];
+angular.module('adminCtrl', []).controller('adminController', function($scope, adminData, $uibModal, $parse) {
     $scope.selectedDepartments = [];
     $scope.selectedStatus = [];
 
@@ -11,6 +10,21 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
     $scope.typeSearch = 'Username';
     $scope.infosToSearch = '';
     $scope.searchUsername = true;
+
+    $scope.filename = 'all_users';
+    $scope.separator = ',';
+    $scope.decimalSeparator = '.';
+
+    $scope.csv = {
+        content: null,
+        header: true,
+        headerVisible: true,
+        separator: ',',
+        separatorVisible: true,
+        result: null,
+        encoding: 'ISO-8859-1',
+        encodingVisible: true,
+    };
 
     fillInSelectDepartments = function(users, departments){
         $scope.selectedDepartments = [];
@@ -42,7 +56,6 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         adminData.allDepartments().then(function(response){
             $scope.departments = response.data;
             fillInSelectDepartments($scope.users, $scope.departments);
-            console.log($scope.selectedDepartments);
         }, function(response){
             console.log(response);
         });
@@ -91,6 +104,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
             if($scope.searchDepartment){
                 infos.type = 'Department';
                 infos.infosToSearch = $scope.infosToSearch.name;
+                $scope.filename = 'all_users';
             } else if($scope.searchStatus){
                 infos.type = 'Status';
                 infos.infosToSearch = $scope.infosToSearch.name;
@@ -99,11 +113,9 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
                 infos.infosToSearch = $scope.infosToSearch;
             }
 
-
-            console.log(infos);
+            $scope.filename = infos.infosToSearch + '_users';
 
             adminData.searchedUsers(infos).then(function(response){
-                console.log(response);
                 $scope.users = response.data;
                 fillInSelectDepartments($scope.users, $scope.departments);
                 fillInSelectStatus($scope.users, $scope.status);
@@ -123,16 +135,58 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         } else $scope.searchUsername = true;
     };
 
-    // Gestion de la pagination
-    $scope.itemsPerPage = 8;
-    $scope.currentPage = 1;
-
-    $scope.setPage = function (pageNo) {
-        $scope.currentPage = pageNo;
+    $scope.getHeader = function(){
+        return ['Username', 'Email', 'Statut', 'Département'];
     };
 
-    $scope.pageChanged = function() {
-        console.log('Page changed to: ' + $scope.currentPage);
+    $scope.getUsers = function(){
+        var arrayUsers = [];
+        var tempUser = {
+            username: '',
+            email: '',
+            status: '',
+            department: ''
+        };
+        for(var i = 0; i < $scope.users.length; i++){
+            tempUser.username = $scope.users[i].username;
+            tempUser.email = $scope.users[i].email;
+            tempUser.status = $scope.users[i].status;
+            tempUser.department = $scope.users[i].department;
+
+            arrayUsers[i] = tempUser;
+            tempUser = {};
+        }
+
+        return arrayUsers;
+    };
+
+    // parse contenu csv vers json et enregistrement des users
+    $scope.createUsersFromCsv = function (json) {
+
+        console.log('fonction de parse trigger');
+        var objStr = JSON.stringify(json);
+        var obj = null;
+        try {
+            obj = $parse(objStr)({});
+        } catch(e){
+            // eat $parse error
+            return _lastGoodResult;
+        }
+        
+        var usersToAdd = obj;
+        for(var i = 0; i < usersToAdd.length; i++){
+            usersToAdd[i].chatRooms = ['Global'];
+            usersToAdd[i].password = '';
+        }
+
+        adminData.createUser(usersToAdd).then(function(response){
+            var msg = response.data.message;
+            if(msg === 'Created!'){
+                alert('Utilisateur(s) créé(s)');
+            } else {
+                alert("Une erreur s'est produite !");
+            }
+        });
     };
 
     // Gestion de la modal pour la création d'un user

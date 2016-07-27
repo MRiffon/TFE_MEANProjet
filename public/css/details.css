@@ -1,0 +1,78 @@
+div.import>div>div.label {
+    display: inline-block;
+    width: 30%;
+    text-align: left;
+    color: white;
+    font-family: 'Verdana';
+    font-size: 14px;
+}
+
+div.import > div {
+    padding-left: 4px;
+    margin-top: 10px;
+}
+
+div.import > div > span {
+    color: white;
+}
+
+div.import > div> span > input[type="text"] {
+    font-size: 18px;
+    color: #d6492f;
+    font-weight: bold;
+    border-radius: none;
+    outline: none;
+}
+
+div.import>div>input[type="file"] {
+    color: transparent;
+    padding: 0;
+}
+
+div.import>div>input[type="file"]::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+div.import>div>input[type="file"]::before {
+    content: 'Import';
+    display: inline-block;
+    background-image: none;
+    color: white;
+    background-color: #3ca2e0;
+    border: 1px solid #2698dd;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    font-size: 14px;
+
+}
+div.import>div>input[type="file"]:hover::before {
+    border-color: black;
+}
+div.import>div>input[type="file"]:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+div.block {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+}
+
+div.block>div.content {
+    border: 5px dashed #d6492f;
+    background: none;
+    padding: 0px;
+    border-radius: 3px;
+}
+
+div.block>div.content>pre {
+    font-size: 15px;
+    font-family: 'Courier';
+    background: #F0F0F0;
+    padding: 10px;
+    margin: 0;
+}

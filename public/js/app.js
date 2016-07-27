@@ -27,5 +27,8 @@ angular.module('app', [
         'unauthorizedCtrl',
         'addUserModalCtrl',
         'ui.bootstrap',
-        'angular-confirm']
+        'angular-confirm',
+        'ngSanitize',
+        'ngCsv',
+        'ngCsvImport']
 );

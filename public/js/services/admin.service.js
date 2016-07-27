@@ -42,8 +42,9 @@ function adminData($http, log){
         });
     };
     
-    createUser = function(user){
-        return $http.post('/api/users', user, {
+    createUser = function(users){
+        console.log(users);
+        return $http.post('/api/users', users, {
             headers: {
                 Authorization: 'Bearer ' + log.getToken()
             }

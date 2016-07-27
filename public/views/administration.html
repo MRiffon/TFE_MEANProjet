@@ -5,13 +5,22 @@
         <div class=container>
             <h2>Utilisateurs</h2><hr>
 
-
             <div class="btn-toolbar">
                 <button class="btn btn-primary" ng-click="open()">Nouvel utilisateur</button>
-                <button class="btn">Import</button>
-                <button class="btn">Export</button>
+                <button class="btn" ng-csv="getUsers()" csv-header="getHeader()" filename="{{ filename }}.csv" field-separator="{{separator}}" decimal-separator="{{decimalSeparator}}">Export</button>
+                <ng-csv-import
+                        class="import"
+                        content="csv.content"
+                        header="csv.header"
+                        separator="csv.separator"
+                        result="csv.result"
+                        encoding="csv.encoding"></ng-csv-import>
+                <br>
+                <div ng-if="csv.result">
+                    <button class="btn" style="margin-left: 3px;" ng-click="createUsersFromCsv(csv.result)">Ajouter les users</button>
+                </div>
             </div><br>
-            <div class="">
+            <div>
                 <form name="searchUsersForm" role="form" ng-submit="searchResults(searchUsersForm.$valid)" novalidate>
                     <div class=form-content>
                         <div class=form-group row>
@@ -46,7 +55,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="user in users.slice(((currentPage - 1)*itemsPerPage), ((currentPage)*itemsPerPage))">
+                    <tr ng-repeat="user in users">
                         <td>{{ $index + 1 }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
@@ -60,7 +69,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <pagination uib-pagination total-items="totalUsers" ng-model="currentPage" items-per-page="itemsPerPage" ng-change="pageChanged()"></pagination>
             </div>
 
         </div>

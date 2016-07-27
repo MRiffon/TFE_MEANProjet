@@ -88,40 +88,40 @@ module.exports = {
     },
 
     creation: function(req, res){
+        var error = '';
         if(req.payload.role !== 'Admin') {
             res.status(401).end();
         } else {
-            var user = new User();
+            console.log(req.body);
+            for(var i = 0; i < req.body.length; i++){
 
-            req.checkBody("username", "Nom utilisateur invalide").notEmpty();
-            req.checkBody("email", "Email invalide").notEmpty().isEmail();
+                var user = new User();
 
-            var errors = req.validationErrors();
-            if(errors){
-                res.send(errors);
-            } else {
+                user.username = req.body[i].username;
+                user.email = req.body[i].email;
 
-                user.username = req.body.username;
-                user.email = req.body.email;
-
-                if(req.body.password === ''){
+                if (req.body[i].password === '') {
                     user.makePassword('password');
                 } else {
-                    user.makePassword(req.body.password);
+                    user.makePassword(req.body[i].password);
                 }
 
                 //user.role = req.body.role;
-                user.department = req.body.department;
+                user.department = req.body[i].department;
 
-                user.chatRooms[0] = req.body.chatRooms[0];
+                user.chatRooms[0] = req.body[i].chatRooms[0];
 
-                user.save(function(err){
+                user.save(function (err) {
                     if (err){
                         res.send(err);
                     } else {
-                        res.status(200).json({message: 'Created!'});
+                        error = false;
                     }
                 });
+            }
+            if(!error){
+                console.log('Pas derreur');
+                res.status(200).json({message: 'Created!'});
             }
         }
     },
