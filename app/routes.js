@@ -39,6 +39,7 @@ module.exports = function(app){
     .get('/api/getRooms', chatRoomHandler.getRooms)
 
     // Api setup models mongoose
+    .post('/api/setupAdmin', setupHandler.setupAdmin)
     .post('/api/setupChat', setupHandler.setupChatRoom)
     .post('/api/setupRoles', setupHandler.setupRoles)
     .post('/api/setupStatus', setupHandler.setupStatus)

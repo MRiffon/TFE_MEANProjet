@@ -7,8 +7,28 @@ var Status = require('../models/status');
 var Role = require('../models/role');
 var Department = require('../models/department');
 var ChatRoom = require('../models/chatroom');
-
+var User = require('../models/user');
 module.exports = {
+
+    setupAdmin: function(req, res){
+        var user = new User({
+            username: 'admin',
+            email:'admin@gmail.com',
+            chatRooms:['Global', 'Administratif'],
+            role:'Admin',
+            department:'Direction'
+        });
+
+        user.makePassword('password');
+
+        user.save(function(err, user){
+            if(err){
+                res.send(err);
+            }
+        });
+        res.send('Admin initiated !');
+    },
+
     setupChatRoom: function(req, res){
         var chat = [{
             created: new Date(),
