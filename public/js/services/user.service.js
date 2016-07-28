@@ -41,6 +41,7 @@ function log($http, $window){
             payload = JSON.parse(payload);
 
             return {
+                _id : payload._id,
                 email : payload.email,
                 username : payload.username,
                 role : payload.role,

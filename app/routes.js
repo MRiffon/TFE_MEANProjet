@@ -15,8 +15,8 @@ var configjwt = require('../config/jwt.js');
 // permet de vérifier l'authenication d'un user avant d'utiliser une API, pas utile pour toute
 var authentication = jwt({ secret: configjwt.secret, userProperty: 'payload'});
 
-module.exports = function(app){
-    
+module.exports = function(app, upload){
+
     app.use(function(req, res, next){
         next();
     })
@@ -27,7 +27,7 @@ module.exports = function(app){
     .delete('/api/users/:user_id', authentication, userHandler.delete)
     .post('/api/users', authentication, userHandler.creation)
     .post('/api/login', userHandler.login)
-    .get('/api/profil', authentication, userHandler.profilRead)
+    .get('/api/profil', authentication, userHandler.readProfil)
     .put('/api/profil', authentication, userHandler.editProfil)
     .get('/api/logout', function(req, res){
         req.logOut();
@@ -35,8 +35,20 @@ module.exports = function(app){
     })
 
     // Api chat
+    .post('/api/setupChat', chatRoomHandler.setup)
     .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
+
+    // Api upload de files
+    .post('/api/upload', function(req, res){
+        upload(req, res, function(err){
+            if(err) {
+                res.json({error_code:1,err_desc:err});
+            } else {
+                res.json({error_code:0,err_desc:null});
+            }
+        })
+    })
 
     // Api setup models mongoose
     .post('/api/setupAdmin', setupHandler.setupAdmin)
@@ -49,7 +61,7 @@ module.exports = function(app){
     .get('/api/roles', rolesHandler.list)
     .delete('/api/roles/:role_id', rolesHandler.delete)
     .post('/api/roles', rolesHandler.creation)
-        
+
     // Api departments
     .get('/api/departments', departmentsHandler.list)
     .delete('/api/departments/:department_id', departmentsHandler.delete)

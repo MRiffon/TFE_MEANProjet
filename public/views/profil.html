@@ -3,10 +3,104 @@
     <h1>Profil</h1>
     <div class=jumbotron>
         <div class=container>
-            <h2>{{user.username}}</h2>
-            <p>Informations sur le profil de l'utilisateur</p>
-            <!--<p> <a class="btn btn-primary btn-lg btn-outline btn-rounded">Learn more</a>
-            </p>-->
+            <div class="panel-body">
+                <div class="row">
+                    <div ng-hide="editStatus">
+                        <div class="col-md-9 col-lg-5">
+                            <h3>Informations générales</h3>
+                            <table class="table table-user-information">
+                                <tbody>
+                                <tr>
+                                    <td>Username :</td>
+                                    <td>{{user.username}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Email :</td>
+                                    <td>{{user.email}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nom : </td>
+                                    <td>{{user.firstname}}</td>
+                                </tr>
+
+                                <tr>
+                                <tr>
+                                    <td>Prénom : </td>
+                                    <td>{{user.lastname}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <br><p> <a class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" href="#" ng-click="editOn()">EDITER PROFIL</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="editStatus">
+                <h3>Editer votre profil</h3>
+                <hr>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <img ng-src="{{ urlImg }}" fallback-src="./img/photo-default-th.png" loading-src class="user-avatar">
+                        <h6>Choisissez une image différente...</h6>
+                        <form name="uploadImageForm" role="form" ng-submit="uploadImg(uploadImageForm.$valid)" novalidate>
+
+                            <label class="btn btn-default btn-file">
+                                Naviguer <input type="file" name="imgProfile" style="display: none;" ngf-pattern="'image/*'" accept="image/*" ng-model="imgProfile" ngf-select ngf-max-size="20MB" onchange="angular.element(this).scope().inputFileChange()">
+                            </label><br><br>
+
+                            <div ng-show="displayUpload">
+                                <img style="width:100px;" ngf-thumbnail="imgProfile"><br><br>
+                                <button type="submit" class="btn btn-primary btn-outline btn-lg btn-rounded btn-sm">UPLOAD</button>
+                            </div><br>
+
+                            <span ng-show="uploadImageForm.imgProfile.$error.maxSize">Fichier trop vulimeux !! Max 20MB</span>
+                            <span ng-show="successImgUpload">Image bien mis à jour !</span>
+                            <span ng-show="failedImgUpload">Echec de l'upload de l'image !</span>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-9 personal-info">
+                    <form name="editProfilForm" role="form" ng-submit="saveEdit(editProfilForm.$valid)" novalidate class="form-horizontal">
+                            <div class="form-content">
+                                <div class="profil-content">
+
+                                    <div class="form-group">
+                                        <b>Nom d'utilisateur : </b>
+                                        <input class="form-control" type="text" id="username" name="username" ng-value="user.username" ng-model="userEdit.username" ng-required="false">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <b>Nom : </b>
+                                        <input class="form-control" type="text" id="firstname" name="firstname" ng-value="user.firstname" ng-model="userEdit.firstname" ng-required="false" ng-pattern ="/^[a-zA-Z\s]*$/">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <b>Prénom : </b>
+                                        <input class="form-control" type="text" id="lastname" name="lastname" ng-value="user.lastname" ng-model="userEdit.lastname" ng-required="false" ng-pattern ="/^[a-zA-Z]*$/">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <b>Nouveau mot de passe : </b>
+                                        <input class="form-control" type="password" id="password" name="password" placeholder="Nouveau mot de passe" ng-model="userEdit.password" ng-required="false" ng-minlength="8">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <b>Confirmer mot de passe : </b>
+                                        <input class="form-control" type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmer mot de passe" ng-model="userEdit.confirmPassword" ng-required="false" ng-minlength="8">
+                                    </div>
+                                    <br>
+
+                                    <span ng-show="editProfilForm.password.$error.minlength || editProfilForm.confirmPassword.$error.minlength">Mot de passe de 8 caractères minimum!</span>
+                                    <span ng-show="editProfilForm.firstname.$error.pattern || editProfilForm.lastname.$error.pattern">Que des caractères non-numériques pour le nom/prénom ! </span>
+                                    <span ng-show="dataEditProfilInvalid">{{ msgError }}</span>
+                                </div><br>
+                                <button type="submit" class="btn btn-primary btn-outline btn-lg btn-rounded btn-sm">SAUVER</button>
+                                <a class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" href="#" ng-click="editOff()">ANNULER</a>
+                            </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

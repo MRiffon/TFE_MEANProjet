@@ -5,6 +5,7 @@
 var mongoose = require('mongoose');
 var User = require('../models/user');
 var passport = require('passport');
+var ChatRoom = require('../models/chatroom');
 
 module.exports = {
     list: function(req, res){
@@ -162,9 +163,9 @@ module.exports = {
         }
     },
 
-    profilRead: function(req, res){
+    readProfil: function(req, res){
         if(!req.payload._id){
-            res.status(401).end();
+            res.status(401).json({message: "Authentication failure !"});
         } else {
             User.findById(req.payload._id).exec(function(err, user){
                 res.status(200).json(user);

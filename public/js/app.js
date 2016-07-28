@@ -30,5 +30,7 @@ angular.module('app', [
         'angular-confirm',
         'ngSanitize',
         'ngCsv',
-        'ngCsvImport']
+        'ngCsvImport',
+        'ngFileUpload',
+        'dcbImgFallback']
 );

@@ -1,6 +1,7 @@
 node_modules/
 config/
 public/bower_components
+public/img/clients
 
 ehthumbs.db
 Thumbs.db

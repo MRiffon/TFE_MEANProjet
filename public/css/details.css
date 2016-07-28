@@ -76,3 +76,18 @@ div.block>div.content>pre {
     padding: 10px;
     margin: 0;
 }
+
+.profil-content{
+    padding-left: 30px;
+    width: 300px;
+    clear: both;
+}
+
+.profil-content input{
+    width: 100%;
+    clear: both;
+}
+
+.user-avatar{
+    border-radius: 10%;
+}
