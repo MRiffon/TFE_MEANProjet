@@ -70,8 +70,9 @@ module.exports = function(io){
         
         // Notif à un certain utilisateur qu'une room le concernant a été créée
         socket.on('notif-newRoom', function(data){
-            console.log('notif-newRoom serverside dataRoom : ' + data.name);
+            console.log('notif-newRoom serverside dataRoom : ' + data.chatRoom);
             for(var i = 0; i < data.users.length; i++){
+                console.log("emitted to : " + data.users[i]);
                 usersSocket[data.users[i]].emit('newRoom', data);
             }
         });

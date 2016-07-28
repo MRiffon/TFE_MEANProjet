@@ -63,7 +63,7 @@ module.exports = {
 
             user.makePassword(req.body.password);
 
-            user.chatRooms[0] = req.body.chatRooms[0];
+            user.chatRooms = req.body.chatRooms;
 
             user.save(function(err){
                 if (err){
@@ -86,17 +86,22 @@ module.exports = {
     },
 
     updateChatrooms: function(req, res){
-        User.find({ username: {$in: req.body.users}}).exec(function(err, users){
+        console.log("users_handler : updating users' rooms");
+        User.find({username: {$in: req.body.users}}).exec(function(err, users){
             if(err){
                 res.send(err);
             } else {
                 for(var i = 0; i < users.length; i++){
                     users[i].chatRooms.push(req.body.chatRoom);
                     users[i].save(function(err){
-                        if(err)
+                        if(err){
                             res.send(err);
-                    })
+                        }
+                    });
                 }
+                //Renvoyez un code status ok, évite un pending sur la fonction save() et les 3-4 doublons qui l'accompagnent.
+                //Ca reste cependant une solution qui me semble brouillon, à voir si ca pose des problèmes plus tard.
+                res.send(200);
             }
         })
     }

@@ -26,8 +26,6 @@ function chatData($http, userData, $sessionStorage){
                 }
             }
 
-            //Renvoie un tableau contenant les objets Rooms.
-            console.log(fillInRooms(userRooms));
             return fillInRooms(userRooms);
         });
     };
@@ -55,20 +53,31 @@ function chatData($http, userData, $sessionStorage){
                 userRooms.privateRooms.push(allRooms[i]);
             }
         }
-
         return userRooms;
     }
 
-    createNewRoom = function(room){
-        return $http.post('/api/newRoom', room).then(function(response){
-            return response;
-        });
+    var createNewRoom = function(room){
+        if(userData.currentUser().chatRooms.indexOf(room.name) !== -1){
+            console.log("Error. Room already existing");
+        }
+        else{
+            console.log("Creating new chatRoom : " + room.name);
+            return $http.post('/api/newRoom', room).then(function(response){
+                return response;
+            });
+        }
+
     };
 
-    updateUsersRoom = function(req){
-        return $http.put('/api/updateRooms', req).then(function(response){
-            return response;
-        });
+    var updateUsersRoom = function(req){
+        if(userData.currentUser().chatRooms.indexOf(req.chatRoom) !== -1){
+            console.log("Error. User has already this room");
+        }
+        else{
+            console.log("user rooms updated");
+            $http.put('/api/updateRooms', req);
+        }
+
     };
 
     return {
