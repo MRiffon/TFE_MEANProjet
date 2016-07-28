@@ -18,6 +18,7 @@ function profilData($http, log){
     };
 
     updateProfil = function(user){
+        console.log(user);
         return $http.put('/api/profil', user, {
             headers: {
                 Authorization: 'Bearer ' + log.getToken()

@@ -73,6 +73,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
 
     // Gestion de l'update du status ou département
     $scope.updateUser = function(user, type, toUpdate){
+        user.location = 'admin';
         if(type === 'department'){
             user.department = toUpdate.name;
         } else if(type === 'status'){

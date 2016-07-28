@@ -39,6 +39,7 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
 
     $scope.saveEdit = function(isValid){
         if(isValid && $scope.userEdit.password === $scope.userEdit.confirmPassword){
+            $scope.userEdit.location = 'profil';
             profilData.updateProfil($scope.userEdit).then(function(response){
                 var status = response.status;
                 if(status === 200 && response.data.message === "Updated!"){

@@ -133,7 +133,11 @@ module.exports = {
         } else {
             var requete = '';
             if(req.payload.role === 'Admin'){
-                requete = req.body._id;
+                if(req.body.location === 'profil'){
+                    requete = req.payload._id;
+                }else{
+                    requete = req.body._id;
+                }
             } else {
                 requete = req.payload._id;
             }
@@ -145,7 +149,10 @@ module.exports = {
                         if(req.body.hasOwnProperty(key)){
                             if(key === "password"){
                                 user.makePassword(req.body[key]);
-                            } else {
+                            }else if(key === 'location'){
+
+                            }
+                            else {
                                 user[key] = req.body[key];
                             }
                         }

@@ -19,7 +19,7 @@ module.exports = function(app, upload){
 
     app.use(function(req, res, next){
         next();
-    })
+        })
 
     // Api user/auth/sess
     .get('/api/users', authentication, userHandler.list)
@@ -35,20 +35,8 @@ module.exports = function(app, upload){
     })
 
     // Api chat
-    .post('/api/setupChat', chatRoomHandler.setup)
     .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
-
-    // Api upload de files
-    .post('/api/upload', function(req, res){
-        upload(req, res, function(err){
-            if(err) {
-                res.json({error_code:1,err_desc:err});
-            } else {
-                res.json({error_code:0,err_desc:null});
-            }
-        })
-    })
 
     // Api setup models mongoose
     .post('/api/setupAdmin', setupHandler.setupAdmin)
@@ -72,7 +60,21 @@ module.exports = function(app, upload){
     .delete('/api/status/:status_id', statusHandler.delete)
     .post('/api/status', statusHandler.creation)
 
+    // Api upload de files
+    .post('/api/upload', function(req, res){
+        upload(req, res, function(err){
+            if(err) {
+                console.log(err);
+                res.json({error_code:1,err_desc:err});
+            } else {
+                res.json({error_code:0,err_desc:null});
+            }
+        })
+    })
+
     .get('*', function(req, res){
         res.sendFile(path.join(__dirname, '../public', 'index.html'));
     });
+
+
 };

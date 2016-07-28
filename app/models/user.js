@@ -19,8 +19,14 @@ var userSchema = new Schema({
         required: true,
         unique: true
     },
-    firstname: String,
-    lastname: String,
+    firstname: {
+        type: String,
+        default:''
+    },
+    lastname: {
+        type: String,
+        default:''
+    },
     status: {
         type: String,
         default: "Active",
