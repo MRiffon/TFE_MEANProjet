@@ -70,13 +70,9 @@ function chatData($http, userData, $sessionStorage){
     };
 
     var updateUsersRoom = function(req){
-        if(userData.currentUser().chatRooms.indexOf(req.chatRoom) !== -1){
-            console.log("Error. User has already this room");
-        }
-        else{
-            console.log("user rooms updated");
-            $http.put('/api/updateRooms', req);
-        }
+        console.log("user rooms updated");
+        console.log(req);
+         $http.put('/api/updateRooms', req);
 
     };
 

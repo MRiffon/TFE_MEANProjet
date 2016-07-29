@@ -33,7 +33,37 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     $scope.messages = [];
 
     var username = $sessionStorage.user.username;
-    // new user enter in the name
+
+    $scope.isGroupChatRoom = function(selectedRoom){
+
+        if ($scope.userRooms.groupRooms !== undefined && $scope.userRooms.groupRooms.length > 0){
+            for (var i = 0; i < $scope.userRooms.groupRooms.length; i++){
+                if($scope.userRooms.groupRooms[i].name === selectedRoom){
+                    return true;
+                }
+            }
+            return false;
+
+        }else{
+            return false;
+        }
+
+    };
+
+    $scope.leaveGroup = function(chatRoomName){
+
+        chatData.updateUsersRoom({
+            users : [
+                userData.currentUser().username
+            ],
+            chatRoom: chatRoomName,
+            action: 'remove'
+        });
+
+        $scope.$storage.user.chatRooms.splice($scope.$storage.user.chatRooms.indexOf(chatRoomName), 1);
+        $scope.userRooms.groupRooms.splice($scope.userRooms.groupRooms.indexOf(chatRoomName), 1);
+        $scope.switchRoom($scope.$storage.user.chatRooms[0]);
+    };
 
     $scope.switchRoom = function(room){
         $scope.selectedRoom = room;
@@ -75,7 +105,8 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
                     userData.currentUser().username,
                     user
                 ],
-                chatRoom: newRoom.name
+                chatRoom: newRoom.name,
+                action : 'add'
             });
 
             Socket.emit('notif-newRoom', {

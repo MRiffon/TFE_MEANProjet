@@ -2,9 +2,9 @@
     <h2>Chat, un truc de ouf</h2>
     <div class=jumbotron>
         <div class="container">
-            <div class="col-md-10 col-sm-10">
-
+            <div class="col-md-8 col-sm-8">
                 <h2>{{ chatRoomName }}</h2>
+
                 <h4>Messages : </h4>
                 <div style="height: 375px; overflow-y: auto; overflow-x: hidden" scroll-glue-bottom="true">
                     <ul>
@@ -25,6 +25,10 @@
                         <button type="submit" class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" ng-click="sendMessage(msg)">Envoyer</button>
                     </div>
                 </form>
+            </div>
+
+            <div class="col-md-2 col-sm-2">
+                <button ng-show="isGroupChatRoom(chatRoomName)" class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" ng-click="leaveGroup(chatRoomName)">Quitter groupe</button>
             </div>
             <div class="col-md-2 col-sm-2 adaptHeight">
                 <div class="sidebar-nav-nav-fixed pull-right affix">

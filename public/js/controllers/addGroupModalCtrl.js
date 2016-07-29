@@ -41,7 +41,8 @@ angular.module('addGroupModalCtrl', []).controller('modalAddGroupController', fu
                 //$scope.items.currentUserRooms.push(response.data.name);
                 chatData.updateUsersRoom({
                     users : $scope.addGroup.users,
-                    chatRoom: newRoom.name
+                    chatRoom: newRoom.name,
+                    action : 'add'
                 });
 
                 Socket.emit('notif-newRoom', {

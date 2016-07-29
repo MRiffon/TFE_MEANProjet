@@ -87,12 +87,19 @@ module.exports = {
 
     updateChatrooms: function(req, res){
         console.log("users_handler : updating users' rooms");
+        console.log("action : " + req.body.action);
         User.find({username: {$in: req.body.users}}).exec(function(err, users){
             if(err){
                 res.send(err);
             } else {
                 for(var i = 0; i < users.length; i++){
-                    users[i].chatRooms.push(req.body.chatRoom);
+                    if(req.body.action === 'add'){
+                        users[i].chatRooms.push(req.body.chatRoom);
+                    }else if(req.body.action === 'remove'){
+                        console.log('remove room : ' + req.body.chatRoom);
+                        users[i].chatRooms.splice(users[i].chatRooms.indexOf(req.body.chatRoom), 1);
+                    }
+
                     users[i].save(function(err){
                         if(err){
                             res.send(err);
@@ -101,7 +108,7 @@ module.exports = {
                 }
                 //Renvoyez un code status ok, évite un pending sur la fonction save() et les 3-4 doublons qui l'accompagnent.
                 //Ca reste cependant une solution qui me semble brouillon, à voir si ca pose des problèmes plus tard.
-                res.send(200);
+                res.sendStatus(200);
             }
         })
     }
