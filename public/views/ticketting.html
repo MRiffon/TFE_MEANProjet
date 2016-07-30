@@ -2,11 +2,12 @@
     <h1>Support ticketting</h1>
     <div class=jumbotron>
         <div class=container>
-            <h3>Tous les tickets</h3><hr>
+            <h3>{{ title }}</h3><hr>
 
             <div class="btn-toolbar">
-                <button class="btn btn-primary" ng-click="open()">Nouveau ticket</button>
-                <button class="btn btn-primary">Mes tickets</button>
+                <button class="btn btn-primary" ng-click="fetchAllTickets()">Tous les tickets</button>
+                <button class="btn btn-primary" ng-click="fetchOwnTickets()">Mes tickets</button>
+                <button class="btn" ng-click="open()">Nouveau ticket</button>
             </div><br>
 
             <div class="well">
@@ -14,7 +15,7 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th style="width: 100px;">Sujet</th>
+                        <th>Sujet</th>
                         <th>Statut</th>
                         <th>Priorité</th>
                         <th>Submitter</th>
@@ -25,22 +26,30 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Un sujet très long WWWWWWWWWWWWWWWWWWWWW</td>
-                        <td>{{ user.email }}</td>
-                        <td><select id="status" name="status" ng-options="option.name for option in status track by option.name" ng-model="selectedStatus[$index]" ng-change="updateUser(user, 'status', selectedStatus[$index])">
-                        </select></td>
-                        <td><select id="department" name="department" ng-options="option.name for option in departments" ng-model="selectedDepartments[$index]" ng-change="updateUser(user, 'department', selectedDepartments[$index])">
-                        </select></td>
-                        <td>
-                            <a href="" role="button" ng-click="deleteUser(user)" confirm="Etes-vous sûr de vouloir supprimer {{ user.username }} ?"><i class="glyphicon glyphicon-remove"></i></a>
+                    <tr ng-repeat="ticket in tickets">
+                        <td>{{ $index + 1 }}</td>
+                        <td class="widthSubjectTicket">{{ ticket.subject }}</td>
+                        <td><span ng-class="whichStatus(ticket.status)">{{ ticket.status }}</span></td>
+                        <td><span ng-class="whichPriority(ticket.priority)">{{ ticket.priority }}</span></td>
+                        <td>{{ ticket.submitter }}</td>
+                        <td>{{ ticket.assigned}}</td>
+                        <td>{{ ticket.department}}</td>
+                        <td>{{ ticket.client}}</td>
+                        <td>{{ ticket.deadline | date:'dd/MM/yyyy'}}</td>
+                        <td class="tdIconsWidth"><a><i class="glyphicon glyphicon-search"></i></a></td>
+
+                        <td ng-show="isConcerned(ticket)" class="tdIconsWidth"><a><i class="glyphicon glyphicon-edit"></i></a></td>
+                        <td ng-hide="isConcerned(ticket)"></td>
+
+                        <td ng-show="isConcerned(ticket)" class="tdIconsWidth">
+                            <a href="" role="button" ng-click="deleteTicket(ticket)" confirm="Etes-vous sûr de vouloir supprimer ce ticket ?"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
+                        <td ng-hide="isConcerned(ticket)"></td>
+
                     </tr>
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </div>

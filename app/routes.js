@@ -21,7 +21,7 @@ module.exports = function(app, upload){
 
     app.use(function(req, res, next){
         next();
-        })
+    })
 
     // Api user/auth/sess
     .get('/api/users', authentication, userHandler.list)
@@ -47,6 +47,7 @@ module.exports = function(app, upload){
     .post('/api/setupUserStatus', setupHandler.setupUserStatus)
     .post('/api/setupTicketStatus', setupHandler.setupTicketStatus)
     .post('/api/setupDepartments', setupHandler.setupDepartments)
+    .post('/api/setupTickets', setupHandler.setupTickets)
 
     // Api roles
     .get('/api/roles', rolesHandler.list)

@@ -8,14 +8,55 @@ ticket.factory('ticketData', ticketData);
 
 ticketData.$inject = ['$http', 'userData'];
 
-function ticketData($http, userData){
+function ticketData($http, log){
     var allTickets = function(){
-        return $http.get('/api/users', {
+        return $http.get('/api/tickets', {
             headers: {
                 Authorization: 'Bearer ' + log.getToken()
             }
         }).then(function(response){
             return response;
         });
+    };
+
+    deleteTicket = function(ticket){
+        return $http.delete('/api/tickets/'+ticket._id, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
+            return response;
+        }).catch(function(response){
+            return response;
+        });
+    };
+
+    createTicket = function(ticket){
+        return $http.post('/api/tickets', ticket, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
+            return response;
+        }).catch(function(response){
+            return response;
+        });
+    };
+
+    var searchedTickets = function(infos){
+        return $http.post('/api/searchTickets', infos, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
+            return response;
+        });
+    };
+
+    return {
+        allTickets : allTickets,
+        createTicket : createTicket,
+        deleteTicket : deleteTicket,
+        searchedTickets : searchedTickets
     };
 }

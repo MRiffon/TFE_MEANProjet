@@ -9,6 +9,7 @@ var Role = require('../models/role');
 var Department = require('../models/department');
 var ChatRoom = require('../models/chatroom');
 var User = require('../models/user');
+var Ticket = require('../models/ticket');
 
 module.exports = {
 
@@ -45,7 +46,6 @@ module.exports = {
             newChat.save(function(err, savedChat) {
                 if(err)
                     res.send(err);
-                console.log(savedChat);
             });
         }
         res.send('Chatrooms initiated !');
@@ -63,7 +63,6 @@ module.exports = {
             newRoles.save(function(err, savedRoles) {
                 if(err)
                     res.send(err);
-                console.log(savedRoles);
             });
         }
         res.send('Roles initiated !');
@@ -83,7 +82,6 @@ module.exports = {
             newStatus.save(function(err, savedStatus) {
                 if(err)
                     res.send(err);
-                console.log(savedStatus);
             });
         }
         res.send('User statuses initiated !');
@@ -105,7 +103,6 @@ module.exports = {
             newStatus.save(function(err, savedStatus) {
                 if(err)
                     res.send(err);
-                console.log(savedStatus);
             });
         }
         res.send('Ticket statuses initiated !');
@@ -127,9 +124,58 @@ module.exports = {
             newDepartments.save(function(err, savedDepartments) {
                 if(err)
                     res.send(err);
-                console.log(savedDepartments);
             });
         }
         res.send('Departments initiated !');
+    },
+    
+    setupTickets: function(req, res){
+        var tickets = [{
+            subject : 'Test1',
+            description : 'Une description random',
+            priority : 'Low',
+            submitter : 'admin',
+            client : 'SomeGuy',
+            assigned : 'testyolo',
+            department : 'Support',
+            deadline : new Date()
+        }, {
+            subject : 'Test2',
+            description : 'Une autre description random',
+            priority : 'Medium',
+            submitter : 'testyolo',
+            client : 'ThisGuy',
+            assigned : 'admin',
+            department : 'Direction',
+            deadline : new Date()
+        }, {
+            subject : 'Test3',
+            description : 'Une certaine description de ouf',
+            priority : 'High',
+            submitter : 'bolosse',
+            client : 'ThatGuy',
+            status : 'Closed',
+            assigned : 'testyolo',
+            department : 'Support',
+            deadline : new Date()
+        }, {
+            subject : 'Test4 assez long pour tout décaler',
+            description : 'Une autre certaine description de ouf',
+            priority : 'High',
+            submitter : 'testyolo',
+            client : 'ThatGuy',
+            assigned : 'bolosse',
+            department : 'R&D',
+            deadline : new Date()
+        }];
+
+        for (var i = 0; i < tickets.length; i++) {
+            var newTicket = new Ticket(tickets[i]);
+            newTicket.save(function(err, savedTicket) {
+                if(err)
+                    res.send(err);
+            });
+        }
+        res.send('Tickets initiated !');
     }
 };

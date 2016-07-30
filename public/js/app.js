@@ -34,5 +34,6 @@ angular.module('app', [
         'ngFileUpload',
         'dcbImgFallback',
         'ticketCtrl',
-        'ticketData']
+        'ticketData',
+        'addTicketModalCtrl']
 );

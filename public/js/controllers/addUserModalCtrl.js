@@ -11,6 +11,8 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
         password : ''
     };
 
+    $scope.items = items;
+
     $scope.selectedDepartment = {};
     $scope.dataLoginInvalid = false;
 
@@ -26,6 +28,8 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
             $scope.addUser.department = $scope.selectedDepartment.name;
             var addUser = [];
             addUser.push($scope.addUser);
+            $scope.items.user = $scope.addUser;
+            $scope.items.status = 'userAdded';
             adminData.createUser(addUser).then(function(response){
                 var msg = response.data.message;
                 if(msg === 'Created!'){

@@ -10,6 +10,10 @@ var ticketSchema = new Schema({
         type : String,
         required : true
     },
+    description: {
+        type : String
+    },
+    comments : [String],
     priority : {
         type : String,
         required : true
@@ -35,7 +39,7 @@ var ticketSchema = new Schema({
         type : String,
         required : true
     },
-    dueBye : {
+    deadline : {
         type : Date
     },
     created: {

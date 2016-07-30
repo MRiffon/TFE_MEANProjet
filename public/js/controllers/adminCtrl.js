@@ -39,13 +39,17 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
 
     fillInSelectStatus = function(users, status){
         $scope.selectedStatus = [];
+        console.log(users);
+        console.log(status);
         for(var i = 0; i < users.length; i++){
             for (var j = 0; j < status.length; j++){
                 if(users[i].status === status[j].name){
                     $scope.selectedStatus[i] = status[j];
+                    console.log($scope.selectedStatus[i]);
                 }
             }
         }
+        console.log($scope.selectedStatus);
     };
 
     // Chargement des infos pour lister les users
@@ -90,8 +94,9 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
 
     // Suppression d'un user avec confirmation
     $scope.deleteUser = function(user){
+        var userToDelete = user;
         adminData.deleteUser(user);
-        alert(user.username + ' a bien été supprimé !');
+        $scope.users.splice($scope.users.indexOf(userToDelete.subject), 1);
     };
 
     // Effectuer une recherche
@@ -192,6 +197,10 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
 
     // Gestion de la modal pour la création d'un user
     $scope.animationsEnabled = true;
+    $scope.items = {
+        user : {},
+        status : ''
+    };
     $scope.open = function (size) {
 
         $scope.items = {};
@@ -208,8 +217,12 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
             }
         });
 
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selected = selectedItem;
+        modalInstance.result.then(function () {
+            if($scope.items.status === 'userAdded'){
+                $scope.users.push($scope.items.user);
+                fillInSelectDepartments($scope.users, $scope.departments);
+                fillInSelectStatus($scope.users, $scope.status);
+            }
         });
     };
 });

@@ -91,3 +91,12 @@ div.block>div.content>pre {
 .user-avatar{
     border-radius: 10%;
 }
+
+.tdIconsWidth {
+    width: 5px;
+}
+
+.widthSubjectTicket {
+    width: 200px;
+    word-wrap: break-word;
+}

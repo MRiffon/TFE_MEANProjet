@@ -13,37 +13,21 @@ module.exports = {
             Ticket.find(function(err, tickets){
                 if(err)
                     res.send(err);
-                res.send(200).json(tickets);
+                res.status(200).json(tickets);
             })
         }
     },
 
     search: function(req, res){
-        if(req.payload.role !== 'Admin'){
-            res.status(401).end();
+        if(!req.payload._id){
+            res.status(401).json({message: "Authentication failure !"});
         } else {
-            if(req.body.type === 'Status'){
-                User.find({ status: req.body.infosToSearch }).exec(function(err, users){
+            if(req.body.type === 'ownTickets'){
+                Ticket.find({$or : [{submitter : req.body.infosToSearch}, {assigned : req.body.infosToSearch}]}).exec(function(err, tickets){
                     if(err){
                         res.send(err);
                     } else {
-                        res.status(200).json(users);
-                    }
-                })
-            } else if(req.body.type === 'Department'){
-                User.find({ department: req.body.infosToSearch }).exec(function(err, users){
-                    if(err){
-                        res.send(err);
-                    } else {
-                        res.status(200).json(users);
-                    }
-                })
-            } else {
-                User.find({ username: req.body.infosToSearch }).exec(function(err, user){
-                    if(err) {
-                        res.send(err);
-                    } else {
-                        res.status(200).json(user);
+                        res.status(200).json(tickets);
                     }
                 })
             }
@@ -77,13 +61,13 @@ module.exports = {
             ticket.status = req.body.status;
             ticket.department = req.body.department;
             ticket.assigned = req.body.assigned;
-            ticket.dueBye = req.body.dueBye;
+            ticket.deadline = req.body.deadline;
 
             ticket.save(function(err){
                 if (err){
                     res.send(err);
                 } else {
-                    res.json(ticket);
+                    res.status(200).json({message: 'Created!'});
                 }
             });
         }
