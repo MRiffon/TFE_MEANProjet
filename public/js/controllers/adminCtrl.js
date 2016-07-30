@@ -23,7 +23,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         separatorVisible: true,
         result: null,
         encoding: 'ISO-8859-1',
-        encodingVisible: true,
+        encodingVisible: true
     };
 
     fillInSelectDepartments = function(users, departments){

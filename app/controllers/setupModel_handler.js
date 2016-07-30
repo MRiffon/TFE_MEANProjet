@@ -3,11 +3,13 @@
  */
 
 var mongoose = require('mongoose');
-var Status = require('../models/status');
+var UserStatus = require('../models/userStatus');
+var TicketStatus = require('../models/ticketStatus');
 var Role = require('../models/role');
 var Department = require('../models/department');
 var ChatRoom = require('../models/chatroom');
 var User = require('../models/user');
+
 module.exports = {
 
     setupAdmin: function(req, res){
@@ -67,7 +69,7 @@ module.exports = {
         res.send('Roles initiated !');
     },
 
-    setupStatus: function(req, res){
+    setupUserStatus: function(req, res){
         var status = [{
             name: 'Active'
         }, {
@@ -77,14 +79,36 @@ module.exports = {
         }];
 
         for (var i = 0; i < status.length; i++) {
-            var newStatus = new Status(status[i]);
+            var newStatus = new UserStatus(status[i]);
             newStatus.save(function(err, savedStatus) {
                 if(err)
                     res.send(err);
                 console.log(savedStatus);
             });
         }
-        res.send('Status initiated !');
+        res.send('User statuses initiated !');
+    },
+
+    setupTicketStatus: function(req, res){
+        var status = [{
+            name: 'Open'
+        }, {
+            name: 'Closed'
+        }, {
+            name: 'Pending'
+        }, {
+            name : 'In Progress'
+        }];
+
+        for (var i = 0; i < status.length; i++) {
+            var newStatus = new TicketStatus(status[i]);
+            newStatus.save(function(err, savedStatus) {
+                if(err)
+                    res.send(err);
+                console.log(savedStatus);
+            });
+        }
+        res.send('Ticket statuses initiated !');
     },
 
     setupDepartments: function(req, res){
