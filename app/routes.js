@@ -10,6 +10,7 @@ var rolesHandler = require('./controllers/roles_handler');
 var departmentsHandler = require('./controllers/department_handler');
 var userStatusHandler = require('./controllers/userStatus_handler');
 var ticketStatusHandler = require('./controllers/ticketStatus_handler');
+var ticketHandler = require('./controllers/tickets_handler');
 var jwt = require('express-jwt');
 var configjwt = require('../config/jwt.js');
 
@@ -66,6 +67,13 @@ module.exports = function(app, upload){
     .get('/api/ticketStatus', ticketStatusHandler.list)
     .delete('/api/ticketStatus/:status_id', ticketStatusHandler.delete)
     .post('/api/ticketStatus', ticketStatusHandler.creation)
+        
+    // Api tickets
+    .get('/api/tickets', authentication, ticketHandler.list)
+    .post('/api/searchTickets', authentication, ticketHandler.search)
+    .delete('/api/tickets/:ticket_id', authentication, ticketHandler.delete)
+    .post('/api/tickets', authentication, ticketHandler.creation)
+    .put('/api/editTicket', authentication, ticketHandler.edit)
 
     // Api upload de files
     .post('/api/upload', function(req, res){
@@ -82,6 +90,4 @@ module.exports = function(app, upload){
     .get('*', function(req, res){
         res.sendFile(path.join(__dirname, '../public', 'index.html'));
     });
-
-
 };

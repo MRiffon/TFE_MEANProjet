@@ -32,5 +32,7 @@ angular.module('app', [
         'ngCsv',
         'ngCsvImport',
         'ngFileUpload',
-        'dcbImgFallback']
+        'dcbImgFallback',
+        'ticketCtrl',
+        'ticketData']
 );

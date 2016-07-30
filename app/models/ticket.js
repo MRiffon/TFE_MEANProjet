@@ -35,9 +35,6 @@ var ticketSchema = new Schema({
         type : String,
         required : true
     },
-    begin : {
-        type : Date
-    },
     dueBye : {
         type : Date
     },

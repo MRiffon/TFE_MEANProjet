@@ -77,6 +77,13 @@ angular.module('appRoutes', []).config(function($stateProvider, $urlRouterProvid
                 }
             }
         })
+        
+        .state('ticketting', {
+            url: '/ticketting', 
+            parent: 'dashboard',
+            templateUrl: './views/ticketting.html', 
+            controller: 'ticketController'
+        })
 
         .state('error', {
             url: '/error',

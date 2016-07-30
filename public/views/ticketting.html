@@ -1,0 +1,46 @@
+<div>
+    <h1>Support ticketting</h1>
+    <div class=jumbotron>
+        <div class=container>
+            <h3>Tous les tickets</h3><hr>
+
+            <div class="btn-toolbar">
+                <button class="btn btn-primary" ng-click="open()">Nouveau ticket</button>
+                <button class="btn btn-primary">Mes tickets</button>
+            </div><br>
+
+            <div class="well">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th style="width: 100px;">Sujet</th>
+                        <th>Statut</th>
+                        <th>Priorité</th>
+                        <th>Submitter</th>
+                        <th>Assigné</th>
+                        <th>Département</th>
+                        <th>Client</th>
+                        <th>Pour</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Un sujet très long WWWWWWWWWWWWWWWWWWWWW</td>
+                        <td>{{ user.email }}</td>
+                        <td><select id="status" name="status" ng-options="option.name for option in status track by option.name" ng-model="selectedStatus[$index]" ng-change="updateUser(user, 'status', selectedStatus[$index])">
+                        </select></td>
+                        <td><select id="department" name="department" ng-options="option.name for option in departments" ng-model="selectedDepartments[$index]" ng-change="updateUser(user, 'department', selectedDepartments[$index])">
+                        </select></td>
+                        <td>
+                            <a href="" role="button" ng-click="deleteUser(user)" confirm="Etes-vous sûr de vouloir supprimer {{ user.username }} ?"><i class="glyphicon glyphicon-remove"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
