@@ -19,6 +19,22 @@ function ticketData($http, log){
         });
     };
 
+    var searchedTickets = function(infos){
+        return $http.post('/api/searchTickets', infos, {
+            headers: {
+                Authorization: 'Bearer ' + log.getToken()
+            }
+        }).then(function(response){
+            return response;
+        });
+    };
+    
+    var allTicketsStatus = function(){
+        return $http.get('/api/ticketStatus').then(function(response){
+            return response;
+        });
+    };
+    
     deleteTicket = function(ticket){
         return $http.delete('/api/tickets/'+ticket._id, {
             headers: {
@@ -43,8 +59,8 @@ function ticketData($http, log){
         });
     };
 
-    var searchedTickets = function(infos){
-        return $http.post('/api/searchTickets', infos, {
+    updateTicket = function(ticket){
+        return $http.put('/api/editTicket', ticket, {
             headers: {
                 Authorization: 'Bearer ' + log.getToken()
             }
@@ -55,8 +71,10 @@ function ticketData($http, log){
 
     return {
         allTickets : allTickets,
+        searchedTickets : searchedTickets,
+        allTicketsStatus : allTicketsStatus,
         createTicket : createTicket,
         deleteTicket : deleteTicket,
-        searchedTickets : searchedTickets
+        updateTicket : updateTicket
     };
 }

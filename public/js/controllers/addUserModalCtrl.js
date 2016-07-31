@@ -31,6 +31,8 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
             $scope.items.user = $scope.addUser;
             $scope.items.status = 'userAdded';
             adminData.createUser(addUser).then(function(response){
+                
+                // ajouter le ticket à l'utilisateur !
                 var msg = response.data.message;
                 if(msg === 'Created!'){
                     $uibModalInstance.close();

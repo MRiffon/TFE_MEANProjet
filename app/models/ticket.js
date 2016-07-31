@@ -45,6 +45,14 @@ var ticketSchema = new Schema({
     created: {
         type: Date,
         default: Date.now
+    },
+    updated: {
+        type : Date,
+        required : true
+    },
+    lastUpdateBy : {
+        type : String,
+        required : true
     }
 });
 

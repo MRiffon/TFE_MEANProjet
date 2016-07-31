@@ -138,7 +138,10 @@ module.exports = {
             client : 'SomeGuy',
             assigned : 'testyolo',
             department : 'Support',
-            deadline : new Date()
+            deadline : new Date(),
+            updated : new Date(),
+            lastUpdateBy : 'admin',
+            comments : ['Une premier commentaire random', 'Un autre pour la route !']
         }, {
             subject : 'Test2',
             description : 'Une autre description random',
@@ -147,7 +150,9 @@ module.exports = {
             client : 'ThisGuy',
             assigned : 'admin',
             department : 'Direction',
-            deadline : new Date()
+            deadline : new Date(),
+            updated : new Date(),
+            lastUpdateBy : 'testyolo',
         }, {
             subject : 'Test3',
             description : 'Une certaine description de ouf',
@@ -157,7 +162,9 @@ module.exports = {
             status : 'Closed',
             assigned : 'testyolo',
             department : 'Support',
-            deadline : new Date()
+            deadline : new Date(),
+            updated : new Date(),
+            lastUpdateBy : 'bolosse',
         }, {
             subject : 'Test4 assez long pour tout décaler',
             description : 'Une autre certaine description de ouf',
@@ -166,7 +173,9 @@ module.exports = {
             client : 'ThatGuy',
             assigned : 'bolosse',
             department : 'R&D',
-            deadline : new Date()
+            deadline : new Date(),
+            updated : new Date(),
+            lastUpdateBy : 'testyolo',
         }];
 
         for (var i = 0; i < tickets.length; i++) {

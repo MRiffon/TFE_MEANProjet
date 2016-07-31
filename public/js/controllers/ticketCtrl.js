@@ -5,6 +5,26 @@
 angular.module('ticketCtrl', []).controller('ticketController', function($scope, userData, ticketData, $uibModal){
 
     $scope.title = 'Tous les tickets';
+    $scope.showOneTicket = false;
+    $scope.isAdmin = userData.isAdmin();
+
+    // scope à passer à la fonction open() afin de savoir le type d'action
+    $scope.addButton = 'add';
+    $scope.editButton = 'edit';
+
+    var currentUser = userData.currentUser();
+    
+    $scope.ticket = {
+        subject : '',
+        submitter : '', 
+        assigned : '',
+        deadline : '',
+        status : '',
+        description : '',
+        priority : '',
+        department : '',
+        updated : ''
+    };
 
     fetchAllTickets = function(){
         ticketData.allTickets().then(function(response){
@@ -14,11 +34,14 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
 
     fetchAllTickets();
 
+    // fetch tous les tickets existants
     $scope.fetchAllTickets = function(){
         fetchAllTickets();
         $scope.title = 'Tous les tickets';
+        $scope.showOneTicket = false;
     };
 
+    // fetch tous les tickets concernant l'utilisateur concerné
     $scope.fetchOwnTickets = function(){
         var infos = {
             type : 'ownTickets',
@@ -28,6 +51,7 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         ticketData.searchedTickets(infos).then(function(response){
             $scope.tickets = response.data;
             $scope.title = 'Mes tickets';
+            $scope.showOneTicket = false;
         });
     };
 
@@ -38,6 +62,11 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         $scope.tickets.splice($scope.tickets.indexOf(ticketToDelete.subject), 1);
     };
 
+    $scope.showTicket = function(ticket){
+        $scope.title = 'Consulter un ticket';
+        $scope.ticket = ticket;
+        $scope.showOneTicket = true;
+    };
     
     $scope.whichPriority = function(priority){
         if(priority === 'High'){
@@ -54,23 +83,30 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
     };
 
     $scope.isConcerned = function(ticket){
-        if(userData.currentUser().username === ticket.submitter || userData.currentUser().username === ticket.assigned || userData.currentUser().role === 'Admin'){
+        if(currentUser.username === ticket.submitter || currentUser.username === ticket.assigned || currentUser.role === 'Admin'){
             return true;
         } else return false;
     };
 
-    // Gestion de la modal pour la création d'un ticket
+    // Gestion de la modal pour la création ou l'édition d'un ticket
     $scope.animationsEnabled = true;
     $scope.items = {
         ticket : {},
-        status : ''
+        status : '',
+        typeModal : ''
     };
-    $scope.open = function (size) {
+    $scope.open = function (type, ticket, size) {
 
+        $scope.items.typeModal = type;
+        if($scope.items.typeModal === 'edit'){
+            $scope.items.ticket = Object.create(ticket);
+        }
+
+        console.log($scope.items);
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
-            templateUrl: '../views/modals/addTicketModalView.html',
-            controller: 'modalAddTicketController',
+            templateUrl: '../views/modals/ticketModalView.html',
+            controller: 'modalTicketController',
             size: size,
             resolve: {
                 items: function () {

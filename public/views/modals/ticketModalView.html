@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3 class="modal-title">Nouveau ticket</h3>
+    <h3 class="modal-title">{{ title }}</h3>
 </div>
 <div class="row">
     <div class="col-sm-1"></div>
@@ -15,6 +15,15 @@
                     <b>Description :</b>
                     <textarea style="resize:none" class="form-control" type="description" id="description" name="description" ng-model="addTicket.description" ng-required="false"></textarea>
                 </div>
+                <div ng-show="isEdit" class="form-group">
+                    <b>Commentaire :</b>
+                    <textarea style="resize:none" class="form-control" type="comment" id="comment" name="comment" ng-model="addedComment" ng-required="false"></textarea>
+                </div>
+                <div ng-show="isEdit" class="form-group">
+                    <b>Statut :</b>
+                    <select class="form-control" id="status" name="status" ng-options="option for option in status" ng-model="addTicket.status" ng-required="false">
+                    </select>
+                </div>
                 <div class="form-group">
                     <b>Priorité : </b>
                     <select class="form-control" id="priority" name="priority" ng-options="option for option in priorities" ng-model="addTicket.priority" ng-required="true">
@@ -23,13 +32,13 @@
                 </div>
                 <div class="form-group">
                     <b>Département concerné :</b>
-                    <select class="form-control" id="department" name="department" ng-options="option.name for option in departments track by option.name" ng-model="selectedDepartment" ng-change="fillInListPotentialUsers()" ng-required="true">
+                    <select class="form-control" id="department" name="department" ng-options="option for option in departments" ng-model="selectedDepartment" ng-change="fillInListPotentialUsers()" ng-required="true">
                     </select>
                     <span ng-show="addTicketForm.department.$invalid && submitted">Département concerné requis !</span>
                 </div>
                 <div class="form-group">
                     <b>Assigné une personne :</b>
-                    <select class="form-control" id="assigned" name="assigned" ng-options="option.username for option in potentialAssignedUsers track by option.username" ng-model="selectedAssigned" ng-required="true">
+                    <select class="form-control" id="assigned" name="assigned" ng-options="option for option in potentialAssignedUsers" ng-model="selectedAssigned" ng-required="true">
                     </select>
                     <span ng-show="addTicketForm.assigned.$invalid && submitted">Veuillez choisir une personne assignée !</span>
                 </div>
@@ -40,13 +49,13 @@
                 </div>
                 <div class="form-group">
                     <b>Deadline :</b>
-                    <input class="form-control" type="datetime-local" id="deadline" name="deadline"  ng-value="today | date:'yyyy-MM-ddTHH:mm'" ng-min="today | date:'yyyy-MM-ddTHH:mm'" ng-model="addTicket.deadline" ng-required="true">
+                    <input class="form-control" type="datetime-local" id="deadline" name="deadline"  ng-value="displayDate | date:'yyyy-MM-ddTHH:mm'" ng-min="today | date:'yyyy-MM-ddTHH:mm'" ng-model="selectedDeadline" ng-required="true">
                     <span ng-show="addTicketForm.deadline.$invalid && addTicketForm.deadline.$error && submitted">Veuillez préciser une deadline valide !</span>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" type="submit">Créer le ticket</button>
+            <button class="btn btn-primary" type="submit">{{ txtButton }}</button>
         </div>
     </form>
     <div class="col-md-1"></div>

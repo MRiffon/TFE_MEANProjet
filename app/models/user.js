@@ -44,10 +44,6 @@ var userSchema = new Schema({
     hash: String,
     salt: String,
     chatRooms: [String],
-    tickets : [{
-        subject : String,
-        role : String // assigned ou submitter
-    }],
     created: {
         type: Date,
         default: Date.now

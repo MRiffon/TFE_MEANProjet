@@ -55,6 +55,7 @@ module.exports = {
             var ticket = new Ticket();
 
             ticket.subject = req.body.subject;
+            ticket.description = req.body.description;
             ticket.priority = req.body.priority;
             ticket.submitter = req.body.submitter;
             ticket.client = req.body.client;
@@ -62,6 +63,8 @@ module.exports = {
             ticket.department = req.body.department;
             ticket.assigned = req.body.assigned;
             ticket.deadline = req.body.deadline;
+            ticket.updated = new Date();
+            ticket.lastUpdateBy = req.body.lastUpdateBy;
 
             ticket.save(function(err){
                 if (err){
@@ -74,6 +77,7 @@ module.exports = {
     },
 
     edit: function(req, res){
+        console.log(req.body);
         if(!req.payload._id){
             res.status(401).json({message: "Authentication failure !"});
         } else {
@@ -83,7 +87,11 @@ module.exports = {
                 } else {
                     for(var key in req.body){
                         if(req.body.hasOwnProperty(key)){
-                            ticket[key] = req.body[key];
+                            if(key === 'updated') {
+                                ticket[key] = new Date();
+                            } else if(key === 'comment'){
+                                ticket.comments.push(req.body[key]);
+                            } else ticket[key] = req.body[key];
                         }
                     }
                     ticket.save(function(err){

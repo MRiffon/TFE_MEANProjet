@@ -35,5 +35,5 @@ angular.module('app', [
         'dcbImgFallback',
         'ticketCtrl',
         'ticketData',
-        'addTicketModalCtrl']
+        'ticketModalCtrl']
 );
