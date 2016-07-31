@@ -39,7 +39,7 @@
     "angular-sanitize": "^1.5.8",
     "angular-csv-import": "^0.0.36",
     "ng-file-upload": "^12.0.4",
-    "angular-img-fallback": "^0.2.0"
+    "angular-img-fallback": "^0.2.0",
     "angular-scroll-glue": "^2.0.7",
     "angular-bootstrap": "^2.0.0"
   },
