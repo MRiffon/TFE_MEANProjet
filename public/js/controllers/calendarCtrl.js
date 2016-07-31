@@ -2,7 +2,7 @@
  * Created by Martouf on 26-05-16.
  */
 
-angular.module('calendarCtrl', []).controller('calendarController', function($scope, calendarData, $location, $http, uiCalendarConfig, $uibModal, $log){
+angular.module('calendarCtrl', []).controller('calendarController', function($scope, calendarData, $location, $sessionStorage, $http, uiCalendarConfig, $uibModal, $log){
 
     $scope.date = new Date();
     var d = $scope.date.getDate();
@@ -12,15 +12,27 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
     $scope.timeUnityReminder = "";
     $scope.durationReminder = 0;
     $scope.events = [];
+    $scope.companyEvents = [];
     $scope.isAppAuthorized = false;
+    $scope.isEventsLoaded = false;
+
     /* event sources array*/
     $scope.eventSources = [];
 
     $scope.getEvents = function(){
         if($scope.isAppAuthorized === false){
+            console.log($scope.events.length);
             calendarData.loadEvents($scope.isAppAuthorized).then(function(response){
-                $scope.events = response;
+                console.log(response);
+                var result = response;
+                $scope.events = result.personnalEvents;
+                $scope.companyEvents = result.companyEvents;
+                console.log($scope.events);
+                console.log($scope.companyEvents);
+                console.log(new Date().getTime());
+                uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
                 uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
+                uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.companyEvents);
             });
             $scope.isAppAuthorized = true;
         }

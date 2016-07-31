@@ -22,6 +22,6 @@ angular.module('app', [
         'ngStorage',
         'ngAnimate',
         'ui.bootstrap',
-        'modalCtrl',
+        'eventModalCtrl',
         'calendarData']
 );

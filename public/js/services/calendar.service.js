@@ -6,9 +6,9 @@ var calendar = angular.module('calendarData', []);
 
 calendar.factory('calendarData', calendarData);
 
-calendar.$inject = ['$q'];
+calendar.$inject = ['$q', '$location'];
 
-function calendarData($q) {
+function calendarData($q, $location) {
     var deferred = $q.defer();
 
     var loadEvents = function(isAppAuthorized){
@@ -40,8 +40,10 @@ function calendarData($q) {
         var authorizeDiv = document.getElementById('authorize-div');
         if (authResult && !authResult.error) {
             // Hide auth UI, then load client library.
-            authorizeDiv.style.display = 'none';
-            console.log('On a l authorisation de google');
+            if($location.url() === '/dashboard/calendar'){
+                console.log("on a l'autorisation de google");
+                authorizeDiv.style.display = 'none';
+            }
             return loadCalendarApi();
         } else {
             // Show auth UI, allowing the user to initiate authorization by
@@ -69,10 +71,15 @@ function calendarData($q) {
         gapi.client.load('calendar', 'v3', listUpcomingEvents);
     }
 
-    /**
-     * Renvoie les events récupérés.
-     */
-    function listUpcomingEvents () {
+    function listCalendars(){
+        var request = gapi.client.calendar.calendarList.list({});
+        request.execute(function(resp){
+           console.log(resp.items);
+        });
+    }
+
+    function loadPersonnalCalendar() {
+        var personnalEvents = [];
         var request = gapi.client.calendar.events.list({
             'calendarId': 'primary',
             'timeMin': (new Date()).toISOString(),
@@ -82,30 +89,76 @@ function calendarData($q) {
             'orderBy': 'startTime'
         });
 
-        request.execute(function(resp) {
+        request.execute(function (resp) {
             var events = resp.items;
-            console.log(events[1]);
-            var formattedEvents = [];
-            for (var i = 0; i < events.length; i++){
+
+
+            for (var i = 0; i < events.length; i++) {
                 var singleEvent = {
-                    title : events[i].summary,
-                    start : new Date(events[i].start.dateTime),
-                    end : new Date(events[i].end.dateTime),
-                    description : events[i].description,
-                    location : events[i].location,
-                    reminders : events[i].reminders,
-                    id : events[i].id
+                    title: events[i].summary,
+                    start: new Date(events[i].start.dateTime),
+                    end: new Date(events[i].end.dateTime),
+                    description: events[i].description,
+                    location: events[i].location,
+                    reminders: events[i].reminders,
+                    id: events[i].id
                 };
                 console.log(singleEvent);
-                formattedEvents.push(singleEvent);
+                console.log(new Date().getTime());
+                personnalEvents.push(singleEvent);
             }
-            deferred.resolve(formattedEvents);
         });
+        return personnalEvents;
+    }
+
+    function loadCompanyCalendar() {
+        var companyEvents = [];
+        var request = gapi.client.calendar.events.list({
+            'calendarId': 'm85on1nu9kuaqavesiv5ov3sgo@group.calendar.google.com',
+            'timeMin': (new Date()).toISOString(),
+            'showDeleted': false,
+            'singleEvents': true,
+            'maxResults': 10,
+            'orderBy': 'startTime'
+        });
+
+        request.execute(function (resp) {
+            var events = resp.items;
+            console.log(events[0]);
+
+            for (var i = 0; i < events.length; i++) {
+                var singleEvent = {
+                    title: events[i].summary,
+                    start: new Date(events[i].start.dateTime),
+                    end: new Date(events[i].end.dateTime),
+                    description: events[i].description,
+                    location: events[i].location,
+                    reminders: events[i].reminders,
+                    id: events[i].id
+                };
+                console.log(singleEvent);
+                companyEvents.push(singleEvent);
+            }
+        });
+        return companyEvents;
+    }
+
+    /**
+     * Renvoie les events récupérés.
+     */
+    function listUpcomingEvents () {
+        var formattedEvents = {
+            personnalEvents: loadPersonnalCalendar(),
+            companyEvents: loadCompanyCalendar()
+        };
+
+        console.log(formattedEvents);
+        deferred.resolve(formattedEvents);
+
     }
 
     function sendEvent (event, typeRequest) {
         if(event.durationReminder != undefined){
-            console.log('Y a des minutes');
             var minutes = calculateReminderTime(event.timeUnityReminder, event.durationReminder);
             var reminders = {
                 useDefault: false,
