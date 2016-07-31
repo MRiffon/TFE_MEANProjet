@@ -7,10 +7,9 @@ var Message = require('./models/message');
 
 module.exports = function(io){
     var users = [];
+    var usersSocket = [];
 
     io.on('connection', function(socket){
-
-        //socket.emit('setup', {rooms: rooms});
 
         //listen for new users
         socket.on('new user', function(data){
@@ -45,26 +44,37 @@ module.exports = function(io){
             })
         });
 
-
-        /*socket.on('requestUsers', function(){
-            socket.emit('users', {users: users});
+        socket.on('requestUsers', function(){
+            socket.emit('listUsers', {users: users});
         });
 
-        socket.on('addUser', function(data){
+        // Signal nouvel utilisateur connecté
+        socket.on('userConnected', function(data){
+            usersSocket[data.username] = socket;
             if(users.indexOf(data.username) == -1){
-                io.emit('addUser', {username: data.username});
-                console.log('user a ajouter : ' + data.username);
+                // envoi signal à tout le monde
+                io.emit('userConnected', {username: data.username});
                 username = data.username;
                 users.push(data.username);
-                console.log('users avant delete : ' + users);
+                console.log('Liste des users connectés après connexion : ' + users);
             }
         });
 
-        socket.on('disconnect', function(){
-            console.log(username + ' has disconnected');
-            users.splice(users.indexOf(username), 1);
-            console.log('Users après delete : ' + users);
-            io.emit('removeUser', {username: username});
-        });*/
+        // Signal d'un utilisateur qui a déconnecté
+        socket.on('userDisconnected', function(data){
+            console.log(data.username + ' has disconnected');
+            users.splice(users.indexOf(data.username), 1);
+            console.log('Users après disconnect : ' + users);
+            io.emit('userDisconnected', {username: data.username});
+        });
+        
+        // Notif à un certain utilisateur qu'une room le concernant a été créée
+        socket.on('notif-newRoom', function(data){
+            console.log('notif-newRoom serverside dataRoom : ' + data.chatRoom);
+            for(var i = 0; i < data.users.length; i++){
+                console.log("emitted to : " + data.users[i]);
+                usersSocket[data.users[i]].emit('newRoom', data);
+            }
+        });
     });
 };

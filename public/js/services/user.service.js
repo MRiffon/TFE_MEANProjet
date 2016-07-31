@@ -2,12 +2,12 @@
  * Created by Michaël and Martin on 06-04-16.
  */
 
-var auth = angular.module('authentication', []);
+var auth = angular.module('userData', []);
 
-auth.factory('userData', log);
+auth.factory('userData', userData);
 
-log.$inject = ['$http', '$window'];
-function log($http, $window){
+userData.$inject = ['$http', '$window', 'Socket'];
+function userData($http, $window, Socket){
 
     var saveToken = function(token){
         $window.localStorage['mean-token'] = token;
@@ -17,8 +17,9 @@ function log($http, $window){
         return $window.localStorage['mean-token'];
     };
 
-    logout = function(){
+    logout = function(username){
         $window.localStorage.removeItem('mean-token');
+        Socket.emit('userDisconnected', {username : username});
     };
 
     var loggedIn = function(){
@@ -29,6 +30,10 @@ function log($http, $window){
             payload = token.split('.')[1];
             payload = $window.atob(payload);
             payload = JSON.parse(payload);
+
+            Socket.connect();
+            Socket.emit('userConnected', {username: payload.username});
+
             return payload.expire > Date.now()/1000;
         } else return false;
     };
@@ -40,14 +45,15 @@ function log($http, $window){
             payload = $window.atob(payload);
             payload = JSON.parse(payload);
 
-            return {
-                _id : payload._id,
+            var userInfos = {
                 email : payload.email,
                 username : payload.username,
                 role : payload.role,
                 status : payload.status,
                 chatRooms : payload.chatRooms
             };
+
+            return userInfos;
         }
     };
 
@@ -59,13 +65,13 @@ function log($http, $window){
             return response;
         });
     };
-    
+
     isAdmin = function(user){
         var token = getToken();
         var payload = token.split('.')[1];
         payload = $window.atob(payload);
         payload = JSON.parse(payload);
-        
+
         if(payload.role === "Admin"){
             return true;
         } return false;

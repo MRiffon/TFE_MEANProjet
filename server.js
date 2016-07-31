@@ -41,7 +41,7 @@ mongoose.connect(config.db);
 
 // jwt secret config
 var configjwt = require('./config/jwt.js');
-app.set('secretjwt', configjwt.secret)
+app.set('secretjwt', configjwt.secret);
 
 var passport = require('passport');
 

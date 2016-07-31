@@ -6,46 +6,80 @@ var chat = angular.module('chatData', []);
 
 chat.factory('chatData', chatData);
 
-chatData.$inject = ['$http', 'userData'];
+chatData.$inject = ['$http', 'userData', '$sessionStorage'];
 
-function chatData($http, userData){
-
-    var messagesRoom = function(){
-        return $http.get('/api/getMsgs').then(function(response){
-            console.log();
-        });
-    };
+function chatData($http, userData, $sessionStorage){
 
     var userRooms = function(){
         return $http.get('/api/getRooms').then(function(response){
-            var userRoomsName = userData.currentUser().chatRooms;
+            var userRoomsName = $sessionStorage.user.chatRooms;
             var userRooms = [];
             var allRooms = response.data;
             var i;
             var j;
 
-            for (i = 0; i < userRoomsName.length; i++){
+            for (i = 0; i < allRooms.length; i++){
                 for (j = 0; j < allRooms.length; j++){
                     if (userRoomsName[i] === allRooms[j].name){
                         userRooms.push(allRooms[j]);
                     }
                 }
             }
-            //Renvoie un tableau contenant les objets Rooms.
-            return userRooms;
+
+            return fillInRooms(userRooms);
         });
     };
 
     var lastMessages = function(room){
-        console.log("room : " + room.name);
         return $http.post('/api/getMsgs', room).then(function(response){
-            console.log("response service last message : " + response.data[0].content);
             return response;
         });
     };
-    
+
+    function fillInRooms(allRooms){
+        var userRooms = {
+            globalRooms : [],
+            groupRooms : [],
+            privateRooms : []
+        };
+
+        for(var i = 0; i < allRooms.length; i++){
+            if(allRooms[i].type === 'Global'){
+                userRooms.globalRooms.push(allRooms[i]);
+            } else if(allRooms[i].type === 'Group'){
+                userRooms.groupRooms.push(allRooms[i]);
+            } else if(allRooms[i].type === 'Private'){
+                console.log('PrivateRooms added : ' + allRooms[i]);
+                userRooms.privateRooms.push(allRooms[i]);
+            }
+        }
+        return userRooms;
+    }
+
+    var createNewRoom = function(room){
+        if(userData.currentUser().chatRooms.indexOf(room.name) !== -1){
+            console.log("Error. Room already existing");
+        }
+        else{
+            console.log("Creating new chatRoom : " + room.name);
+            return $http.post('/api/newRoom', room).then(function(response){
+                return response;
+            });
+        }
+
+    };
+
+    var updateUsersRoom = function(req){
+        console.log("user rooms updated");
+        console.log(req);
+         $http.put('/api/updateRooms', req);
+
+    };
+
     return {
         userRooms: userRooms,
-        lastMessages: lastMessages
+        lastMessages: lastMessages,
+        createNewRoom : createNewRoom,
+        updateUsersRoom : updateUsersRoom
     };
 }

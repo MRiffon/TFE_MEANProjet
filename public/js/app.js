@@ -10,7 +10,7 @@ angular.module('app', [
         'appRun',
         'profilData',
         'chatData',
-        'authentication',
+        'userData',
         'Socket',
         'loginCtrl',
         'profilCtrl',
@@ -32,5 +32,7 @@ angular.module('app', [
         'ngCsv',
         'ngCsvImport',
         'ngFileUpload',
-        'dcbImgFallback']
+        'dcbImgFallback',
+        'luegg.directives',
+        'addGroupModalCtrl']
 );

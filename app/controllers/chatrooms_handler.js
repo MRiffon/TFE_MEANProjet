@@ -7,6 +7,28 @@ var ChatRoom = require('../models/chatroom');
 var Message = require('../models/message');
 
 module.exports = {
+    setup: function(req, res){
+        var chat = [{
+            created: new Date(),
+            name: 'Global',
+            type: 'Global'
+        }, {
+            created: new Date(),
+            name: 'Administratif',
+            type: 'Global'
+        }];
+
+        for (var i = 0; i < chat.length; i++) {
+            var newChat = new ChatRoom(chat[i]);
+            newChat.save(function(err, savedChat) {
+                if(err)
+                    res.send(err);
+                console.log(savedChat);
+            });
+        }
+        res.send('Chatrooms initiated !');
+    },
+
     getMsgs: function(req, res){
         console.log("log req : " + req);
         Message.find({
@@ -24,5 +46,19 @@ module.exports = {
                 res.json(rooms);
             }
         })
+    },
+
+    newRoom: function(req, res){
+        var newRoom = new ChatRoom();
+
+        newRoom.name = req.body.name;
+        newRoom.type = req.body.type;
+        newRoom.created = new Date();
+
+        newRoom.save(function(err){
+            if(err)
+                res.send(err);
+            res.json(newRoom);
+        });
     }
 };

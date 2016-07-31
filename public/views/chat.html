@@ -1,37 +1,58 @@
 <div>
-    <h2>Chat de forain</h2>
+    <h2>Chat, un truc de ouf</h2>
     <div class=jumbotron>
-        <div class=container>
-            <form name="selectRoomForm">
-                <label for="roomSelect"> Chatroom : </label>
-                <select name="roomSelect" id="roomSelect" ng-model="selectedRoom"
-                        ng-options="option.name for option in dataRooms track by option.name" ng-change="switchRoom()">
-                </select><br>
-            </form>
-            <ul>
-                <li ng-repeat="message in messages">
-                    <b>{{message.sender}}</b>
-                    <span>{{message.content}}</span>
-                </li>
-            </ul>
+        <div class="container">
+            <div class="col-md-8 col-sm-8">
+                <h2>{{ chatRoomName }}</h2>
 
-            <form>
-                <div class=form-content>
-                    <div class=form-group>
-                        <label>Messages : </label>
-                        <input type="text" id="chatMessages" placeholder="Votre message" ng-model="msg" class="form-control input-underline input-lg">
+                <h4>Messages : </h4>
+                <div style="height: 375px; overflow-y: auto; overflow-x: hidden" scroll-glue-bottom="true">
+                    <ul>
+                        <li ng-repeat="message in messages" style="list-style: none">
+                            <b>{{message.sender}}</b>
+                            <span style="word-wrap: break-word">{{message.content}}</span>
+                        </li>
+                    </ul>
+                </div><br>
+
+                <form>
+                    <div class=form-content>
+                        <div class=form-group>
+                            <input type="text" id="chatMessages" placeholder="Votre message" ng-model="msg" class="form-control" style="resize:none">
+                        </div>
                     </div>
-                </div>
-                <div class=form-group>
-                    <button type="submit" class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" ng-click="sendMessage(msg)">ENVOYER</button>
-                </div>
-            </form>
+                    <div class=form-group>
+                        <button type="submit" class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" ng-click="sendMessage(msg)">Envoyer</button>
+                    </div>
+                </form>
+            </div>
 
-            <ul>
-                <li ng-repeat="user in users">
-                    <b>{{user}}</b>
-                </li>
-            </ul>
+            <div class="col-md-2 col-sm-2">
+                <button ng-show="isGroupChatRoom(chatRoomName)" class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" ng-click="leaveGroup(chatRoomName)">Quitter groupe</button>
+            </div>
+            <div class="col-md-2 col-sm-2 adaptHeight">
+                <div class="sidebar-nav-nav-fixed pull-right affix">
+                    <h4>Chatrooms</h4>
+                    <ul class="nav">
+                        <li ng-repeat="room in userRooms.globalRooms">
+                            <a ng-click="switchRoom(room)" class="linkPointer">{{room.name}}</a>
+                        </li>
+                    </ul>
+                    <h4>Groupes</h4>
+                    <ul class="nav">
+                        <li><a ng-click="open()" class="linkPointer">ADD</a></li>
+                        <li ng-repeat="room in userRooms.groupRooms track by $index">
+                            <a ng-click="switchRoom(room)" class="linkPointer">{{room.name}}</a>
+                        </li>
+                    </ul>
+                    <h4>Utilisateurs</h4>
+                    <ul class="nav">
+                        <li ng-repeat="user in users track by $index">
+                            <a ng-show="isUrself(user)" ng-click="getPrivateRoom(user)" class="linkPointer">{{user}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>

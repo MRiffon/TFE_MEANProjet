@@ -29,14 +29,17 @@ module.exports = function(app, upload){
     .post('/api/login', userHandler.login)
     .get('/api/profil', authentication, userHandler.readProfil)
     .put('/api/profil', authentication, userHandler.editProfil)
+    .put('/api/updateRooms', userHandler.updateChatrooms)
     .get('/api/logout', function(req, res){
         req.logOut();
         res.redirect('/');
     })
 
     // Api chat
+    .post('/api/setupChat', chatRoomHandler.setup)
     .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
+    .post('/api/newRoom', chatRoomHandler.newRoom)
 
     // Api setup models mongoose
     .post('/api/setupAdmin', setupHandler.setupAdmin)
