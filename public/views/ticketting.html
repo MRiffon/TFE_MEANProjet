@@ -11,6 +11,30 @@
             </div><br>
 
             <div ng-hide="showOneTicket">
+                <form name="searchTicketsForm" role="form" novalidate>
+                    <div class=form-content>
+                        <div class=form-group row>
+                            <div class="col-md-4">
+                                <select ng-required="true" class="form-control" id="typeSearch" name="typeSearch" ng-options="option for option in searchOptions" ng-model="typeSearch" ng-change="changeTypeSearch(typeSearch)"></select>
+                            </div>
+                            <div class="col-md-5">
+                                <select ng-show="searchStatus" ng-change="searchResults()" class="form-control" id="status" name="status" ng-options="option for option in status" ng-model="infosToSearch" ng-required="true"></select>
+                                <select ng-show="searchPriority" ng-change="searchResults()" class="form-control" id="priority" name="priority" ng-options="option for option in priorities" ng-model="infosToSearch" ng-required="true"></select>
+                                <select ng-show="searchDepartment" ng-change="searchResults()" class="form-control" id="department" name="department" ng-options="option for option in departments" ng-model="infosToSearch" ng-required="true"></select>
+                                <input ng-show="searchSubject" type="text" id="subject" name="subject" class="form-control" placeholder="Votre recherche" ng-model="infosToSearch" ng-required="true">
+                            </div>
+                            <div>
+                                <button ng-click="searchResults()" class="btn btn-primary">Rechercher</button>
+                            </div>
+                            <span ng-show="searchUsersForm.status.$invalid && submitted && searchStatus">Statut requis !</span>
+                            <span ng-show="searchUsersForm.department.$invalid && submitted && searchDepartment">Département requis !</span>
+                            <span ng-show="searchUsersForm.username.$invalid && submitted && searchUsername">Username requis !</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div ng-hide="showOneTicket">
                 <div class="well">
                     <table class="table">
                         <thead>

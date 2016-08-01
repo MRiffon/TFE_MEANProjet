@@ -30,6 +30,38 @@ module.exports = {
                         res.status(200).json(tickets);
                     }
                 })
+            } else if(req.body.type === 'Department'){
+                Ticket.find({ department: req.body.infosToSearch }).exec(function(err, tickets){
+                    if(err){
+                        res.send(err);
+                    } else {
+                        res.status(200).json(tickets);
+                    }
+                })
+            } else if(req.body.type === 'Priority'){
+                Ticket.find({ priority: req.body.infosToSearch }).exec(function(err, tickets){
+                    if(err){
+                        res.send(err);
+                    } else {
+                        res.status(200).json(tickets);
+                    }
+                })
+            } else if(req.body.type === 'Status'){
+                Ticket.find({ status: req.body.infosToSearch }).exec(function(err, tickets){
+                    if(err){
+                        res.send(err);
+                    } else {
+                        res.status(200).json(tickets);
+                    }
+                })
+            } else {
+                Ticket.find({ subject: {'$regex': req.body.infosToSearch} }).exec(function(err, tickets){
+                    if(err){
+                        res.send(err);
+                    } else {
+                        res.status(200).json(tickets);
+                    }
+                })
             }
         }
     },

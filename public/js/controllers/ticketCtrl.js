@@ -2,7 +2,7 @@
  * Created by Michaël and Martin on 30-07-16.
  */
 
-angular.module('ticketCtrl', []).controller('ticketController', function($scope, userData, ticketData, $uibModal){
+angular.module('ticketCtrl', []).controller('ticketController', function($scope, userData, ticketData, $uibModal, adminData){
 
     $scope.title = 'Tous les tickets';
     $scope.showOneTicket = false;
@@ -11,6 +11,15 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
     // scope à passer à la fonction open() afin de savoir le type d'action
     $scope.addButton = 'add';
     $scope.editButton = 'edit';
+
+    $scope.searchOptions = ['Sujet', 'Statut', 'Priorité', 'Département'];
+    $scope.typeSearch = 'Sujet';
+    $scope.infosToSearch = '';
+    $scope.searchSubject = true;
+
+    $scope.status = [];
+    $scope.departments = [];
+    $scope.priorities = ['High', 'Medium', 'Low'];
 
     var currentUser = userData.currentUser();
     
@@ -33,6 +42,25 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
     };
 
     fetchAllTickets();
+
+    // on charge tous les départements pour affichage dans le select
+    adminData.allDepartments().then(function(response){
+        var departments = response.data;
+        for(var i = 0; i < departments.length; i++){
+            $scope.departments[i] = departments[i].name;
+        }
+    }, function(response){
+        console.log(response);
+    });
+
+    ticketData.allTicketsStatus().then(function(response){
+        var status = response.data;
+        for(var i = 0; i < status.length; i++){
+            $scope.status[i] = status[i].name;
+        }
+    }, function(response){
+        console.log(response);
+    });
 
     // fetch tous les tickets existants
     $scope.fetchAllTickets = function(){
@@ -66,6 +94,39 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         $scope.title = 'Consulter un ticket';
         $scope.ticket = ticket;
         $scope.showOneTicket = true;
+    };
+
+    $scope.searchResults = function(){
+        var infos = {
+            type : '',
+            infosToSearch : $scope.infosToSearch
+        };
+        if($scope.searchDepartment){
+            infos.type = 'Department';
+        } else if($scope.searchPriority){
+            infos.type = 'Priority';
+        } else if($scope.searchStatus){
+            infos.type = 'Status';
+        } else infos.type = 'Subject';
+        
+        ticketData.searchedTickets(infos).then(function(response){
+            $scope.tickets = response.data;
+            $scope.title = 'Résultats';
+        });
+    };
+
+    $scope.changeTypeSearch = function(typeSearch){
+        $scope.searchDepartment = false;
+        $scope.searchSubject = false;
+        $scope.searchStatus = false;
+        $scope.searchPriority = false;
+        if(typeSearch === 'Statut'){
+            $scope.searchStatus = true;
+        } else if(typeSearch === 'Département'){
+            $scope.searchDepartment = true;
+        } else if(typeSearch === 'Priorité'){
+            $scope.searchPriority = true;
+        } else $scope.searchSubject = true;
     };
     
     $scope.whichPriority = function(priority){
