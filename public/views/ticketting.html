@@ -39,7 +39,6 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>#</th>
                             <th>Sujet</th>
                             <th>Statut</th>
                             <th>Priorité</th>
@@ -48,8 +47,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="ticket in tickets">
-                            <td>{{ $index + 1 }}</td>
+                        <tr ng-repeat="ticket in tickets.slice(((currentPage - 1)*itemsPerPage), ((currentPage)*itemsPerPage))">
                             <td class="widthSubjectTicket">{{ ticket.subject }}</td>
                             <td><span ng-class="whichStatus(ticket.status)">{{ ticket.status }}</span></td>
                             <td><span ng-class="whichPriority(ticket.priority)">{{ ticket.priority }}</span></td>
@@ -67,6 +65,7 @@
                         </tr>
                         </tbody>
                     </table>
+                    <pagination uib-pagination total-items="totalTickets" ng-model="currentPage" items-per-page="itemsPerPage" ng-change="pageChanged()"></pagination>
                 </div>
             </div>
 

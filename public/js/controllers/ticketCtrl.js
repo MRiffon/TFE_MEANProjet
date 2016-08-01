@@ -6,11 +6,20 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
 
     $scope.title = 'Tous les tickets';
     $scope.showOneTicket = false;
+    $scope.showOwnTickets = false;
     $scope.isAdmin = userData.isAdmin();
 
     // scope à passer à la fonction open() afin de savoir le type d'action
     $scope.addButton = 'add';
     $scope.editButton = 'edit';
+
+    // gestion de la pagination
+    $scope.itemsPerPage = 8;
+    $scope.currentPage = 1;
+
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+    };
 
     $scope.searchOptions = ['Sujet', 'Statut', 'Priorité', 'Département'];
     $scope.typeSearch = 'Sujet';
@@ -35,14 +44,6 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         updated : ''
     };
 
-    fetchAllTickets = function(){
-        ticketData.allTickets().then(function(response){
-            $scope.tickets = response.data;
-        });
-    };
-
-    fetchAllTickets();
-
     // on charge tous les départements pour affichage dans le select
     adminData.allDepartments().then(function(response){
         var departments = response.data;
@@ -53,6 +54,7 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         console.log(response);
     });
 
+    // on charge tous les status de ticket pour affichage dans le select
     ticketData.allTicketsStatus().then(function(response){
         var status = response.data;
         for(var i = 0; i < status.length; i++){
@@ -64,20 +66,28 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
 
     // fetch tous les tickets existants
     $scope.fetchAllTickets = function(){
-        fetchAllTickets();
+        ticketData.allTickets().then(function(response){
+            $scope.tickets = response.data;
+            $scope.totalTickets = $scope.tickets.length;
+        });
         $scope.title = 'Tous les tickets';
         $scope.showOneTicket = false;
+        $scope.showOwnTickets = false;
     };
 
-    // fetch tous les tickets concernant l'utilisateur concerné
+    $scope.fetchAllTickets();
+
+    // fetch tous les tickets concernant l'utilisateur connecté
     $scope.fetchOwnTickets = function(){
+        $scope.showOwnTickets = true;
         var infos = {
             type : 'ownTickets',
             infosToSearch : userData.currentUser().username
         };
-
+        
         ticketData.searchedTickets(infos).then(function(response){
             $scope.tickets = response.data;
+            $scope.totalTickets = $scope.tickets.length;
             $scope.title = 'Mes tickets';
             $scope.showOneTicket = false;
         });
@@ -88,14 +98,17 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         var ticketToDelete = ticket;
         ticketData.deleteTicket(ticket);
         $scope.tickets.splice($scope.tickets.indexOf(ticketToDelete.subject), 1);
+        $scope.totalTickets = $scope.tickets.length;
     };
 
+    // affichage d'un ticket
     $scope.showTicket = function(ticket){
         $scope.title = 'Consulter un ticket';
         $scope.ticket = ticket;
         $scope.showOneTicket = true;
     };
 
+    // recherche sur les tickets selon différents critères présents dans le select
     $scope.searchResults = function(){
         var infos = {
             type : '',
@@ -111,7 +124,7 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         
         ticketData.searchedTickets(infos).then(function(response){
             $scope.tickets = response.data;
-            $scope.title = 'Résultats';
+            $scope.totalTickets = $scope.tickets.length;
         });
     };
 
@@ -129,6 +142,7 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         } else $scope.searchSubject = true;
     };
     
+    // changement de classe css en fonction de la priorité du ticket
     $scope.whichPriority = function(priority){
         if(priority === 'High'){
             return 'label label-danger';
@@ -137,12 +151,14 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         } else return 'label label-success';
     };
 
+    // idem pour le statut
     $scope.whichStatus = function(status){
         if(status === 'Open'){
             return 'label label-primary';
         } else return 'label label-default';
     };
 
+    // permet de savoir si un utilisateur est concerné par un ticket
     $scope.isConcerned = function(ticket){
         if(currentUser.username === ticket.submitter || currentUser.username === ticket.assigned || currentUser.role === 'Admin'){
             return true;
@@ -179,6 +195,12 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
         modalInstance.result.then(function () {
             if($scope.items.status === 'ticketAdded'){
                 $scope.tickets.push($scope.items.ticket);
+            } else if($scope.items.status === 'ticketEdited'){
+                if($scope.showOwnTickets){
+                    $scope.fetchOwnTickets();
+                } else{
+                    $scope.fetchAllTickets();
+                }
             }
         });
     };

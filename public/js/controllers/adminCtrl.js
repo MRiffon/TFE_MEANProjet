@@ -5,11 +5,14 @@
 angular.module('adminCtrl', []).controller('adminController', function($scope, adminData, $uibModal, $parse) {
     $scope.selectedDepartments = [];
     $scope.selectedStatus = [];
+    $scope.departments = [];
+    $scope.status = [];
 
     $scope.searchOptions = ['Username', 'Statut', 'Département'];
     $scope.typeSearch = 'Username';
     $scope.infosToSearch = '';
     $scope.searchUsername = true;
+    $scope.isSearched = false;
 
     $scope.filename = 'all_users';
     $scope.separator = ',';
@@ -26,62 +29,71 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         encodingVisible: true
     };
 
+    // on remplit le tableau contenant les départmenents liés aux utilisateurs
     fillInSelectDepartments = function(users, departments){
         $scope.selectedDepartments = [];
         for(var i = 0; i < users.length; i++){
             for (var j = 0; j < departments.length; j++){
-                if(users[i].department === departments[j].name){
+                if(users[i].department === departments[j]){
                     $scope.selectedDepartments[i] = departments[j];
                 }
             }
         }
     };
 
+    // idem pour les statuts
     fillInSelectStatus = function(users, status){
         $scope.selectedStatus = [];
-        console.log(users);
-        console.log(status);
         for(var i = 0; i < users.length; i++){
             for (var j = 0; j < status.length; j++){
-                if(users[i].status === status[j].name){
+                if(users[i].status === status[j]){
                     $scope.selectedStatus[i] = status[j];
-                    console.log($scope.selectedStatus[i]);
                 }
             }
         }
-        console.log($scope.selectedStatus);
+    };
+    
+    // Chargement des infos pour lister les users
+    $scope.listUsers = function(){
+        $scope.isSearched = false;
+        adminData.allUsers().then(function(response){
+            $scope.users = response.data;
+            $scope.totalUsers = $scope.users.length;
+
+            adminData.allDepartments().then(function(response){
+                var departments = response.data;
+                for(var i = 0; i < departments.length; i++){
+                    $scope.departments[i] = departments[i].name;
+                }
+                fillInSelectDepartments($scope.users, $scope.departments);
+            }, function(response){
+                console.log(response);
+            });
+
+            adminData.allStatus().then(function(response){
+                var status = response.data;
+                for(var i = 0; i < status.length; i++){
+                    $scope.status[i] = status[i].name;
+                }
+                fillInSelectStatus($scope.users, $scope.status);
+            }, function(response){
+                console.log(response);
+            });
+
+        }, function(response){
+            console.log(response);
+        });
     };
 
-    // Chargement des infos pour lister les users
-    adminData.allUsers().then(function(response){
-        $scope.users = response.data;
-        $scope.totalUsers = $scope.users.length;
-
-        adminData.allDepartments().then(function(response){
-            $scope.departments = response.data;
-            fillInSelectDepartments($scope.users, $scope.departments);
-        }, function(response){
-            console.log(response);
-        });
-
-        adminData.allStatus().then(function(response){
-            $scope.status = response.data;
-            fillInSelectStatus($scope.users, $scope.status);
-        }, function(response){
-            console.log(response);
-        });
-
-    }, function(response){
-        console.log(response);
-    });
-
+    $scope.listUsers();
+    
     // Gestion de l'update du status ou département
     $scope.updateUser = function(user, type, toUpdate){
         user.location = 'admin';
         if(type === 'department'){
-            user.department = toUpdate.name;
+            user.department = toUpdate;
         } else if(type === 'status'){
-            user.status = toUpdate.name;
+            user.status = toUpdate;
         }
 
         adminData.updateUser(user).then(function(response){
@@ -99,36 +111,30 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         $scope.users.splice($scope.users.indexOf(userToDelete.subject), 1);
     };
 
-    // Effectuer une recherche
-    $scope.searchResults = function(isValid){
-        $scope.submitted = true;
-        if(isValid){
-            var infos = {
-                type : '',
-                infosToSearch : ''
-            };
-            if($scope.searchDepartment){
-                infos.type = 'Department';
-                infos.infosToSearch = $scope.infosToSearch.name;
-                $scope.filename = 'all_users';
-            } else if($scope.searchStatus){
-                infos.type = 'Status';
-                infos.infosToSearch = $scope.infosToSearch.name;
-            } else {
-                infos.type = 'Username';
-                infos.infosToSearch = $scope.infosToSearch;
-            }
+    // recherche d'un utilisateur selon différents critères
+    $scope.searchResults = function(){
+        $scope.isSearched = true;
+        var infos = {
+            type : '',
+            infosToSearch : ''
+        };
+        infos.infosToSearch = $scope.infosToSearch;
+        if($scope.searchDepartment){
+            infos.type = 'Department';
+        } else if($scope.searchStatus){
+            infos.type = 'Status';
+        } else infos.type = 'Username';
 
-            $scope.filename = infos.infosToSearch + '_users';
+        $scope.filename = infos.infosToSearch + '_users';
 
-            adminData.searchedUsers(infos).then(function(response){
-                $scope.users = response.data;
-                fillInSelectDepartments($scope.users, $scope.departments);
-                fillInSelectStatus($scope.users, $scope.status);
-            });
-        }
+        adminData.searchedUsers(infos).then(function(response){
+            $scope.users = response.data;
+            fillInSelectDepartments($scope.users, $scope.departments);
+            fillInSelectStatus($scope.users, $scope.status);
+        });
     };
 
+    // Changement du type en fonction de la valeur du premier select
     $scope.changeTypeSearch = function(typeSearch){
         $scope.submitted = false;
         $scope.searchDepartment = false;
@@ -145,6 +151,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         return ['Username', 'Email', 'Statut', 'Département'];
     };
 
+    // on récupère les utilisateurs sous tableau pour remplir le fichier csv
     $scope.getUsers = function(){
         var arrayUsers = [];
         var tempUser = {
@@ -166,7 +173,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         return arrayUsers;
     };
 
-    // parse contenu csv vers json et enregistrement des users
+    // parse contenu csv vers json et enregistrement des users en bdd
     $scope.createUsersFromCsv = function (json) {
 
         console.log('fonction de parse trigger');
