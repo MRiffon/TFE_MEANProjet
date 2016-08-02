@@ -1,0 +1,133 @@
+<div>
+    <h1>Support ticketting</h1>
+    <div class=jumbotron>
+        <div class=container>
+            <h3>{{ title }}</h3><hr>
+
+            <div class="btn-toolbar">
+                <button class="btn btn-primary" ng-click="fetchAllTickets()">Tous les tickets</button>
+                <button ng-hide="isAdmin" class="btn btn-primary" ng-click="fetchOwnTickets()">Mes tickets</button>
+                <button class="btn" ng-click="open(addButton)">Nouveau ticket</button>
+            </div><br>
+
+            <div ng-hide="showOneTicket">
+                <form name="searchTicketsForm" role="form" novalidate>
+                    <div class=form-content>
+                        <div class=form-group row>
+                            <div class="col-md-4">
+                                <select ng-required="true" class="form-control" id="typeSearch" name="typeSearch" ng-options="option for option in searchOptions" ng-model="typeSearch" ng-change="changeTypeSearch(typeSearch)"></select>
+                            </div>
+                            <div class="col-md-5">
+                                <select ng-show="searchStatus" ng-change="searchResults()" class="form-control" id="status" name="status" ng-options="option for option in status" ng-model="infosToSearch" ng-required="true"></select>
+                                <select ng-show="searchPriority" ng-change="searchResults()" class="form-control" id="priority" name="priority" ng-options="option for option in priorities" ng-model="infosToSearch" ng-required="true"></select>
+                                <select ng-show="searchDepartment" ng-change="searchResults()" class="form-control" id="department" name="department" ng-options="option for option in departments" ng-model="infosToSearch" ng-required="true"></select>
+                                <input ng-show="searchSubject" type="text" id="subject" name="subject" class="form-control" placeholder="Votre recherche" ng-model="infosToSearch" ng-required="true">
+                            </div>
+                            <div>
+                                <button ng-click="searchResults()" class="btn btn-primary">Rechercher</button>
+                            </div>
+                            <span ng-show="searchUsersForm.status.$invalid && submitted && searchStatus">Statut requis !</span>
+                            <span ng-show="searchUsersForm.department.$invalid && submitted && searchDepartment">Département requis !</span>
+                            <span ng-show="searchUsersForm.username.$invalid && submitted && searchUsername">Username requis !</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div ng-hide="showOneTicket">
+                <div class="well">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Sujet</th>
+                            <th>Statut</th>
+                            <th>Priorité</th>
+                            <th>Assigné</th>
+                            <th>Pour</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="ticket in tickets.slice(((currentPage - 1)*itemsPerPage), ((currentPage)*itemsPerPage))">
+                            <td class="widthSubjectTicket">{{ ticket.subject }}</td>
+                            <td><span ng-class="whichStatus(ticket.status)">{{ ticket.status }}</span></td>
+                            <td><span ng-class="whichPriority(ticket.priority)">{{ ticket.priority }}</span></td>
+                            <td>{{ ticket.assigned}}</td>
+                            <td>{{ ticket.deadline | date:'dd/MM/yyyy'}}</td>
+                            <td class="tdIconsWidth"><a href="" role="button" ng-click="showTicket(ticket)"><i class="glyphicon glyphicon-search"></i></a></td>
+
+                            <td ng-show="isConcerned(ticket)" class="tdIconsWidth"><a href="" role="button" ng-click="open(editButton, ticket)"><i class="glyphicon glyphicon-edit"></i></a></td>
+                            <td ng-hide="isConcerned(ticket)"></td>
+
+                            <td ng-show="isConcerned(ticket)" class="tdIconsWidth">
+                                <a href="" role="button" ng-click="deleteTicket(ticket)" confirm="Etes-vous sûr de vouloir supprimer ce ticket ?"><i class="glyphicon glyphicon-remove"></i></a>
+                            </td>
+                            <td ng-hide="isConcerned(ticket)"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <pagination uib-pagination total-items="totalTickets" ng-model="currentPage" items-per-page="itemsPerPage" ng-change="pageChanged()"></pagination>
+                </div>
+            </div>
+
+            <div ng-show="showOneTicket">
+                <div class="col-md-1"></div>
+                <div class="col-md-9">
+                    <h3>{{ ticket.subject }}</h3>
+                    <table class="table table-user-information">
+                        <tbody>
+                        <tr>
+                            <td class="col-md-4">Priorité :</td>
+                            <td class="col-md-8">{{ ticket.priority }}</td>
+                        </tr>
+                        <tr>
+                            <td>Statut :</td>
+                            <td>{{ ticket.status }}</td>
+                        </tr>
+                        <tr>
+                            <td>Description :</td>
+                            <td>{{ ticket.description }}</td>
+                        </tr>
+                        <tr>
+                            <td>Commentaires :</td>
+                                <td>
+                                    <div style="height: 100px; overflow-y: auto; overflow-x: hidden" scroll-glue-bottom="true">
+                                        <ul style="margin-left: 0px; padding-left: 0px;">
+                                            <li ng-repeat="comm in ticket.comments" style="list-style: none"><span style="word-wrap: break-word">{{ comm }}</span><hr></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                        </tr>
+
+                        <tr>
+                            <td>Submitter : </td>
+                            <td>{{ ticket.submitter }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Client : </td>
+                            <td>{{ ticket.client }}</td>
+                        </tr>
+                        <tr>
+                            <td>Personne assigné : </td>
+                            <td>{{ ticket.assigned }}</td>
+                        </tr>
+                        <tr>
+                            <td>Département concerné : </td>
+                            <td>{{ ticket.department }}</td>
+                        </tr>
+                        <tr>
+                            <td>Deadline : </td>
+                            <td>{{ ticket.deadline | date:'dd/MM/yyyy' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dernière mise à jour : </td>
+                            <td> le {{ ticket.updated | date:'dd/MM/yyyy'}} par <b>{{ ticket.lastUpdateBy }}</b></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+    </div>
+</div>

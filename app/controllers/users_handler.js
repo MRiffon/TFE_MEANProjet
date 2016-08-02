@@ -23,7 +23,7 @@ module.exports = {
     },
 
     search: function(req, res){
-        if(req.payload.role !== 'Admin'){
+        if(!req.payload._id){
             res.status(401).end();
         } else {
             if(req.body.type === 'Status'){

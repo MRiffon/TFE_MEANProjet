@@ -43,7 +43,11 @@ var userSchema = new Schema({
     },
     hash: String,
     salt: String,
-    chatRooms: [String]
+    chatRooms: [String],
+    created: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 userSchema.methods.makePassword = function(password){

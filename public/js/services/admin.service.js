@@ -37,7 +37,7 @@ function adminData($http, log){
     };
 
     var allStatus = function(){
-        return $http.get('/api/status').then(function(response){
+        return $http.get('/api/userStatus').then(function(response){
             return response;
         });
     };

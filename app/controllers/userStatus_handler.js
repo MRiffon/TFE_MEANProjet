@@ -3,11 +3,11 @@
  */
 
 var mongoose = require('mongoose');
-var Status = require('../models/status');
+var UserStatus = require('../models/userStatus');
 
 module.exports = {
     list: function(req, res){
-        Status.find(function(err, status){
+        UserStatus.find(function(err, status){
             if(err){
                 res.send(err);
             }
@@ -16,7 +16,7 @@ module.exports = {
     },
 
     delete: function(req, res){
-        Status.remove({
+        UserStatus.remove({
             _id: req.params.role_id
         }, function(err, status){
             if(err)
@@ -26,7 +26,7 @@ module.exports = {
     },
 
     creation: function(req, res){
-        var status = new Status();
+        var status = new UserStatus();
 
         status.name = req.body.name;
 

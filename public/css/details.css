@@ -102,3 +102,12 @@ div.block>div.content>pre {
 .linkPointer {
     cursor: pointer
 }
+
+.tdIconsWidth {
+    width: 5px;
+}
+
+.widthSubjectTicket {
+    width: 200px;
+    word-wrap: break-word;
+}

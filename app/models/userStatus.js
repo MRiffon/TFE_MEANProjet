@@ -4,7 +4,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var statusSchema = new Schema({
+var userStatusSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -15,4 +15,4 @@ var statusSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Status', statusSchema);
+module.exports = mongoose.model('UserStatus', userStatusSchema);

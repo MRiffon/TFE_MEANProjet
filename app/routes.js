@@ -8,7 +8,9 @@ var chatRoomHandler = require('./controllers/chatrooms_handler');
 var setupHandler = require('./controllers/setupModel_handler');
 var rolesHandler = require('./controllers/roles_handler');
 var departmentsHandler = require('./controllers/department_handler');
-var statusHandler = require('./controllers/status_handler');
+var userStatusHandler = require('./controllers/userStatus_handler');
+var ticketStatusHandler = require('./controllers/ticketStatus_handler');
+var ticketHandler = require('./controllers/tickets_handler');
 var jwt = require('express-jwt');
 var configjwt = require('../config/jwt.js');
 
@@ -19,7 +21,7 @@ module.exports = function(app, upload){
 
     app.use(function(req, res, next){
         next();
-        })
+    })
 
     // Api user/auth/sess
     .get('/api/users', authentication, userHandler.list)
@@ -45,8 +47,10 @@ module.exports = function(app, upload){
     .post('/api/setupAdmin', setupHandler.setupAdmin)
     .post('/api/setupChat', setupHandler.setupChatRoom)
     .post('/api/setupRoles', setupHandler.setupRoles)
-    .post('/api/setupStatus', setupHandler.setupStatus)
+    .post('/api/setupUserStatus', setupHandler.setupUserStatus)
+    .post('/api/setupTicketStatus', setupHandler.setupTicketStatus)
     .post('/api/setupDepartments', setupHandler.setupDepartments)
+    .post('/api/setupTickets', setupHandler.setupTickets)
 
     // Api roles
     .get('/api/roles', rolesHandler.list)
@@ -58,10 +62,22 @@ module.exports = function(app, upload){
     .delete('/api/departments/:department_id', departmentsHandler.delete)
     .post('/api/departments', departmentsHandler.creation)
 
-    // Api status
-    .get('/api/status', statusHandler.list)
-    .delete('/api/status/:status_id', statusHandler.delete)
-    .post('/api/status', statusHandler.creation)
+    // Api status user
+    .get('/api/userStatus', userStatusHandler.list)
+    .delete('/api/userStatus/:status_id', userStatusHandler.delete)
+    .post('/api/userStatus', userStatusHandler.creation)
+
+    // Api status ticket
+    .get('/api/ticketStatus', ticketStatusHandler.list)
+    .delete('/api/ticketStatus/:status_id', ticketStatusHandler.delete)
+    .post('/api/ticketStatus', ticketStatusHandler.creation)
+        
+    // Api tickets
+    .get('/api/tickets', authentication, ticketHandler.list)
+    .post('/api/searchTickets', authentication, ticketHandler.search)
+    .delete('/api/tickets/:ticket_id', authentication, ticketHandler.delete)
+    .post('/api/tickets', authentication, ticketHandler.creation)
+    .put('/api/editTicket', authentication, ticketHandler.edit)
 
     // Api upload de files
     .post('/api/upload', function(req, res){
@@ -78,6 +94,4 @@ module.exports = function(app, upload){
     .get('*', function(req, res){
         res.sendFile(path.join(__dirname, '../public', 'index.html'));
     });
-
-
 };

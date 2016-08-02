@@ -34,5 +34,9 @@ angular.module('app', [
         'ngFileUpload',
         'dcbImgFallback',
         'luegg.directives',
-        'addGroupModalCtrl']
+        'addGroupModalCtrl',
+        'dcbImgFallback',
+        'ticketCtrl',
+        'ticketData',
+        'ticketModalCtrl']
 );

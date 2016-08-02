@@ -1,13 +1,13 @@
 <div>
-    <!--<a ui-sref=overview class="pull-right btn btn-primary btn-outline btn-rounded">Back to Overview</a>-->
     <h1>Administration</h1>
     <div class=jumbotron>
         <div class=container>
-            <h2>Utilisateurs</h2><hr>
+            <h3>Utilisateurs</h3><hr>
 
             <div class="btn-toolbar">
                 <button class="btn btn-primary" ng-click="open()">Nouvel utilisateur</button>
                 <button class="btn" ng-csv="getUsers()" csv-header="getHeader()" filename="{{ filename }}.csv" field-separator="{{separator}}" decimal-separator="{{decimalSeparator}}">Export</button>
+                <button ng-show="isSearched" ng-click="listUsers()" class="btn">Revenir à la liste des utilisateurs</button>
                 <ng-csv-import
                         class="import"
                         content="csv.content"
@@ -17,26 +17,24 @@
                         encoding="csv.encoding"></ng-csv-import>
                 <br>
                 <div ng-if="csv.result">
-                    <button class="btn" style="margin-left: 3px;" ng-click="createUsersFromCsv(csv.result)">Ajouter les users</button>
+                    <button class="btn" style="margin-left: 3px;" ng-click="createUsersFromCsv(csv.result)">Ajouter ces utilisateurs</button>
                 </div>
             </div><br>
             <div>
-                <form name="searchUsersForm" role="form" ng-submit="searchResults(searchUsersForm.$valid)" novalidate>
+                <form name="searchUsersForm" role="form" novalidate>
                     <div class=form-content>
                         <div class=form-group row>
                             <div class="col-md-4">
                                 <select ng-required="true" class="form-control" id="typeSearch" name="typeSearch" ng-options="option for option in searchOptions track by option" ng-model="typeSearch" ng-change="changeTypeSearch(typeSearch)"></select>
                             </div>
                             <div class="col-md-5">
-                                <select ng-show="searchStatus" class="form-control" id="status" name="status" ng-options="option.name for option in status track by option.name" ng-model="infosToSearch" ng-required="true"></select>
-                                <select ng-show="searchDepartment" class="form-control" id="department" name="department" ng-options="option.name for option in departments track by option.name" ng-model="infosToSearch" ng-required="true"></select>
+                                <select ng-show="searchStatus" ng-change="searchResults()" class="form-control" id="status" name="status" ng-options="option for option in status" ng-model="infosToSearch" ng-required="true"></select>
+                                <select ng-show="searchDepartment" ng-change="searchResults()" class="form-control" id="department" name="department" ng-options="option for option in departments" ng-model="infosToSearch" ng-required="true"></select>
                                 <input ng-show="searchUsername" type="text" id="username" name="username" class="form-control" placeholder="Votre recherche" ng-model="infosToSearch" ng-required="true">
                             </div>
                             <div>
-                                <button type="submit" name="submit" class="btn btn-primary">Rechercher</button>
+                                <button ng-click="searchResults()" class="btn btn-primary">Rechercher</button>
                             </div>
-                            <span ng-show="searchUsersForm.status.$invalid && submitted && searchStatus">Statut requis !</span>
-                            <span ng-show="searchUsersForm.department.$invalid && submitted && searchDepartment">Département requis !</span>
                             <span ng-show="searchUsersForm.username.$invalid && submitted && searchUsername">Username requis !</span>
                         </div>
                     </div>
@@ -59,9 +57,9 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
-                        <td><select id="status" name="status" ng-options="option.name for option in status track by option.name" ng-model="selectedStatus[$index]" ng-change="updateUser(user, 'status', selectedStatus[$index])">
+                        <td><select id="status" name="status" ng-options="option for option in status" ng-model="selectedStatus[$index]" ng-change="updateUser(user, 'status', selectedStatus[$index])">
                         </select></td>
-                        <td><select id="department" name="department" ng-options="option.name for option in departments" ng-model="selectedDepartments[$index]" ng-change="updateUser(user, 'department', selectedDepartments[$index])">
+                        <td><select id="department" name="department" ng-options="option for option in departments" ng-model="selectedDepartments[$index]" ng-change="updateUser(user, 'department', selectedDepartments[$index])">
                         </select></td>
                         <td>
                             <a href="" role="button" ng-click="deleteUser(user)" confirm="Etes-vous sûr de vouloir supprimer {{ user.username }} ?"><i class="glyphicon glyphicon-remove"></i></a>
@@ -70,7 +68,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </div>
