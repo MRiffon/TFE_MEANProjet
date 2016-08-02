@@ -35,10 +35,12 @@ module.exports = {
     setupChatRoom: function(req, res){
         var chat = [{
             created: new Date(),
-            name: 'Global'
+            name: 'Global',
+            type: 'Global'
         }, {
             created: new Date(),
-            name: 'Administratif'
+            name: 'Administratif',
+            type: 'Global'
         }];
 
         for (var i = 0; i < chat.length; i++) {
@@ -46,6 +48,7 @@ module.exports = {
             newChat.save(function(err, savedChat) {
                 if(err)
                     res.send(err);
+                console.log(savedChat);
             });
         }
         res.send('Chatrooms initiated !');

@@ -103,11 +103,11 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
 
         }
         console.log("timeUnity : " + $scope.editEvent.timeUnityReminder);
-    }
+    };
 
     $scope.deleteEvent = function(){
         calendarData.deleteEvent($scope.editEvent.id);
         $uibModalInstance.close();
-    }
+    };
 
 });

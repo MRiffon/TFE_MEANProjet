@@ -38,7 +38,6 @@ module.exports = function(app, upload){
     })
 
     // Api chat
-    .post('/api/setupChat', chatRoomHandler.setup)
     .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
     .post('/api/newRoom', chatRoomHandler.newRoom)

@@ -23,7 +23,7 @@ function calendarData($q, $location) {
     var checkAuth = function (isAppAuthorized) {
         var CLIENT_ID = '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com';
         var SCOPES = ["https://www.googleapis.com/auth/calendar"];
-        if (gapi.auth !== undefined && isAppAuthorized == false) {
+        if (gapi.auth !== undefined && isAppAuthorized === false) {
             gapi.auth.authorize(
                 {
                     'client_id': CLIENT_ID,
@@ -217,9 +217,11 @@ function calendarData($q, $location) {
     }
 
     function sendEvent (event, typeRequest) {
-        if(event.durationReminder != undefined){
-            var minutes = calculateReminderTime(event.timeUnityReminder, event.durationReminder);
-            var reminders = {
+        var minutes = '';
+        var reminders = {};
+        if(event.durationReminder !== undefined){
+            minutes = calculateReminderTime(event.timeUnityReminder, event.durationReminder);
+            reminders = {
                 useDefault: false,
                 overrides: [{
                     method: 'popup',
@@ -283,5 +285,5 @@ function calendarData($q, $location) {
         loadEvents : loadEvents,
         sendEvent : sendEvent,
         deleteEvent : deleteEvent
-    }
+    };
 }
