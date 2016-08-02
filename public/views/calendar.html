@@ -9,8 +9,9 @@
                     <button id="authorize-button" ng-click="handleAuthClick(event)">
                         Authorize
                     </button>
+
                 </div>
-                <div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
+                <div ui-calendar="uiConfig.calendar" calendar="myCalendar" id="calendar" ng-model="eventSources"></div>
              </div>
         </div>
     </div>

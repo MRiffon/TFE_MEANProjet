@@ -46,6 +46,7 @@ function userData($http, $window, Socket){
             payload = JSON.parse(payload);
 
             var userInfos = {
+                _id : payload._id,
                 email : payload.email,
                 username : payload.username,
                 role : payload.role,
