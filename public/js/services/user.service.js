@@ -6,8 +6,8 @@ var auth = angular.module('userData', []);
 
 auth.factory('userData', userData);
 
-userData.$inject = ['$http', '$window', 'Socket'];
-function userData($http, $window, Socket){
+userData.$inject = ['$http', '$window', 'Socket', '$sessionStorage'];
+function userData($http, $window, Socket, $sessionStorage){
 
     var saveToken = function(token){
         $window.localStorage['mean-token'] = token;

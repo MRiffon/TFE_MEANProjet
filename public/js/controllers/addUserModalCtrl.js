@@ -7,7 +7,7 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
         username: '',
         email : '',
         department: '',
-        chatRooms : ['Global'],
+        chatRooms : [],
         password : ''
     };
 
@@ -28,6 +28,8 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
             $scope.addUser.department = $scope.selectedDepartment.name;
             var addUser = [];
             addUser.push($scope.addUser);
+            addUser[0].chatRooms = ['Global', $scope.selectedDepartment.name];
+            console.log(addUser[0]);
             $scope.items.user = $scope.addUser;
             $scope.items.status = 'userAdded';
             adminData.createUser(addUser).then(function(response){

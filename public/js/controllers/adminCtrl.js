@@ -32,6 +32,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
     // on remplit le tableau contenant les départmenents liés aux utilisateurs
     fillInSelectDepartments = function(users, departments){
         $scope.selectedDepartments = [];
+        console.log(users.length);
         for(var i = 0; i < users.length; i++){
             for (var j = 0; j < departments.length; j++){
                 if(users[i].department === departments[j]){
@@ -44,10 +45,12 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
     // idem pour les statuts
     fillInSelectStatus = function(users, status){
         $scope.selectedStatus = [];
+        console.log(users.length);
         for(var i = 0; i < users.length; i++){
             for (var j = 0; j < status.length; j++){
                 if(users[i].status === status[j]){
                     $scope.selectedStatus[i] = status[j];
+                    console.log($scope.selectedStatus[i]);
                 }
             }
         }
@@ -58,6 +61,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         $scope.isSearched = false;
         adminData.allUsers().then(function(response){
             $scope.users = response.data;
+            console.log($scope.users);
             $scope.totalUsers = $scope.users.length;
 
             adminData.allDepartments().then(function(response){
@@ -106,9 +110,9 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
 
     // Suppression d'un user avec confirmation
     $scope.deleteUser = function(user){
-        var userToDelete = user;
         adminData.deleteUser(user);
-        $scope.users.splice($scope.users.indexOf(userToDelete.subject), 1);
+        console.log(user.username);
+        $scope.users.splice($scope.users.indexOf(user), 1);
     };
 
     // recherche d'un utilisateur selon différents critères
@@ -188,7 +192,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         
         var usersToAdd = obj;
         for(var i = 0; i < usersToAdd.length; i++){
-            usersToAdd[i].chatRooms = ['Global'];
+            usersToAdd[i].chatRooms = ['Global', usersToAdd[i].department];
             usersToAdd[i].password = '';
         }
 
@@ -196,6 +200,12 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
             var msg = response.data.message;
             if(msg === 'Created!'){
                 alert('Utilisateur(s) créé(s)');
+                for(var i = 0; i < usersToAdd.length; i++){
+                    usersToAdd[i].status = 'Active';
+                    $scope.users.push(usersToAdd[i]);
+                    fillInSelectDepartments($scope.users, $scope.departments);
+                    fillInSelectStatus($scope.users, $scope.status);
+                }
             } else {
                 alert("Une erreur s'est produite !");
             }
@@ -226,6 +236,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
 
         modalInstance.result.then(function () {
             if($scope.items.status === 'userAdded'){
+                $scope.items.user.status = 'Active';
                 $scope.users.push($scope.items.user);
                 fillInSelectDepartments($scope.users, $scope.departments);
                 fillInSelectStatus($scope.users, $scope.status);

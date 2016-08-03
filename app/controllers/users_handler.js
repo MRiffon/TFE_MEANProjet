@@ -9,8 +9,7 @@ var ChatRoom = require('../models/chatroom');
 
 module.exports = {
     list: function(req, res){
-        if(req.payload.role !== 'Admin') {
-            res.redirect('/');
+        if(!req.payload._id) {
             res.status(401).end();
         } else {
             User.find(function(err, users){
@@ -39,6 +38,15 @@ module.exports = {
                     if(err){
                         res.send(err);
                     } else {
+                        res.status(200).json(users);
+                    }
+                })
+            } else if(req.body.type === 'ChatRoom'){
+                User.find({ chatRooms: req.body.infosToSearch }).exec(function(err, users){
+                    if(err){
+                        res.send(err);
+                    } else {
+                        console.log(users);
                         res.status(200).json(users);
                     }
                 })
@@ -89,6 +97,7 @@ module.exports = {
     },
 
     creation: function(req, res){
+        console.log(req.body);
         var error = '';
         if(req.payload.role !== 'Admin') {
             res.status(401).end();
@@ -110,7 +119,7 @@ module.exports = {
                 //user.role = req.body.role;
                 user.department = req.body[i].department;
 
-            user.chatRooms = req.body.chatRooms;
+                user.chatRooms = req.body[i].chatRooms;
 
                 user.save(function (err) {
                     if (err){
@@ -121,7 +130,6 @@ module.exports = {
                 });
             }
             if(!error){
-                console.log('Pas derreur');
                 res.status(200).json({message: 'Created!'});
             }
         }

@@ -51,6 +51,12 @@
                             <a ng-show="isUrself(user)" ng-click="getPrivateRoom(user)" class="linkPointer">{{user}}</a>
                         </li>
                     </ul>
+                    <hr>
+                    <ul class="nav">
+                        <li ng-repeat="disconnectedUserName in disconnectedUsersName track by $index">
+                            <a ng-click="getPrivateRoom(disconnectedUserName)" class="linkPointer">{{disconnectedUserName}}</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

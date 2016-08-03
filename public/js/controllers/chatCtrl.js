@@ -2,7 +2,7 @@
  * Created by Michaël and Martin on 20-04-16.
  */
 
-angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData, $sessionStorage, $uibModal){
+angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData, $sessionStorage, $uibModal, notificationData, adminData){
 
     console.log('USER : ' + $sessionStorage.user.chatRooms);
 
@@ -11,6 +11,23 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     $scope.$storage = $sessionStorage;
     $scope.chatRoomName = '';
     $scope.userRooms = {};
+
+
+    $scope.disconnectedUsersName = [];
+    $scope.allUsersName = [];
+
+    $scope.users = [];
+    $scope.messages = [];
+
+    var username = $sessionStorage.user.username;
+
+    adminData.allUsers().then(function(response) {
+        var allUsers = response.data;
+        for(var i = 0; i < allUsers.length; i++){
+            $scope.disconnectedUsersName.push(allUsers[i].username);
+            $scope.allUsersName.push(allUsers[i].username);
+        }
+    });
 
     chatData.userRooms().then(function(response){
         $scope.userRooms = response;
@@ -28,11 +45,6 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         });
         getLastMessage();
     });
-
-    $scope.users = [];
-    $scope.messages = [];
-
-    var username = $sessionStorage.user.username;
 
     $scope.isGroupChatRoom = function(selectedRoom){
 
@@ -131,6 +143,50 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         //$scope.messages.push(msg);
         if(msg !== null && msg !== ''){
             Socket.emit('message sended', message);
+
+            var usersConcerned = [];
+
+            var infos = {
+                type : 'ChatRoom',
+                infosToSearch : $scope.selectedRoom.name
+            };
+
+            adminData.searchedUsers(infos).then(function(response){
+                usersConcerned = response.data;
+                console.log(usersConcerned);
+
+                var content = 'Vous avez reçu un nouveau message';
+                if($scope.selectedRoom.type === 'Global' || $scope.selectedRoom.type === 'Group'){
+                    content += ' dans le chatroom ' + $scope.selectedRoom.name;
+                }
+                content += ' de ' + username;
+                console.log(content);
+                
+                for(var i = 0; i < usersConcerned.length; i++){
+                    if(usersConcerned[i].username === username){
+                        usersConcerned.splice(i, 1);
+                    }
+                }
+                
+                var addNotif = {
+                    users : usersConcerned,
+                    identifier : 'Chat',
+                    content : content
+                };
+                notificationData.createNotification(addNotif).then(function(response){
+                    var usernameToNotif = [];
+                    for(var i = 0; i < usersConcerned.length; i++){
+                        usernameToNotif.push(usersConcerned[i].username);
+                    }
+                    var notifMessage = {
+                        users : usernameToNotif,
+                        sender : username,
+                        message : content,
+                        identifier : 'Chat'
+                    };
+                    Socket.emit('notif-newMessage', notifMessage);
+                });
+            });
         }
         $scope.msg = '';
     };
@@ -145,7 +201,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     $scope.open = function (size) {
 
         $scope.items = {
-            users : Object.create($scope.users),
+            users : Object.create($scope.allUsersName),
             groupChatRooms : $scope.userRooms.groupRooms,
             currentUserRooms : $scope.$storage.user.chatRooms
         };
@@ -231,6 +287,11 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     Socket.on('listUsers', function(data){
         $scope.users = data.users;
         console.log('Liste des users : ' + $scope.users);
+
+        for(var j = 0; j < $scope.users.length; j++){
+            $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf($scope.users[j]), 1);
+        }
+        console.log($scope.disconnectedUsersName);
     });
 
     Socket.on('user joined default',function(data){

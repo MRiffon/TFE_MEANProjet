@@ -2,7 +2,7 @@
  * Created by micka on 22-07-16.
  */
 
-angular.module('addGroupModalCtrl', []).controller('modalAddGroupController', function (Socket, $scope, $uibModalInstance, items, $sessionStorage, chatData) {
+angular.module('addGroupModalCtrl', []).controller('modalAddGroupController', function (Socket, $scope, $uibModalInstance, items, $sessionStorage, chatData, notificationData, adminData) {
     $scope.title ='Créer un groupe';
 
     $scope.addGroup = {
@@ -37,6 +37,7 @@ angular.module('addGroupModalCtrl', []).controller('modalAddGroupController', fu
                 created : new Date()
             };
             chatData.createNewRoom(newRoom).then(function(response){
+                var roomToNotif = response.data;
                 //$scope.items.groupChatRooms.push(response.data);
                 //$scope.items.currentUserRooms.push(response.data.name);
                 chatData.updateUsersRoom({
@@ -45,10 +46,37 @@ angular.module('addGroupModalCtrl', []).controller('modalAddGroupController', fu
                     action : 'add'
                 });
 
-                Socket.emit('notif-newRoom', {
-                    users : $scope.addGroup.users,
-                    chatRoom: response.data,
-                    typeRoom : 'Group'
+                var infos = {
+                    type : 'ChatRoom',
+                    infosToSearch : $scope.addGroup.name
+                };
+
+                adminData.searchedUsers(infos).then(function(response){
+                    var usersConcerned = response.data;
+                    for(var i = 0; i < usersConcerned.length; i++){
+                        if(usersConcerned[i].username === $sessionStorage.user.username){
+                            usersConcerned.splice(i, 1);
+                        }
+                    }
+
+                    var content = 'Vous avez été invité dans une nouvelle conversation de groupe : ' + $scope.addGroup.name;
+                    var addGroupNotif = {
+                        users : usersConcerned,
+                        identifier : 'Chat',
+                        content : content
+                    };
+
+                    console.log(addGroupNotif);
+
+                    notificationData.createNotification(addGroupNotif).then(function(response){
+                        Socket.emit('notif-newRoom', {
+                         users : $scope.addGroup.users,
+                         chatRoom:  roomToNotif,
+                         typeRoom : 'Group',
+                         message : content,
+                         identifier : 'Chat'
+                         });
+                    });
                 });
 
             });

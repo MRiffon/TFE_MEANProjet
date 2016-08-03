@@ -10,6 +10,6 @@ angular.module('overviewCtrl', []).controller('overviewController', function($sc
             console.log($scope.notifs);
         });
     };
-    console.log('kekeke');
+    
     getNotifications();
 });

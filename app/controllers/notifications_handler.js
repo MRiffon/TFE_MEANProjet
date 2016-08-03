@@ -35,22 +35,29 @@ module.exports = {
     },
 
     creation: function(req, res){
+        var error = '';
         if(!req.payload._id){
             res.status(401).json({message: "Authentication failure !"});
         } else {
-            var notif = new Notification();
-            
-            notif.username = req.body.username;
-            notif.identifier = req.body.identifier;
-            notif.content = req.body.content;
+            for(var i = 0; i < req.body.users.length; i++){
 
-            notif.save(function(err){
-                if (err){
-                    res.send(err);
-                } else {
-                    res.status(200).json({message: 'Created!'});
-                }
-            });
+                var notif = new Notification();
+
+                notif.username = req.body.users[i].username;
+                notif.identifier = req.body.identifier;
+                notif.content = req.body.content;
+
+                notif.save(function(err){
+                    if (err){
+                        res.send(err);
+                    } else {
+                        error = false;
+                    }
+                });
+            }
+            if(!error){
+                res.status(200).json({message: 'Created!'});
+            }
         }
     }
 };

@@ -18,7 +18,7 @@ module.exports = {
         var user = new User({
             username: 'admin',
             email:'admin@gmail.com',
-            chatRooms:['Global', 'Administratif'],
+            chatRooms:['Global', 'Administratif', 'Support', 'R&D', 'Direction'],
             role:'Admin',
             department:'Direction'
         });
@@ -41,6 +41,18 @@ module.exports = {
         }, {
             created: new Date(),
             name: 'Administratif',
+            type: 'Global'
+        }, {
+            created: new Date(),
+            name: 'Support',
+            type: 'Global'
+        }, {
+            created: new Date(),
+            name: 'R&D',
+            type: 'Global'
+        }, {
+            created: new Date(),
+            name: 'Direction',
             type: 'Global'
         }];
 
@@ -197,12 +209,14 @@ module.exports = {
             username: 'admin',
             created: new Date(),
             content: 'Incroyable enculé',
-            identifier: 'chat'
+            identifier: 'chat',
+            isRead : true
         }, {
             username: 'admin',
             created: new Date(),
             content: 'Incroyable batard',
-            identifier: 'calendrier'
+            identifier: 'calendrier',
+            isRead : false
         }];
 
         for (var i = 0; i < notifs.length; i++) {

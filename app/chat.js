@@ -9,6 +9,21 @@ module.exports = function(io){
     var users = [];
     var usersSocket = [];
 
+    var fillInUsersConnectedToNotif = function(usersConcerned, usersConnected){
+        var usersToNotif = [];
+        console.log('Users connected : ' + usersConnected);
+        for(var i = 0; i < usersConcerned.length; i++){
+            for(var j = 0; j < usersConnected.length; j++){
+                console.log(usersConcerned[i]);
+                if(usersConcerned[i] === usersConnected[j]){
+                    usersToNotif.push(usersConnected[j]);
+                }
+            }
+        }
+        console.log('usersToNotif : ' + usersToNotif);  
+        return usersToNotif;
+    };
+
     io.on('connection', function(socket){
 
         //listen for new users
@@ -57,6 +72,7 @@ module.exports = function(io){
                 username = data.username;
                 users.push(data.username);
                 console.log('Liste des users connectés après connexion : ' + users);
+                console.log('Liste des sockets : ' + usersSocket.length);
             }
         });
 
@@ -64,6 +80,7 @@ module.exports = function(io){
         socket.on('userDisconnected', function(data){
             console.log(data.username + ' has disconnected');
             users.splice(users.indexOf(data.username), 1);
+            usersSocket.splice(users.indexOf(data.username), 1);
             console.log('Users après disconnect : ' + users);
             io.emit('userDisconnected', {username: data.username});
         });
@@ -71,10 +88,21 @@ module.exports = function(io){
         // Notif à un certain utilisateur qu'une room le concernant a été créée
         socket.on('notif-newRoom', function(data){
             console.log('notif-newRoom serverside dataRoom : ' + data.chatRoom);
-            for(var i = 0; i < data.users.length; i++){
-                console.log("emitted to : " + data.users[i]);
-                usersSocket[data.users[i]].emit('newRoom', data);
+            var usersToNotif = fillInUsersConnectedToNotif(data.users, users);
+            for(var i = 0; i < usersToNotif.length; i++){
+                console.log('ca passe vers le emit');
+                usersSocket[usersToNotif[i]].emit('newRoom', data);
             }
         });
+        
+        socket.on('notif-newMessage', function(data){
+            console.log('notif-newMessage serverside : ' + data.users[0]);
+            var usersToNotif = fillInUsersConnectedToNotif(data.users, users);
+            for(var i = 0; i < usersToNotif.length; i++){
+                console.log(i);
+                console.log(usersSocket[0]);
+                usersSocket[usersToNotif[i]].emit('newMessage', data);
+            }
+        })
     });
 };

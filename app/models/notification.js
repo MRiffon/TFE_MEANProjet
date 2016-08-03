@@ -18,6 +18,11 @@ var notificationSchema = new Schema({
         type : String,
         required : true
     },
+    isRead : {
+        type : Boolean,
+        required : true,
+        default : false
+    },
     created: {
         type: Date,
         default: Date.now
