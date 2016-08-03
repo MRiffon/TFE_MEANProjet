@@ -8,11 +8,11 @@ ticket.factory('ticketData', ticketData);
 
 ticketData.$inject = ['$http', 'userData'];
 
-function ticketData($http, log){
+function ticketData($http, userData){
     var allTickets = function(){
         return $http.get('/api/tickets', {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;
@@ -22,7 +22,7 @@ function ticketData($http, log){
     var searchedTickets = function(infos){
         return $http.post('/api/searchTickets', infos, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;
@@ -38,7 +38,7 @@ function ticketData($http, log){
     deleteTicket = function(ticket){
         return $http.delete('/api/tickets/'+ticket._id, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;
@@ -50,7 +50,7 @@ function ticketData($http, log){
     createTicket = function(ticket){
         return $http.post('/api/tickets', ticket, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;
@@ -62,7 +62,7 @@ function ticketData($http, log){
     updateTicket = function(ticket){
         return $http.put('/api/editTicket', ticket, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;

@@ -7,12 +7,12 @@ var data = angular.module('profilData', []);
 data.factory('profilData', profilData);
 profilData.$inject = ['$http', 'userData'];
 
-function profilData($http, log){
+function profilData($http, userData){
 
     var getProfil = function(){
         return $http.get('/api/profil', {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         });
     };
@@ -21,7 +21,7 @@ function profilData($http, log){
         console.log(user);
         return $http.put('/api/profil', user, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;

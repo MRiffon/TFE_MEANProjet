@@ -1,8 +1,15 @@
 <div>
-    <h2>Overview des notifications</h2>
+    <h2>Notifications</h2>
     <div class=jumbotron>
         <div class=container>
-            <h1>Notifs</h1> Ici on mettrait les informations pertinentes genre des notifications en cas de mail reçu, de rdv à venir, ticket à traiter and so on<br><br>
+            <div class="panel panel-primary" ng-repeat="notif in notifs">
+                <div class = "panel-heading">
+                    <h3 class = "panel-title">{{ notif.identifier }}</h3>
+                </div>
+                <div class = "panel-body">
+                    <span>{{ notif.content }}</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

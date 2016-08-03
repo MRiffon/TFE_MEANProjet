@@ -11,6 +11,7 @@ var departmentsHandler = require('./controllers/department_handler');
 var userStatusHandler = require('./controllers/userStatus_handler');
 var ticketStatusHandler = require('./controllers/ticketStatus_handler');
 var ticketHandler = require('./controllers/tickets_handler');
+var notifHandler = require('./controllers/notifications_handler');
 var jwt = require('express-jwt');
 var configjwt = require('../config/jwt.js');
 
@@ -50,6 +51,7 @@ module.exports = function(app, upload){
     .post('/api/setupTicketStatus', setupHandler.setupTicketStatus)
     .post('/api/setupDepartments', setupHandler.setupDepartments)
     .post('/api/setupTickets', setupHandler.setupTickets)
+    .post('/api/setupNotifs', setupHandler.setupNotifs)
 
     // Api roles
     .get('/api/roles', rolesHandler.list)
@@ -70,7 +72,7 @@ module.exports = function(app, upload){
     .get('/api/ticketStatus', ticketStatusHandler.list)
     .delete('/api/ticketStatus/:status_id', ticketStatusHandler.delete)
     .post('/api/ticketStatus', ticketStatusHandler.creation)
-        
+
     // Api tickets
     .get('/api/tickets', authentication, ticketHandler.list)
     .post('/api/searchTickets', authentication, ticketHandler.search)
@@ -78,6 +80,12 @@ module.exports = function(app, upload){
     .post('/api/tickets', authentication, ticketHandler.creation)
     .put('/api/editTicket', authentication, ticketHandler.edit)
 
+    // Api notifications
+
+    .delete('/api/notifs/:notif_id', authentication, notifHandler.delete)
+    .post('/api/listNotifs', authentication, notifHandler.list)
+    .post('/api/notifs', authentication, notifHandler.creation)
+        
     // Api upload de files
     .post('/api/upload', function(req, res){
         upload(req, res, function(err){

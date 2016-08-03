@@ -109,5 +109,4 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
         calendarData.deleteEvent($scope.editEvent.id);
         $uibModalInstance.close();
     };
-
 });

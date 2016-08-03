@@ -2,7 +2,31 @@
  * Created by Michaël and Martin on 11-04-16.
  */
 
-angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, userData, Socket, $sessionStorage){
+angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, userData, Socket, $sessionStorage, ngAudio, webNotification){
+
+    webNotification.showNotification('Example Notification', {
+        body: 'Notification Text...',
+        icon: 'my-icon.ico',
+        onClick: function onNotificationClicked() {
+            alert('Notification clicked.');
+        },
+        autoClose: 4000
+    }, function onShow(error, hide) {
+        if (error) {
+            window.alert('Unable to show notification: ' + error.message);
+        } else {
+            console.log('Notification Shown.');
+
+            setTimeout(function hideNotification() {
+                console.log('Hiding notification....');
+                hide(); //manually close the notification (you can skip this if you use the autoClose option)
+            }, 5000);
+        }
+    });
+
+    $scope.audio = ngAudio.load("./audio/you-wouldnt-believe.mp3");
+    $scope.audio.play();
+
     $scope.isLogged = userData.loggedIn();
     $scope.currentUser = userData.currentUser();
     $scope.isAdmin = userData.isAdmin();

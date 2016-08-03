@@ -8,12 +8,12 @@ admin.factory('adminData', adminData);
 
 adminData.$inject = ['$http', 'userData'];
 
-function adminData($http, log){
+function adminData($http, userData){
     
     var allUsers = function(){
         return $http.get('/api/users', {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;
@@ -23,7 +23,7 @@ function adminData($http, log){
     var searchedUsers = function(infos){
         return $http.post('/api/searchUsers', infos, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;
@@ -46,7 +46,7 @@ function adminData($http, log){
         console.log(users);
         return $http.post('/api/users', users, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;
@@ -58,7 +58,7 @@ function adminData($http, log){
     deleteUser = function(user){
         return $http.delete('/api/users/'+user._id, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;
@@ -70,7 +70,7 @@ function adminData($http, log){
     updateUser = function(user){
         return $http.put('/api/profil', user, {
             headers: {
-                Authorization: 'Bearer ' + log.getToken()
+                Authorization: 'Bearer ' + userData.getToken()
             }
         }).then(function(response){
             return response;

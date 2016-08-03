@@ -38,5 +38,8 @@ angular.module('app', [
         'dcbImgFallback',
         'ticketCtrl',
         'ticketData',
-        'ticketModalCtrl']
+        'ticketModalCtrl',
+        'notificationData',
+        'ngAudio',
+        'angular-web-notification']
 );

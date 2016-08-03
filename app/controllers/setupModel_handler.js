@@ -10,6 +10,7 @@ var Department = require('../models/department');
 var ChatRoom = require('../models/chatroom');
 var User = require('../models/user');
 var Ticket = require('../models/ticket');
+var Notification = require('../models/notification');
 
 module.exports = {
 
@@ -189,5 +190,29 @@ module.exports = {
             });
         }
         res.send('Tickets initiated !');
+    },
+
+    setupNotifs: function(req, res){
+        var notifs = [{
+            username: 'admin',
+            created: new Date(),
+            content: 'Incroyable enculé',
+            identifier: 'chat'
+        }, {
+            username: 'admin',
+            created: new Date(),
+            content: 'Incroyable batard',
+            identifier: 'calendrier'
+        }];
+
+        for (var i = 0; i < notifs.length; i++) {
+            var newNotif = new Notification(notifs[i]);
+            newNotif.save(function(err, savedNotif) {
+                if(err)
+                    res.send(err);
+                console.log(savedNotif);
+            });
+        }
+        res.send('Notifs initiated !');
     }
 };
