@@ -2,7 +2,7 @@
  * Created by micka on 30-07-16.
  */
 
-angular.module('ticketModalCtrl', []).controller('modalTicketController', function ($scope, $uibModalInstance, items, adminData, ticketData, userData) {
+angular.module('ticketModalCtrl', []).controller('modalTicketController', function ($scope, $uibModalInstance, items, adminData, ticketData, userData, Socket, notificationData) {
 
     $scope.items = items;
 
@@ -127,20 +127,44 @@ angular.module('ticketModalCtrl', []).controller('modalTicketController', functi
             if($scope.isAdd){
                 $scope.addTicket.submitter = userData.currentUser().username;
                 $scope.addTicket.status = 'Open';
-
-                $scope.items.ticket = $scope.addTicket;
+                
                 $scope.items.status = 'ticketAdded';
 
                 ticketData.createTicket($scope.addTicket).then(function(response){
+                    console.log(response.data);
+                    $scope.items.ticket = response.data.ticket;
                     var msg = response.data.message;
                     if(msg === 'Created!'){
-                        $uibModalInstance.close();
-                        alert('Ticket créé');
+                        var content = 'Le ticket ' + $scope.addTicket.subject + ' vous a été assigné';
+
+                        var addNotif = {
+                            users : [$scope.addTicket.assigned],
+                            identifier : 'Ticketting',
+                            content : content
+                        };
+
+                        console.log(addNotif);
+
+                        notificationData.createNotification(addNotif).then(function(){
+                            var usernameToNotif = [$scope.addTicket.assigned];
+
+                            var notifTicket = {
+                                users : usernameToNotif,
+                                message : content,
+                                identifier : 'Ticketting'
+                            };
+                            Socket.emit('notif-ticket', notifTicket);
+
+                            $uibModalInstance.close();
+                            alert('Ticket créé');
+                        });
+
                     } else {
                         console.log('Error');
                         $scope.dataLoginInvalid = true;
                         $scope.msgError = "Une erreur s'est produite !";
                     }
+
                 });
             } else if($scope.isEdit){
                 $scope.addTicket._id = $scope.items.ticket._id;
@@ -153,8 +177,38 @@ angular.module('ticketModalCtrl', []).controller('modalTicketController', functi
                     console.log(response.data);
                     var msg = response.data.message;
                     if(msg === 'Updated!'){
-                        $uibModalInstance.close();
-                        alert('Ticket mis à jour !');
+
+                        var userConcerned = [];
+                        var content = 'Le ticket ' + $scope.addTicket.subject + ' a été modifié !';
+                        
+                        if($scope.addTicket.assigned === userData.currentUser().username){
+                            userConcerned.push($scope.addTicket.submitter);
+                        } else userConcerned.push($scope.addTicket.assigned);
+
+                        console.log(userConcerned);
+                        
+                        var addNotif = {
+                            users : userConcerned,
+                            identifier : 'Ticketting',
+                            content : content
+                        };
+
+                        console.log(addNotif);
+
+                        notificationData.createNotification(addNotif).then(function() {
+                            var usernameToNotif = [$scope.addTicket.assigned];
+
+                            var notifTicket = {
+                                users: usernameToNotif,
+                                message: content,
+                                identifier: 'Ticketting'
+                            };
+                            Socket.emit('notif-ticket', notifTicket);
+
+                            $uibModalInstance.close();
+                            alert('Ticket mis à jour !');
+
+                        });
                     } else {
                         console.log('Error');
                         $scope.dataLoginInvalid = true;

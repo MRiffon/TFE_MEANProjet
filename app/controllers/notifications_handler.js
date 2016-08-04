@@ -10,7 +10,7 @@ module.exports = {
         if(!req.payload._id){
             res.status(401).json({message: "Authentication failure !"});
         } else {
-            Notification.find({ username: req.body.username }).exec(function(err, notifs){
+            Notification.find({ username: req.body.username }).sort({created:-1}).exec(function(err, notifs){
                 if(err){
                     res.send(err);
                 } else {
@@ -43,7 +43,12 @@ module.exports = {
 
                 var notif = new Notification();
 
-                notif.username = req.body.users[i].username;
+                if(req.body.identifier === 'Ticketting'){
+                    notif.username = req.body.users[i];
+                } else {
+                    notif.username = req.body.users[i].username;
+                }
+
                 notif.identifier = req.body.identifier;
                 notif.content = req.body.content;
 

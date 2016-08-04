@@ -92,6 +92,7 @@ module.exports = function(io){
             for(var i = 0; i < usersToNotif.length; i++){
                 console.log('ca passe vers le emit');
                 usersSocket[usersToNotif[i]].emit('newRoom', data);
+                usersSocket[usersToNotif[i]].emit('newNotif');
             }
         });
         
@@ -102,7 +103,19 @@ module.exports = function(io){
                 console.log(i);
                 console.log(usersSocket[0]);
                 usersSocket[usersToNotif[i]].emit('newMessage', data);
+                usersSocket[usersToNotif[i]].emit('newNotif');
             }
-        })
+        });
+        
+        socket.on('notif-ticket', function(data){
+            console.log('notif-newTicket serverside : ' + data.users[0]);
+            var usersToNotif = fillInUsersConnectedToNotif(data.users, users);
+            for(var i = 0; i < usersToNotif.length; i++){
+                console.log(i);
+                console.log(usersSocket[0]);
+                usersSocket[usersToNotif[i]].emit('notifTicket', data);
+                usersSocket[usersToNotif[i]].emit('newNotif');
+            }
+        });
     });
 };

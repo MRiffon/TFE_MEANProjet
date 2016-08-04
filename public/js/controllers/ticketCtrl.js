@@ -179,7 +179,6 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
             $scope.items.ticket = Object.create(ticket);
         }
 
-        console.log($scope.items);
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
             templateUrl: '../views/modals/ticketModalView.html',

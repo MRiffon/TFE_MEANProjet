@@ -63,4 +63,13 @@ angular.module('dashboardCtrl', []).controller('dashboardController', function($
             showNotification(data);
         }
     });
+    
+    Socket.on('notifTicket', function(data){
+        console.log('notifTicket avant if');
+        console.log($location.url());
+        if ($location.url() !== '/dashboard/ticketting'){
+            console.log('notifTicket depuis dashboardctrl');
+            showNotification(data);
+        }
+    });
 });

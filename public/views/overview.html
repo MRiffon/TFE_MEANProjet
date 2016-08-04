@@ -2,13 +2,30 @@
     <h2>Notifications</h2>
     <div class=jumbotron>
         <div class=container>
-            <div class="panel panel-primary" ng-repeat="notif in notifs">
-                <div class = "panel-heading">
-                    <h3 class = "panel-title">{{ notif.identifier }}</h3>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Chat</h3>
                 </div>
-                <div class = "panel-body">
-                    <span>{{ notif.content }}</span>
-                    <span>{{ notif.isRead }}</span>
+                <div style="height: 150px; overflow-y: auto; overflow-x: hidden" scroll-glue-top="true">
+                    <ul class="list-group">
+                        <li ng-repeat="notif in chatNotifs" style="list-style: none;" class="list-group-item">
+                            <p style="font-size:12px; margin-bottom: 5px;"><b>Il y a {{ notif.created }}</b></p>
+                            <span>{{ notif.content }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class = "panel-title">Ticketting</h3>
+                </div>
+                <div style="height: 150px; overflow-y: auto; overflow-x: hidden" scroll-glue-top="true">
+                    <ul class="list-group">
+                        <li ng-repeat="notif in ticketNotifs" style="list-style: none;" class="list-group-item">
+                            <p style="font-size:12px; margin-bottom: 5px;"><b>Il y a {{ notif.created }}</b></p>
+                            <span>{{ notif.content }}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

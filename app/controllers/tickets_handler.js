@@ -102,7 +102,7 @@ module.exports = {
                 if (err){
                     res.send(err);
                 } else {
-                    res.status(200).json({message: 'Created!'});
+                    res.status(200).json({message: 'Created!', ticket: ticket});
                 }
             });
         }
