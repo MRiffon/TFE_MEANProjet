@@ -19,25 +19,20 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
     /* event sources array*/
     $scope.eventSources = [];
 
-    $scope.getEvents = function(){
-        if($scope.isAppAuthorized === false){
-            console.log($scope.events.length);
-            calendarData.loadEvents($scope.isAppAuthorized).then(function(response){
-                console.log(response);
-                var result = response;
-                $scope.events = result.personnalEvents;
-                $scope.companyEvents = result.companyEvents;
-                console.log($scope.events);
-                console.log($scope.companyEvents);
-                console.log(new Date().getTime());
-                uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
-                uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.events);
-                uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', $scope.companyEvents);
-            });
-            $scope.isAppAuthorized = true;
-        }
-    };
-
+    /**
+     * Si on vient d'arriver sur la page ou si on revient dessus après avoir été sur une autre page,
+     * on recharge les évènements.
+     */
+    if($scope.$on('$locationChangeSuccess') && $location.url() == '/dashboard/calendar'){
+        gapi_helper.configure({
+            clientId: '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com',
+            apiKey: 'AIzaSyB2-UqdcvGjNdW464ahiWZsc0HdXmblI20',
+            scopes: "https://www.googleapis.com/auth/calendar",
+            services: {
+                calendar: 'v3'
+            }
+        });
+    }
     $scope.handleAuthClick = function(){
         calendarData.handleAuthClick();
     };
@@ -49,29 +44,6 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         var m = new Date(start).getMonth();
         var events = [{title: 'Feed Me ' + m,start: s + (50000),end: s + (100000),allDay: false, className: ['customFeed']}];
         callback(events);
-    };
-
-    /* add and removes an event source of choice */
-    $scope.addRemoveEventSource = function(sources,source) {
-        var canAdd = 0;
-        angular.forEach(sources,function(value, key){
-            if(sources[key] === source){
-                sources.splice(key,1);
-                canAdd = 1;
-            }
-        });
-        if(canAdd === 0){
-            sources.push(source);
-        }
-    };
-    /* add custom event*/
-    $scope.addEvent = function() {
-        $scope.events.push({
-            title: 'Open Sesame',
-            start: new Date(y, m, 28),
-            end: new Date(y, m, 29),
-            className: ['openSesame']
-        });
     };
 
     /* remove event */
@@ -103,6 +75,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         calendar:{
             height: 450,
             editable: true,
+            defaultView:'agendaWeek',
             header:{
                 left: 'title',
                 center: '',
