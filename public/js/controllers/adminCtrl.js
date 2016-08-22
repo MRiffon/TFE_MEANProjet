@@ -152,7 +152,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
     };
 
     $scope.getHeader = function(){
-        return ['Username', 'Email', 'Statut', 'Département'];
+        return ['Username', 'Email', 'Prénom', 'Nom', 'Département'];
     };
 
     // on récupère les utilisateurs sous tableau pour remplir le fichier csv
@@ -161,13 +161,15 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         var tempUser = {
             username: '',
             email: '',
-            status: '',
+            firstname: '',
+            lastname: '',
             department: ''
         };
         for(var i = 0; i < $scope.users.length; i++){
             tempUser.username = $scope.users[i].username;
             tempUser.email = $scope.users[i].email;
-            tempUser.status = $scope.users[i].status;
+            tempUser.firstname = $scope.users[i].firstname;
+            tempUser.lastname = $scope.users[i].lastname;
             tempUser.department = $scope.users[i].department;
 
             arrayUsers[i] = tempUser;
@@ -192,7 +194,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         
         var usersToAdd = obj;
         for(var i = 0; i < usersToAdd.length; i++){
-            usersToAdd[i].chatRooms = ['Global', usersToAdd[i].department];
+            usersToAdd[i].chatRooms = ['General', usersToAdd[i].department];
             usersToAdd[i].password = '';
         }
 

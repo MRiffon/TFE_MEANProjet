@@ -18,7 +18,9 @@ module.exports = {
         var user = new User({
             username: 'admin',
             email:'admin@gmail.com',
-            chatRooms:['Global', 'Administratif', 'Support', 'R&D', 'Direction'],
+            chatRooms:['General', 'Administratif', 'Support', 'R&D', 'Direction'],
+            lastname: 'Georges',
+            firstname: 'Roger',
             role:'Admin',
             department:'Direction'
         });
@@ -36,7 +38,7 @@ module.exports = {
     setupChatRoom: function(req, res){
         var chat = [{
             created: new Date(),
-            name: 'Global',
+            name: 'General',
             type: 'Global'
         }, {
             created: new Date(),
@@ -89,8 +91,6 @@ module.exports = {
             name: 'Active'
         }, {
             name: 'Inactive'
-        }, {
-            name: 'Licenced'
         }];
 
         for (var i = 0; i < status.length; i++) {
@@ -105,8 +105,6 @@ module.exports = {
 
     setupTicketStatus: function(req, res){
         var status = [{
-            name: 'Open'
-        }, {
             name: 'Closed'
         }, {
             name: 'Pending'

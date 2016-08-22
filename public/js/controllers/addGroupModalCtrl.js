@@ -36,6 +36,7 @@ angular.module('addGroupModalCtrl', []).controller('modalAddGroupController', fu
                 type : 'Group',
                 created : new Date()
             };
+            $scope.items.room = newRoom;
             chatData.createNewRoom(newRoom).then(function(response){
                 var roomToNotif = response.data;
                 //$scope.items.groupChatRooms.push(response.data);

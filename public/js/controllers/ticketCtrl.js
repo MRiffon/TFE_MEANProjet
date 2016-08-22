@@ -153,9 +153,11 @@ angular.module('ticketCtrl', []).controller('ticketController', function($scope,
 
     // idem pour le statut
     $scope.whichStatus = function(status){
-        if(status === 'Open'){
-            return 'label label-primary';
-        } else return 'label label-default';
+        if(status === 'Pending'){
+            return 'label label-danger';
+        } else if(status === 'In Progress'){
+            return 'label label-info';
+        } else return 'label label-success';
     };
 
     // permet de savoir si un utilisateur est concerné par un ticket

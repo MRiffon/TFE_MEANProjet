@@ -9,7 +9,7 @@
                 <div class="form-group">
                     <b>Sujet :</b>
                     <input class="form-control" type="text" id="subject" name="subject" ng-model="addTicket.subject" ng-required="true">
-                    <span ng-show="addTicketForm.subject.$invalid && submitted">Sujet requis !</span>
+                    <span ng-show="addTicketForm.subject.$invalid && submitted" class="errorMsg">Sujet requis !</span>
                 </div>
                 <div class="form-group">
                     <b>Description :</b>
@@ -28,29 +28,29 @@
                     <b>Priorité : </b>
                     <select class="form-control" id="priority" name="priority" ng-options="option for option in priorities" ng-model="addTicket.priority" ng-required="true">
                     </select>
-                    <span ng-show="addTicketForm.priority.$invalid && submitted">Veuillez choisir une priorité !</span>
+                    <span ng-show="addTicketForm.priority.$invalid && submitted" class="errorMsg">Veuillez choisir une priorité !</span>
                 </div>
                 <div class="form-group">
                     <b>Département concerné :</b>
                     <select class="form-control" id="department" name="department" ng-options="option for option in departments" ng-model="selectedDepartment" ng-change="fillInListPotentialUsers()" ng-required="true">
                     </select>
-                    <span ng-show="addTicketForm.department.$invalid && submitted">Département concerné requis !</span>
+                    <span ng-show="addTicketForm.department.$invalid && submitted" class="errorMsg">Département concerné requis !</span>
                 </div>
                 <div class="form-group">
-                    <b>Assigné une personne :</b>
+                    <b>Assigné à :</b>
                     <select class="form-control" id="assigned" name="assigned" ng-options="option for option in potentialAssignedUsers" ng-model="selectedAssigned" ng-required="true">
                     </select>
-                    <span ng-show="addTicketForm.assigned.$invalid && submitted">Veuillez choisir une personne assignée !</span>
+                    <span ng-show="addTicketForm.assigned.$invalid && submitted" class="errorMsg">Veuillez choisir une personne assignée !</span>
                 </div>
                 <div class="form-group">
                     <b>Client :</b>
                     <input class="form-control" type="text" id="client" name="client" ng-model="addTicket.client" ng-required="true">
-                    <span ng-show="addTicketForm.client.$invalid && submitted">Veuillez préciser un client !</span>
+                    <span ng-show="addTicketForm.client.$invalid && submitted" class="errorMsg">Veuillez préciser un client !</span>
                 </div>
                 <div class="form-group">
                     <b>Deadline :</b>
                     <input class="form-control" type="datetime-local" id="deadline" name="deadline"  ng-value="displayDate | date:'yyyy-MM-ddTHH:mm'" ng-min="today | date:'yyyy-MM-ddTHH:mm'" ng-model="selectedDeadline" ng-required="true">
-                    <span ng-show="addTicketForm.deadline.$invalid && addTicketForm.deadline.$error && submitted">Veuillez préciser une deadline valide !</span>
+                    <span ng-show="addTicketForm.deadline.$invalid && addTicketForm.deadline.$error && submitted" class="errorMsg">Veuillez préciser une deadline valide !</span>
                 </div>
             </div>
         </div>

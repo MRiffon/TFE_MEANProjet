@@ -126,7 +126,7 @@ angular.module('ticketModalCtrl', []).controller('modalTicketController', functi
             
             if($scope.isAdd){
                 $scope.addTicket.submitter = userData.currentUser().username;
-                $scope.addTicket.status = 'Open';
+                $scope.addTicket.status = 'Pending';
                 
                 $scope.items.status = 'ticketAdded';
 
@@ -156,7 +156,6 @@ angular.module('ticketModalCtrl', []).controller('modalTicketController', functi
                             Socket.emit('notif-ticket', notifTicket);
 
                             $uibModalInstance.close();
-                            alert('Ticket créé');
                         });
 
                     } else {
@@ -206,8 +205,6 @@ angular.module('ticketModalCtrl', []).controller('modalTicketController', functi
                             Socket.emit('notif-ticket', notifTicket);
 
                             $uibModalInstance.close();
-                            alert('Ticket mis à jour !');
-
                         });
                     } else {
                         console.log('Error');

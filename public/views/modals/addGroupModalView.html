@@ -8,8 +8,8 @@
                 <div class="form-content">
                     <div class="form-group">
                         <b>Nom :</b>
-                        <input class="form-control" type="text" id="name" name="name" ng-model="addGroup.name" ng-required="true">
-                        <span ng-show="addGroupForm.title.$invalid && submitted">Titre requis !</span>
+                        <input class="form-control" type="text" id="name" name="name" ng-model="addGroup.name" ng-required="true" autofocus>
+                        <span ng-show="addGroupForm.title.$invalid && submitted" class="errorMsg">Titre requis !</span>
                     </div>
 
                     <div class="form-group">
@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                         </div>
-                        <span ng-show="dataInvalid">{{ msgError }}</span>
+                        <span ng-show="dataInvalid" class="errorMsg">{{ msgError }}</span>
                     </div>
                 </div>
             </div>

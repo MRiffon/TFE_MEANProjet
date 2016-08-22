@@ -85,11 +85,15 @@ module.exports = {
             }
 
             if(user) {
-                token = user.generateJwt();
-                res.status(200).json({
-                    token: token,
-                    message: 'Authentification réussie !'
-                });
+                if(user.status === 'Active'){
+                    token = user.generateJwt();
+                    res.status(200).json({
+                        token: token,
+                        message: 'Authentification réussie !'
+                    });
+                } else {
+                    res.status(401).json({message: "Vous ne possédez plus les droits nécessaires. Veuillez contacter l'administrateur pour plus d'informations."});
+                }
             } else {
                 res.status(401).json(info);
             }
@@ -97,24 +101,20 @@ module.exports = {
     },
 
     creation: function(req, res){
-        console.log(req.body);
-        var error = '';
         if(req.payload.role !== 'Admin') {
             res.status(401).end();
         } else {
-            console.log(req.body);
             for(var i = 0; i < req.body.length; i++){
 
                 var user = new User();
 
                 user.username = req.body[i].username;
                 user.email = req.body[i].email;
-
-                if (req.body[i].password === '') {
-                    user.makePassword('password');
-                } else {
-                    user.makePassword(req.body[i].password);
-                }
+                
+                user.makePassword(req.body[i].password);
+                
+                user.lastname = req.body[i].lastname;
+                user.firstname = req.body[i].firstname;
 
                 //user.role = req.body.role;
                 user.department = req.body[i].department;
@@ -123,14 +123,13 @@ module.exports = {
 
                 user.save(function (err) {
                     if (err){
-                        res.send(err);
+                        console.log('error true');
+                        res.status(200).json({message: 'Erreur'});
                     } else {
-                        error = false;
+                        console.log('error false');
+                        res.status(200).json({message: 'Created!'});
                     }
                 });
-            }
-            if(!error){
-                res.status(200).json({message: 'Created!'});
             }
         }
     },

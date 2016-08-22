@@ -9,6 +9,33 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var express = require('express');
 var app = express();
 
+// Mailing
+var email = require('./config/email.js');
+var nodemailer = require("nodemailer");
+
+var smtpTransport  = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        XOAuth2: {
+            user: email.user,
+            clientId: email.clientId,
+            clientSecret: email.clientSecret,
+            refreshToken: email.refreshToken
+        }
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+});
+
+/*smtpTransport.verify(function(error, success) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log('Server is ready to take our messages');
+    }
+});*/
+
 // Upload de files
 var multer = require('multer');
 var storage = multer.diskStorage({
@@ -72,7 +99,7 @@ app.use(function(err, req, res, next){
 });
 
 // Gestion des routes/apis
-require('./app/routes.js')(app, upload);
+require('./app/routes.js')(app, upload, smtpTransport );
 
 // Gestion events socket.io
 require('./app/chat.js')(io);

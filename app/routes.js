@@ -18,7 +18,7 @@ var configjwt = require('../config/jwt.js');
 // permet de vérifier l'authenication d'un user avant d'utiliser une API, pas utile pour toute
 var authentication = jwt({ secret: configjwt.secret, userProperty: 'payload'});
 
-module.exports = function(app, upload){
+module.exports = function(app, upload, smtpTransport){
 
     app.use(function(req, res, next){
         next();
@@ -94,6 +94,25 @@ module.exports = function(app, upload){
                 res.json({error_code:1,err_desc:err});
             } else {
                 res.json({error_code:0,err_desc:null});
+            }
+        })
+    })
+
+    .get('/api/sendEmailNewUser',function(req, res){
+        console.log(req.query);
+        var mailOptions={
+            to : req.query.to,
+            subject : req.query.subject,
+            text : req.query.text
+        };
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+            if(error){
+                console.log(error);
+                res.end("error");
+            } else {
+                console.log("Message sent: " + response.message);
+                res.end("sent");
             }
         })
     })

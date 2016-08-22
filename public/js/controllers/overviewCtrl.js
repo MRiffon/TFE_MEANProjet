@@ -27,7 +27,9 @@ angular.module('overviewCtrl', []).controller('overviewController', function($sc
                 $scope.notifs[i].created = (new Date().getTime()) - new Date($scope.notifs[i].created).getTime();
                 if($scope.notifs[i].created <= 3540000){
                     $scope.notifs[i].created = Math.floor($scope.notifs[i].created / 60000);
-                    $scope.notifs[i].created = $scope.notifs[i].created.toString() + ' minute(s)';
+                    if($scope.notifs[i].created <= 0){
+                        $scope.notifs[i].created = "moins d'une minute";
+                    } else $scope.notifs[i].created = $scope.notifs[i].created.toString() + ' minute(s)';
                 } else if($scope.notifs[i].created <= 82800000){
                     $scope.notifs[i].created = Math.floor($scope.notifs[i].created / 3600000);
                     $scope.notifs[i].created = $scope.notifs[i].created.toString() + ' heure(s)';

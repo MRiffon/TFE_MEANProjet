@@ -6,16 +6,16 @@
                 <div class=form-content>
                     <div class=form-group>
                         <input type="email" id="email" name="email" class="form-control input-underline input-lg" placeholder="Email" ng-model="credentials.email" ng-required="true" autofocus>
-                        <p ng-show="loginForm.email.$invalid && submitted">Email valide requise !</p>
+                        <p ng-show="loginForm.email.$invalid && submitted" class="errorMsg">Email valide requise !</p>
                     </div>
                     <div class=form-group>
-                        <input type="password" id="password" name="password" class="form-control input-underline input-lg" placeholder="Password" ng-model="credentials.password" ng-required="true" ng-minlength="8">
-                        <p ng-show="loginForm.password.$invalid && loginForm.password.$pristine && submitted">Mot de passe requis !</p>
-                        <p ng-show="loginForm.password.$error.minlength && submitted">MDP de 8 caractères !</p>
+                        <input type="password" id="password" name="password" class="form-control input-underline input-lg" placeholder="Mot de passe" ng-model="credentials.password" ng-required="true" ng-minlength="8">
+                        <p ng-show="loginForm.password.$invalid && loginForm.password.$pristine && submitted" class="errorMsg">Mot de passe requis !</p>
+                        <p ng-show="loginForm.password.$error.minlength && submitted" class="errorMsg">MDP de 8 caractères !</p>
                     </div>
                 </div>
-                <p ng-show="dataLoginInvalid">{{ msgError }}</p>
-                <button type="submit" class="btn btn-white btn-outline btn-lg btn-rounded">Login</button>
+                <p ng-show="dataLoginInvalid" class="errorMsg">{{ msgError }}</p>
+                <button type="submit" class="btn btn-white btn-outline btn-lg btn-rounded">Connexion</button>
             </form>
         </div>
     </div>

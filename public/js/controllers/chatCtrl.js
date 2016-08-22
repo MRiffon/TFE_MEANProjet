@@ -135,13 +135,14 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     };
 
     $scope.sendMessage = function(msg){
+        console.log(msg);
         var message = {
             message: msg,
             room: $scope.selectedRoom.name,
             sender: username
         };
         //$scope.messages.push(msg);
-        if(msg !== null && msg !== ''){
+        if(message.message !== null && message.message !== '' && message.message !== undefined){
             Socket.emit('message sended', message);
 
             var usersConcerned = [];
@@ -203,7 +204,8 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         $scope.items = {
             users : Object.create($scope.allUsersName),
             groupChatRooms : $scope.userRooms.groupRooms,
-            currentUserRooms : $scope.$storage.user.chatRooms
+            currentUserRooms : $scope.$storage.user.chatRooms,
+            room : ''
         };
 
         var modalInstance = $uibModal.open({
@@ -220,6 +222,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
         modalInstance.result.then(function (selectedItem) {
             $scope.selected = selectedItem;
+            $scope.switchRoom($scope.items.room);
         });
     };
     

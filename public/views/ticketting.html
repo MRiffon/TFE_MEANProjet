@@ -48,7 +48,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="ticket in tickets.slice(((currentPage - 1)*itemsPerPage), ((currentPage)*itemsPerPage))">
-                            <td class="widthSubjectTicket">{{ ticket.subject }}</td>
+                            <td class="widthSubjectTicket ticketLink"><a href="" ng-click="showTicket(ticket)">{{ ticket.subject }}</a></td>
                             <td><span ng-class="whichStatus(ticket.status)">{{ ticket.status }}</span></td>
                             <td><span ng-class="whichPriority(ticket.priority)">{{ ticket.priority }}</span></td>
                             <td>{{ ticket.assigned}}</td>
@@ -125,6 +125,7 @@
                         </tr>
                         </tbody>
                     </table>
+                    <button ng-click="open(editButton, ticket)" class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm">Editer ce ticket</button>
                 </div>
                 <div class="col-md-1"></div>
             </div>
