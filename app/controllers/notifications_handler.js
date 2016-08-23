@@ -51,7 +51,8 @@ module.exports = {
 
                 notif.identifier = req.body.identifier;
                 notif.content = req.body.content;
-
+                
+                console.log(notif);
                 notif.save(function(err){
                     if (err){
                         res.send(err);

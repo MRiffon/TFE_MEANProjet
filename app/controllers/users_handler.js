@@ -101,17 +101,23 @@ module.exports = {
     },
 
     creation: function(req, res){
+        var msg;
         if(req.payload.role !== 'Admin') {
             res.status(401).end();
         } else {
             for(var i = 0; i < req.body.length; i++){
-
+                console.log(req.body);
+                console.log(i);
                 var user = new User();
 
                 user.username = req.body[i].username;
                 user.email = req.body[i].email;
-                
-                user.makePassword(req.body[i].password);
+
+                if (req.body[i].password === '') {
+                    user.makePassword('password');
+                } else {
+                    user.makePassword(req.body[i].password);
+                }
                 
                 user.lastname = req.body[i].lastname;
                 user.firstname = req.body[i].firstname;
@@ -123,11 +129,11 @@ module.exports = {
 
                 user.save(function (err) {
                     if (err){
-                        console.log('error true');
                         res.status(200).json({message: 'Erreur'});
                     } else {
-                        console.log('error false');
-                        res.status(200).json({message: 'Created!'});
+                        if(i === req.body.length){
+                            res.status(200).json({message: 'Created!'});
+                        }
                     }
                 });
             }
@@ -152,6 +158,7 @@ module.exports = {
                 if(err){
                     res.send(err);
                 } else {
+                    console.log(req.body);
                     for(var key in req.body){
                         if(req.body.hasOwnProperty(key)){
                             if(key === "password"){
@@ -160,10 +167,11 @@ module.exports = {
 
                             }
                             else {
-                                user[key] = req.body[key];
+                                user[key] = req.body[key]; 
                             }
                         }
                     }
+
                     user.save(function(err){
                         if(err) {
                             console.log(err);
@@ -213,5 +221,27 @@ module.exports = {
                 res.sendStatus(200);
             }
         })
+    },
+
+    resetPassword: function(req, res){
+        if(!req.payload._id) {
+            res.status(401).json({message: "Authentication failure !"});
+        } else {
+            User.findById(req.payload._id).exec(function(err, user){
+                if(!user.checkPassword(req.body.oldPassword)){
+                    res.status(200).json({message: 'Mauvais ancien mot de passe !'});
+                } else {
+                    user.makePassword(req.body.password);
+
+                    user.save(function(err){
+                        if(err){
+                            res.send(err);
+                        } else {
+                            res.status(200).json({message: 'Reset !'});
+                        }
+                    })
+                }
+            });
+        }
     }
 };

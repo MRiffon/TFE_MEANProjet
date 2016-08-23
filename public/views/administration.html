@@ -54,14 +54,17 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="user in users">
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td><select id="status" name="status" ng-options="option for option in status" ng-model="selectedStatus[$index]" ng-change="updateUser(user, 'status', selectedStatus[$index])">
+                        <td ng-hide="isAdmin(user)">{{ $index }}</td>
+                        <td ng-hide="isAdmin(user)">{{ user.username }}</td>
+                        <td ng-hide="isAdmin(user)">{{ user.email }}</td>
+                        <td ng-hide="isAdmin(user)"><select id="status" name="status" ng-options="option for option in status" ng-model="selectedStatus[$index]" ng-change="updateUser(user, 'status', selectedStatus[$index])">
                         </select></td>
-                        <td><select id="department" name="department" ng-options="option for option in departments" ng-model="selectedDepartments[$index]" ng-change="updateUser(user, 'department', selectedDepartments[$index])">
+                        <td ng-hide="isAdmin(user)"><select id="department" name="department" ng-options="option for option in departments" ng-model="selectedDepartments[$index]" ng-change="updateUser(user, 'department', selectedDepartments[$index])">
                         </select></td>
-                        <td>
+                        <td ng-hide="isAdmin(user)">
+                            <a href="" role="button" ng-click="updateUser(user, 'password', '')" confirm="Etes-vous sûr de vouloir reset le mot de passe de {{ user.username }} ?"><i class="glyphicon glyphicon-repeat"></i></a>
+                        </td>
+                        <td ng-hide="isAdmin(user)">
                             <a href="" role="button" ng-click="deleteUser(user)" confirm="Etes-vous sûr de vouloir supprimer {{ user.username }} ?"><i class="glyphicon glyphicon-remove"></i></a>
                         </td>
                     </tr>

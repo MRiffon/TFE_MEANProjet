@@ -31,41 +31,56 @@
                 <button ng-show="isGroupChatRoom(chatRoomName)" class="btn btn-primary btn-lg btn-outline btn-rounded btn-sm" ng-click="leaveGroup(chatRoomName)">Quitter groupe</button>
             </div>
             <div class="col-md-2 col-sm-2 adaptHeight">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="#" ng-click="changeTypeConvers(conversGlobal)">Global</a></li>
+                    <li><a href="#" ng-click="changeTypeConvers(conversGroup)">Groupe(s)</a></li>
+                    <li><a href="#" ng-click="changeTypeConvers(conversUsers)">Utilisateur(s)</a></li>
+                </ul>
                 <div class="sidebar-nav-nav-fixed pull-right affix">
-                    <h4>Global</h4>
-                    <div style="height: 150px; overflow-y: auto; overflow-x: hidden; " scroll-glue-top="true" >
-                        <ul class="nav">
-                            <li ng-repeat="room in userRooms.globalRooms">
-                                <a ng-click="switchRoom(room)" class="linkPointer">{{room.name}}</a>
-                            </li>
-                        </ul>
+                    <div ng-show="showGlobal">
+                        <h3>Global</h3>
+                        <div>
+                            <ul class="nav">
+                                <li ng-repeat="room in userRooms.globalRooms">
+                                    <a ng-click="switchRoom(room)" class="linkPointer">{{room.name}}</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <hr>
-                    <h4 style="display: inline; padding-right: 8px;">Groupes</h4>
-                    <a href="#" ng-click="open()">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </a>
-                    <div style="height: 150px; overflow-y: auto; overflow-x: hidden;" scroll-glue-top="true">
-                        <ul class="nav">
 
-                            <li ng-repeat="room in userRooms.groupRooms track by $index">
-                                <a ng-click="switchRoom(room)" class="linkPointer">{{room.name}}</a>
-                            </li>
-                        </ul>
+                    <div ng-show="showGroups">
+                        <h3 style="display: inline; padding-right: 8px;">Groupes</h3>
+                        <a href="#" ng-click="open()">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+                        <div style="height: 400px; overflow-y: auto; overflow-x: hidden; width: 150px;" scroll-glue-top="true">
+                            <ul class="nav">
+
+                                <li ng-repeat="room in userRooms.groupRooms track by $index">
+                                    <a ng-click="switchRoom(room)" class="linkPointer">{{room.name}}</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <hr>
-                    <h4>Utilisateurs</h4>
-                    <ul class="nav">
-                        <li ng-repeat="user in users track by $index">
-                            <a ng-show="isUrself(user)" ng-click="getPrivateRoom(user)" class="linkPointer">{{user}}</a>
-                        </li>
-                    </ul>
-                    <hr>
-                    <ul class="nav">
-                        <li ng-repeat="disconnectedUserName in disconnectedUsersName track by $index">
-                            <a ng-click="getPrivateRoom(disconnectedUserName)" class="linkPointer">{{disconnectedUserName}}</a>
-                        </li>
-                    </ul>
+
+                    <div ng-show="showUsers">
+                        <h3>Utilisateurs</h3>
+                        <div style="height: 175px; overflow-y: auto; overflow-x: hidden; width: 150px;" scroll-glue-top="true">
+                            <ul class="nav">
+                                <li ng-repeat="user in users track by $index">
+                                    <a ng-show="isUrself(user)" ng-click="getPrivateRoom(user)" class="linkPointer">{{user}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <hr>
+                        <div style="height: 175px; overflow-y: auto; overflow-x: hidden; width: 150px;" scroll-glue-top="true">
+                            <ul class="nav">
+                                <li ng-repeat="disconnectedUserName in disconnectedUsersName track by $index">
+                                    <a ng-click="getPrivateRoom(disconnectedUserName)" class="linkPointer">{{disconnectedUserName}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

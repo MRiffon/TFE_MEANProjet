@@ -2,7 +2,7 @@
  * Created by micka on 18-07-16.
  */
 
-angular.module('adminCtrl', []).controller('adminController', function($scope, adminData, $uibModal, $parse) {
+angular.module('adminCtrl', []).controller('adminController', function($scope, adminData, $uibModal, $parse, $http) {
     $scope.selectedDepartments = [];
     $scope.selectedStatus = [];
     $scope.departments = [];
@@ -17,6 +17,12 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
     $scope.filename = 'all_users';
     $scope.separator = ',';
     $scope.decimalSeparator = '.';
+
+    $scope.isAdmin = function(user){
+        if(user.role === 'Admin'){
+            return true;
+        } else return false;
+    };
 
     $scope.csv = {
         content: null,
@@ -93,18 +99,42 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
     
     // Gestion de l'update du status ou département
     $scope.updateUser = function(user, type, toUpdate){
+        var message = '';
         user.location = 'admin';
         if(type === 'department'){
             user.department = toUpdate;
+            user.chatRooms.splice(1, 1);
+            user.chatRooms.push(toUpdate);
+            message = 'Votre département a été changé ! Vous faites dorénavant partie du département ' + toUpdate;
         } else if(type === 'status'){
             user.status = toUpdate;
+            message = 'Votre statut sur le site a changé ! Vous êtes maintenant ' + toUpdate;
+        } else if(type === 'password'){
+            console.log('On change le password');
+            var tabSpecialChar = ['@', '#', '~', '%', '!', '?', '$'];
+
+            var randNumber = Math.floor((Math.random() + 1) * 10000);
+            var password = 'Pass' + randNumber + tabSpecialChar[Math.floor(Math.random() * 7)];
+
+            message = 'Votre mot de passe a été réinitialisé. Voici votre nouveau (à vite changer): ' + password;
+
+            user.password = password;
         }
 
         adminData.updateUser(user).then(function(response){
-            adminData.allUsers().then(function(response){
-                $scope.users = response.data;
-                alert('Informations bien mises à jour !');
-            });
+            console.log(response);
+            if(response.data.message === 'Updated!'){
+                $http.get('/api/sendEmail', { params: {
+                    to: user.email,
+                    subject: 'Mise à jour de votre compte utilisateur',
+                    text: message
+                }});
+
+                adminData.allUsers().then(function(response){
+                    $scope.users = response.data;
+                    alert('Informations bien mises à jour !');
+                });
+            }
         });
     };
 
@@ -114,6 +144,7 @@ angular.module('adminCtrl', []).controller('adminController', function($scope, a
         console.log(user.username);
         $scope.users.splice($scope.users.indexOf(user), 1);
     };
+
 
     // recherche d'un utilisateur selon différents critères
     $scope.searchResults = function(){

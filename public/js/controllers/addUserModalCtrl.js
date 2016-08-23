@@ -27,8 +27,10 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
     $scope.saveUser = function(isValid){
         $scope.submitted = true;
         if(isValid){
-            var randNumber = Math.floor(Math.random() * 10000);
-            var password = 'Pass' + randNumber;
+            var tabSpecialChar = ['@', '#', '~', '%', '!', '?', '$'];
+
+            var randNumber = Math.floor((Math.random() + 1) * 10000);
+            var password = 'Pass' + randNumber + tabSpecialChar[Math.floor(Math.random() * 7)];
 
             $scope.addUser.department = $scope.selectedDepartment.name;
             var addUser = [];
@@ -41,8 +43,9 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
             adminData.createUser(addUser).then(function(response){
                 
                 var msg = response.data.message;
+                console.log(msg);
                 if(msg === 'Created!'){
-                    $http.get('/api/sendEmailNewUser', { params: {
+                    $http.get('/api/sendEmail', { params: {
                         to: addUser[0].email,
                         subject: 'Nouveau compte utilisateur',
                         text: 'Votre compte a été créé. Voici votre mot de passe de connexion (à changer dès que possible) : ' + password

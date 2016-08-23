@@ -5,6 +5,30 @@
 angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData, $sessionStorage, $uibModal, notificationData, adminData){
 
     console.log('USER : ' + $sessionStorage.user.chatRooms);
+    
+    $scope.showGlobal = true;
+    $scope.showGroups = false;
+    $scope.showUsers = false;
+    
+    $scope.conversGlobal = "Global";
+    $scope.conversGroup = "Group";
+    $scope.conversUsers = "Users";
+    
+    $scope.changeTypeConvers = function(type){
+        if(type === 'Group'){
+            $scope.showGroups = true;
+            $scope.showGlobal = false;
+            $scope.showUsers = false;
+        } else if(type === 'Users'){
+            $scope.showUsers = true;
+            $scope.showGroups = false;
+            $scope.showGlobal = false;
+        } else {
+            $scope.showGlobal = true;
+            $scope.showGroups = false;
+            $scope.showUsers = false;
+        }
+    };
 
     var tempRoom = {};
     $scope.selectedRoom = {};

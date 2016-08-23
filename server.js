@@ -16,25 +16,21 @@ var nodemailer = require("nodemailer");
 var smtpTransport  = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        XOAuth2: {
-            user: email.user,
-            clientId: email.clientId,
-            clientSecret: email.clientSecret,
-            refreshToken: email.refreshToken
-        }
+        user: email.user,
+        pass: email.pass
     },
     tls: {
         rejectUnauthorized: false
     }
 });
 
-/*smtpTransport.verify(function(error, success) {
+smtpTransport.verify(function(error, success) {
     if (error) {
         console.log(error);
     } else {
         console.log('Server is ready to take our messages');
     }
-});*/
+});
 
 // Upload de files
 var multer = require('multer');

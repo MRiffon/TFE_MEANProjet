@@ -32,6 +32,7 @@ module.exports = function(app, upload, smtpTransport){
     .post('/api/login', userHandler.login)
     .get('/api/profil', authentication, userHandler.readProfil)
     .put('/api/profil', authentication, userHandler.editProfil)
+    .post('/api/resetPwd', authentication, userHandler.resetPassword)
     .put('/api/updateRooms', userHandler.updateChatrooms)
     .get('/api/logout', function(req, res){
         req.logOut();
@@ -98,7 +99,7 @@ module.exports = function(app, upload, smtpTransport){
         })
     })
 
-    .get('/api/sendEmailNewUser',function(req, res){
+    .get('/api/sendEmail',function(req, res){
         console.log(req.query);
         var mailOptions={
             to : req.query.to,
@@ -108,10 +109,8 @@ module.exports = function(app, upload, smtpTransport){
         console.log(mailOptions);
         smtpTransport.sendMail(mailOptions, function(error, response){
             if(error){
-                console.log(error);
                 res.end("error");
             } else {
-                console.log("Message sent: " + response.message);
                 res.end("sent");
             }
         })
