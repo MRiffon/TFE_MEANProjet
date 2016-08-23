@@ -104,7 +104,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     });
 
     Socket.on('addUser', function(data){
-        $scope.users.push(data.username);
+        $scope.users.push(dat&a.username);
     });
 
     Socket.on('removeUser', function(data){

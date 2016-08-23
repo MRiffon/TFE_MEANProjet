@@ -5,10 +5,20 @@
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
 
-angular.module('eventModalCtrl', []).controller('modalCalendarController', function ($scope, $uibModalInstance, uiCalendarConfig, calendarData, items) {
+angular.module('eventModalCtrl', []).controller('modalCalendarController', function ($scope, $uibModalInstance, uiCalendarConfig, calendarData, items, userData) {
 
     $scope.timeOptions = ['Minutes', 'Heures', 'Jours'];
+    $scope.userRole = userData.currentUser().role;
+    $scope.isReadOnly = true;
+    $scope.calendarsId = {
+        personalCalendarId: 'primary',
+        companyCalendarId: 'm85on1nu9kuaqavesiv5ov3sgo@group.calendar.google.com'
+    };
 
+    $scope.calendarsNames = {
+        personnalCalendarName: 'Calendrier personnel',
+        companyCalendarName: 'Calendrier d\'entreprise'
+    };
     //items contient la date du jour de l'évènement
     $scope.items = items;
 
@@ -29,14 +39,15 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
             description: '',
             durationReminder: '',
             timeUnityReminder: 'Minutes',
-            location: ''
+            location: '',
+            calendarId: 'primary',
+            calendarName:''
         };
     }
     else if($scope.items.date === undefined){
 
         $scope.title = 'Editer évènement';
         $scope.editButton = true;
-        console.log($scope.items.calEvent.start._d);
         $scope.times = {
             startTime: new Date(null, null, null, $scope.items.calEvent.start._d.getHours(), $scope.items.calEvent.start._d.getMinutes(), 0),
             endTime: new Date(null, null, null, $scope.items.calEvent.end._d.getHours(), $scope.items.calEvent.end._d.getMinutes(), 0)
@@ -63,21 +74,11 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
 
     }
 
-    /*
-    $scope.ok = function () {
-        $uibModalInstance.close($scope.selected.item);
-    };
-
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };*/
-
     $scope.saveEvent = function(isValid){
         $scope.submitted = true;
 
         if(isValid){
             var typeRequest = '';
-            console.log("Formulaire valide");
             if($scope.items.calEvent === undefined){
                 $scope.editEvent.start = new Date($scope.items.date._d);
                 $scope.editEvent.start.setHours($scope.times.startTime.getHours());
@@ -96,11 +97,20 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
                 $scope.editEvent.end.setMinutes($scope.times.endTime.getMinutes());
                 typeRequest = 'update';
             }
+            //TODO: à modifier ! On doit se baser sur le role, pas sur le username.
+            if(userData.currentUser().username === "admin"){
+                if($scope.editEvent.calendarName === $scope.calendarsNames.personnalCalendarName){
+                    $scope.editEvent.calendarId = $scope.calendarsId.personalCalendarId;
+                }
+                else{
+                    $scope.editEvent.calendarId = $scope.calendarsId.companyCalendarId;
+                }
+
+            }
 
             calendarData.sendEvent($scope.editEvent, typeRequest);
             $uibModalInstance.close();
-            //uiCalendarConfig.calendars.myCalendar.fullCalendar('rerenderEvents');
-
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('updateEvent', $scope.editEvent);
         }
         console.log("timeUnity : " + $scope.editEvent.timeUnityReminder);
     };
@@ -108,6 +118,29 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
     $scope.deleteEvent = function(){
         calendarData.deleteEvent($scope.editEvent.id);
         $uibModalInstance.close();
-    }
+        uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvent', $scope.items.calEvent);
+    };
+
+    /**
+     * La fonction isAdmin permet de vérifier que lorsque l'utilisateur accède à un évènement d'entreprise, il possède
+     * bien les droits administrateurs. Le cas échéant la fonction renvoie true, false sinon.
+     * */
+    $scope.isAdmin = function(){
+        if($scope.items.calEvent !== undefined){
+            if($scope.items.calEvent.calendarId === $scope.calendarsId.companyCalendarId){
+                console.log($scope.userRole);
+                //TODO: remplacer par $scope.userRole === 'Admin'
+                if(userData.currentUser().username === 'admin'){
+                    $scope.isReadOnly = false;
+                    return true;
+                }else{
+                    $scope.isReadOnly = true;
+                    return false;
+                }
+            }
+        }
+        $scope.isReadOnly = false;
+        return true;
+    };
 
 });

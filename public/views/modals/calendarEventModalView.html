@@ -7,13 +7,13 @@
         <div class="form-content">
             <div class="form-group">
                 <b>Titre :</b>
-                <input class="form-control" type="text" id="title" name="title" ng-value="items.calEvent.title" ng-model="editEvent.title" ng-required="true   ">
+                <input class="form-control" type="text" id="title" ng-readonly="isReadOnly" name="title" ng-value="items.calEvent.title" ng-model="editEvent.title" ng-required="true   ">
                 <span ng-show="editEventForm.title.$invalid && submitted">Titre requis !</span>
             </div>
 
             <div class="form-group">
                 <b>Description :</b>
-                <input class="form-control" type="text" id="description" name="description" ng-value="items.calEvent.description" ng-model="editEvent.description" ng-required="false">
+                <input class="form-control" type="text" id="description" ng-readonly="isReadOnly" name="description" ng-value="items.calEvent.description" ng-model="editEvent.description" ng-required="false">
             </div>
 
             <div class="form-group">
@@ -23,13 +23,13 @@
                         <span>De</span>
                     </div>
                     <div class="col-md-3">
-                        <input class="form-control" type="time" id="startTime" name="startTime" ng-model="times.startTime" ng-value="times.startTime">
+                        <input class="form-control" type="time" id="startTime" ng-readonly="isReadOnly" name="startTime" ng-model="times.startTime" ng-value="times.startTime">
                     </div>
                     <div class="col-sm-1">
                         <span> à </span>
                     </div>
                     <div class="col-md-3">
-                        <input class="form-control" type="time" id="endTime" name="endTime" ng-model="times.endTime" ng-value=" times.endTime">
+                        <input class="form-control" type="time" id="endTime" name="endTime" ng-readonly="isReadOnly" ng-model="times.endTime" ng-value=" times.endTime">
                     </div>
                 </div>
             </div>
@@ -38,10 +38,10 @@
                 <b>Rappel :</b>
                 <div class="form-group row">
                     <div class="col-md-2">
-                        <input class="form-control" type="number" id="eventReminder" name="eventReminder" ng-model="editEvent.durationReminder" ng-value="editEvent.reminders.overrides[0].minutes" ng-required="false" min="0">
+                        <input class="form-control" type="number" id="eventReminder" ng-readonly="isReadOnly" name="eventReminder" ng-model="editEvent.durationReminder" ng-value="editEvent.reminders.overrides[0].minutes" ng-required="false" min="0">
                     </div>
                     <div class="col-md-3">
-                        <select class="form-control" id="timeUnityReminder" name="timeUnityReminder" ng-options="item for item in timeOptions" ng-model="editEvent.timeUnityReminder">
+                        <select class="form-control" id="timeUnityReminder" name="timeUnityReminder" ng-readonly="isReadOnly" ng-options="item for item in timeOptions" ng-model="editEvent.timeUnityReminder">
                         </select>
                     </div>
                 </div>
@@ -50,12 +50,18 @@
 
             <div class="form-group">
                 <b>Lieu :</b>
-                <input class="form-control" type="text" id="eventLocation" name="eventLocation" placeholder="Lieu" ng-model="editEvent.location" ng-required="false"    >
+                <input class="form-control" type="text" id="eventLocation" name="eventLocation" ng-readonly="isReadOnly" placeholder="Lieu" ng-model="editEvent.location" ng-required="false">
             </div>
+
+            <div class="form-group">
+                <b>Calendrier :</b>
+                <select class="form-control" id="calendarId" name="calendarId" ng-show="isAdmin()" ng-model="editEvent.calendarName" ng-options="item for item in calendarsNames">
+            </div>
+
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" type="submit">OK</button>
-        <button class="btn btn-primary" ng-click="deleteEvent()" ng-show="editButton">Supprimer</button>
+        <button class="btn btn-primary" ng-show="isAdmin()" type="submit">OK</button>
+        <button class="btn btn-primary" ng-click="deleteEvent()" ng-show="editButton && isAdmin()">Supprimer</button>
     </div>
 </form>

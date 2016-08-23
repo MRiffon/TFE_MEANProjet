@@ -15,14 +15,14 @@ function calendarData($location, uiCalendarConfig) {
      * l'id client et la clé d'api récupéré sur console.developers.google.com. On précise également à quels
      * services on va accéder.
      */
-    gapi_helper.configure({
+    /*gapi_helper.configure({
         clientId: '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com',
         apiKey: 'AIzaSyB2-UqdcvGjNdW464ahiWZsc0HdXmblI20',
         scopes: "https://www.googleapis.com/auth/calendar",
         services: {
             calendar: 'v3'
         }
-    });
+    });*/
 
     gapi_helper.when('authorized', function () {
         var authorizeButton = document.getElementById('authorize-button');
@@ -43,7 +43,11 @@ function calendarData($location, uiCalendarConfig) {
 
 
     function loadPersonnalCalendar() {
-        var personnalEvents = [];
+        var personnalEvents = {
+            events:[],
+            color : 'royalBlue',
+            textColor: 'black'
+        };
         var request = gapi.client.calendar.events.list({
             'calendarId': 'primary',
             'timeMin': (new Date()).toISOString(),
@@ -54,14 +58,17 @@ function calendarData($location, uiCalendarConfig) {
         });
 
         request.execute(function (resp) {
-            var events = resp.items;
-            personnalEvents = formatGoogleEventsToFullCalendar(events);
+            personnalEvents.events = formatGoogleEventsToFullCalendar(resp.items, 'primary');
             uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', personnalEvents);
         });
     }
 
     function loadCompanyCalendar() {
-        var companyEvents = [];
+        var companyEvents = {
+            events:[],
+            color : 'springGreen',
+            textColor: 'black'
+        };
         var request = gapi.client.calendar.events.list({
             'calendarId': 'm85on1nu9kuaqavesiv5ov3sgo@group.calendar.google.com',
             'timeMin': (new Date()).toISOString(),
@@ -73,16 +80,18 @@ function calendarData($location, uiCalendarConfig) {
 
         request.execute(function (resp) {
             var events = resp.items;
-            companyEvents = formatGoogleEventsToFullCalendar(events);
+            companyEvents.events = formatGoogleEventsToFullCalendar(events, 'm85on1nu9kuaqavesiv5ov3sgo@group.calendar.google.com');
             uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', companyEvents);
         });
     }
 
-    function formatGoogleEventsToFullCalendar(events){
-        var personnalEvents = [];
+    function formatGoogleEventsToFullCalendar(events, calendarId){
+        var formattedEvents = [];
         for (var i = 0; i < events.length; i++) {
+            console.log(events[0]);
             var singleEvent = {
                 title: events[i].summary,
+                calendarId : calendarId,
                 start: new Date(events[i].start.dateTime),
                 end: new Date(events[i].end.dateTime),
                 description: events[i].description,
@@ -91,13 +100,12 @@ function calendarData($location, uiCalendarConfig) {
                 id: events[i].id
             };
             console.log(singleEvent);
-            personnalEvents.push(singleEvent);
+            formattedEvents.push(singleEvent);
         }
-        return personnalEvents;
+        return formattedEvents;
     }
 
     function sendEvent (event, typeRequest) {
-        console.log("Ca passe");
         if(event.durationReminder != undefined){
             var minutes = calculateReminderTime(event.timeUnityReminder, event.durationReminder);
             var reminders = {
@@ -110,7 +118,7 @@ function calendarData($location, uiCalendarConfig) {
         }
 
         var body = {
-            'calendarId': 'primary',
+            'calendarId': event.calendarId,
             'summary': event.title,
             'start': {dateTime: event.start},
             'end': { dateTime: event.end},

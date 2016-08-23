@@ -2,7 +2,7 @@
  * Created by Martouf on 26-05-16.
  */
 
-angular.module('calendarCtrl', []).controller('calendarController', function($scope, calendarData, $location, $sessionStorage, $http, uiCalendarConfig, $uibModal, $log){
+angular.module('calendarCtrl', []).controller('calendarController', function($scope, calendarData, userData, $location, $sessionStorage, $http, uiCalendarConfig, $uibModal, $log){
 
     $scope.date = new Date();
     var d = $scope.date.getDate();
@@ -16,6 +16,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
     $scope.isAppAuthorized = false;
     $scope.isEventsLoaded = false;
 
+
     /* event sources array*/
     $scope.eventSources = [];
 
@@ -23,16 +24,17 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
      * Si on vient d'arriver sur la page ou si on revient dessus après avoir été sur une autre page,
      * on recharge les évènements.
      */
-    if($scope.$on('$locationChangeSuccess') && $location.url() == '/dashboard/calendar'){
-        gapi_helper.configure({
-            clientId: '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com',
-            apiKey: 'AIzaSyB2-UqdcvGjNdW464ahiWZsc0HdXmblI20',
-            scopes: "https://www.googleapis.com/auth/calendar",
-            services: {
-                calendar: 'v3'
-            }
-        });
-    }
+
+    gapi_helper.configure({
+        clientId: '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com',
+        apiKey: 'AIzaSyB2-UqdcvGjNdW464ahiWZsc0HdXmblI20',
+        scopes: "https://www.googleapis.com/auth/calendar",
+        services: {
+            calendar: 'v3'
+        }
+    });
+
+
     $scope.handleAuthClick = function(){
         calendarData.handleAuthClick();
     };
@@ -70,11 +72,22 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         $compile(element)($scope);
     };*/
 
+    $scope.alertOnDrop = function(event, delta, revertFunc, jsEvent, ui, view){
+        var typeRequest = 'update';
+        if(userData.currentUser().username !== 'admin' && event.calendarId === 'm85on1nu9kuaqavesiv5ov3sgo@group.calendar.google.com'){
+            alert('Cette opération n\'est pas permise pour les événements d\'entreprises ! Veuillez contacter un responsable.');
+            revertFunc();
+        }
+        calendarData.sendEvent(event, typeRequest);
+        uiCalendarConfig.calendars.myCalendar.fullCalendar('updateEvent', event);
+    };
+
     /* config object */
     $scope.uiConfig = {
         calendar:{
-            height: 450,
+            height: 550,
             editable: true,
+            timezone: 'local',
             defaultView:'agendaWeek',
             header:{
                 left: 'title',
@@ -88,8 +101,8 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
                 };
                 $scope.open();
             },
+            eventResize: $scope.resize,
             eventDrop: $scope.alertOnDrop,
-            eventResize: $scope.alertOnResize,
             eventRender: $scope.eventRender,
             dayClick : function(date, jsEvent, view){
                 console.log("Clic sur : " + date.format());
