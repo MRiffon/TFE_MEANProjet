@@ -21,20 +21,30 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
 
     $scope.isAdmin = function(){
         //TODO: remplacer par $scope.userRole === 'Admin'
-        return userData.currentUser().username === 'admin';
+        return(userData.currentUser().username === 'admin');
+    };
+
+    $scope.isAlreadyCreated = function(){
+        return ($scope.items.calEvent === undefined && $scope.isAdmin());
     };
 
     $scope.isReadOnly = function() {
-        return !!($scope.items.calEvent.calendarId === $scope.calendarsId.companyCalendarId && !$scope.isAdmin());
+        if($scope.items.calEvent !== undefined){
+            return !!($scope.items.calEvent.calendarId === $scope.calendarsId.companyCalendarId && !$scope.isAdmin());
+        }
+        else return false;
+
     };
 
     var startTime = new Date();
 
+    console.log($scope.items.date);
+
     if ($scope.items.calEvent === undefined){
         $scope.title ='Nouvel événement';
         $scope.times = {
-            startTime: new Date(null, null, null, startTime.getHours(), startTime.getMinutes(), 0),
-            endTime: new Date(null, null, null, startTime.getHours() + 1, startTime.getMinutes(), 0)
+            startTime: new Date(null, null, null, $scope.items.date._d.getHours(), $scope.items.date._d.getMinutes(), 0),
+            endTime: new Date(null, null, null, $scope.items.date._d.getHours() + 1, $scope.items.date._d.getMinutes(), 0)
         };
         $scope.editEvent = {
             title: '',
@@ -42,6 +52,8 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
             end: '',
             description: '',
             durationReminder: '',
+            color :'',
+            textColor:'',
             timeUnityReminder: 'Minutes',
             location: '',
             calendarId: 'primary',
@@ -57,10 +69,10 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
             endTime: new Date(null, null, null, $scope.items.calEvent.end._d.getHours(), $scope.items.calEvent.end._d.getMinutes(), 0)
         };
 
-            $scope.editEvent = $scope.items.calEvent;
+        $scope.editEvent = $scope.items.calEvent;
 
-            $scope.editEvent.id = $scope.items.calEvent.id;
-
+        $scope.editEvent.id = $scope.items.calEvent.id;
+        if($scope.items.calEvent.durationReminder === undefined){
             if($scope.items.calEvent.reminders.overrides !== undefined){
                 if($scope.items.calEvent.reminders.overrides[0].minutes >= 1440){
                     $scope.editEvent.durationReminder = $scope.items.calEvent.reminders.overrides[0].minutes / 1440;
@@ -75,7 +87,7 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
                     $scope.editEvent.timeUnityReminder = 'Minutes';
                 }
             }
-
+        }
     }
 
     $scope.saveEvent = function(isValid){
@@ -117,6 +129,15 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
                 uiCalendarConfig.calendars.myCalendar.fullCalendar('updateEvent', $scope.editEvent);
             }
             else if(typeRequest === 'insert'){
+                if($scope.editEvent.calendarId === $scope.calendarsId.companyCalendarId){
+                    $scope.editEvent.color = 'springGreen';
+                    $scope.editEvent.textColor = 'black';
+                }
+                else{
+                    $scope.editEvent.color = 'royalBlue';
+                    $scope.editEvent.textColor = 'black';
+                }
+
                 uiCalendarConfig.calendars.myCalendar.fullCalendar('renderEvent', $scope.editEvent);
             }
             $uibModalInstance.close();
@@ -126,7 +147,7 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
 
     $scope.deleteEvent = function(){
         calendarData.deleteEvent($scope.editEvent.id);
+        uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents', $scope.items.calEvent._id);
         $uibModalInstance.close();
-        uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvent', $scope.items.calEvent);
     };
 });

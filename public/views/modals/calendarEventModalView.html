@@ -13,7 +13,8 @@
 
             <div class="form-group">
                 <b>Description :</b>
-                <input class="form-control" type="text" id="description" ng-readonly="isReadOnly()" name="description" ng-value="items.calEvent.description" ng-model="editEvent.description" ng-required="false">
+                <textarea class="form-control" style="resize:none;" rows="5" id="description" ng-readonly="isReadOnly()" name="description"  ng-value="items.calEvent.description" ng-model="editEvent.description" ng-required="false">
+                </textarea>
             </div>
 
             <div class="form-group">
@@ -53,9 +54,9 @@
                 <input class="form-control" type="text" id="eventLocation" name="eventLocation" ng-readonly="isReadOnly()" placeholder="Lieu" ng-model="editEvent.location" ng-required="false">
             </div>
 
-            <div class="form-group" ng-show="isAdmin()">
+            <div class="form-group" ng-show="isAlreadyCreated()">
                 <b>Calendrier :</b>
-                <select class="form-control" ng-show="isAdmin()" id="calendarId" name="calendarId" ng-model="editEvent.calendarName" ng-options="item for item in calendarsNames"></select>
+                <select class="form-control" ng-show="isAlreadyCreated()" id="calendarId" name="calendarId" ng-model="editEvent.calendarName" ng-options="item for item in calendarsNames"></select>
             </div>
 
         </div>

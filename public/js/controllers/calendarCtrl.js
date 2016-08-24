@@ -39,15 +39,6 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
         calendarData.handleAuthClick();
     };
 
-    /* event source that calls a function on every view switch */
-    $scope.eventsF = function (start, end, timezone, callback) {
-        var s = new Date(start).getTime() / 1000;
-        var e = new Date(end).getTime() / 1000;
-        var m = new Date(start).getMonth();
-        var events = [{title: 'Feed Me ' + m,start: s + (50000),end: s + (100000),allDay: false, className: ['customFeed']}];
-        callback(events);
-    };
-
     /* remove event */
     $scope.remove = function(index) {
         $scope.events.splice(index,1);
@@ -88,6 +79,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             height: 550,
             editable: true,
             timezone: 'local',
+            lang:'fr',
             defaultView:'agendaWeek',
             header:{
                 left: 'title',
@@ -105,7 +97,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             eventDrop: $scope.alertOnDrop,
             eventRender: $scope.eventRender,
             dayClick : function(date, jsEvent, view){
-                console.log("Clic sur : " + date.format());
+                console.log("Clic sur : " + new Date(date));
                 $scope.items = {
                     date: date
                 };
