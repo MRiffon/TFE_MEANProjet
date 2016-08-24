@@ -34,8 +34,8 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     $scope.selectedRoom = {};
     $scope.$storage = $sessionStorage;
     $scope.chatRoomName = '';
-    $scope.userRooms = {};
 
+    $scope.userRooms = {};
 
     $scope.disconnectedUsersName = [];
     $scope.allUsersName = [];
@@ -55,9 +55,11 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
     chatData.userRooms().then(function(response){
         $scope.userRooms = response;
-        $scope.$storage = $sessionStorage.$default({
-            currentChatRoom: $scope.userRooms.globalRooms[0]
-        });
+        if($sessionStorage.currentChatRoom === undefined){
+            $scope.$storage = $sessionStorage.$default({
+                currentChatRoom: $scope.userRooms.globalRooms[0]
+            });
+        }
 
         $scope.selectedRoom = $scope.$storage.currentChatRoom;
         $scope.chatRoomName = getRoomName($scope.selectedRoom);

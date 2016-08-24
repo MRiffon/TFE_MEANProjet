@@ -8,9 +8,9 @@ angular.module('dashboardCtrl', []).controller('dashboardController', function($
         console.log('ca ouvre une notif');
         webNotification.showNotification(data.identifier, {
             body: data.message,
-            icon: 'my-icon.ico',
+            icon: '../../img/MEAN_img.png',
             onClick: function onNotificationClicked() {
-                alert('Notification clicked.');
+                
             },
             autoClose: 4000
         }, function onShow(error, hide) {

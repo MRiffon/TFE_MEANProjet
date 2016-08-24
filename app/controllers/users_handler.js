@@ -42,6 +42,7 @@ module.exports = {
                     }
                 })
             } else if(req.body.type === 'ChatRoom'){
+                console.log('ChatRooms search : ' + req.body);
                 User.find({ chatRooms: req.body.infosToSearch }).exec(function(err, users){
                     if(err){
                         res.send(err);

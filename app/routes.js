@@ -39,10 +39,11 @@ module.exports = function(app, upload, smtpTransport){
         res.redirect('/');
     })
 
-    // Api chat
+    // Api chatrooms
     .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
     .post('/api/newRoom', chatRoomHandler.newRoom)
+    .post('/api/searchRoom', chatRoomHandler.searchRoom)
 
     // Api setup models mongoose
     .post('/api/setupAdmin', setupHandler.setupAdmin)
