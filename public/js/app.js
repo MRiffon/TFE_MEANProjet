@@ -26,7 +26,6 @@ angular.module('app', [
         'errorCtrl',
         'unauthorizedCtrl',
         'addUserModalCtrl',
-        'ui.bootstrap',
         'angular-confirm',
         'ngSanitize',
         'ngCsv',
@@ -41,5 +40,9 @@ angular.module('app', [
         'ticketModalCtrl',
         'notificationData',
         'ngAudio',
-        'angular-web-notification']
+        'angular-web-notification',
+        'ngAnimate',
+        'ui.bootstrap',
+        'eventModalCtrl',
+        'calendarData']
 );

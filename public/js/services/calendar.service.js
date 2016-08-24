@@ -6,81 +6,48 @@ var calendar = angular.module('calendarData', []);
 
 calendar.factory('calendarData', calendarData);
 
-calendar.$inject = ['$q', '$location'];
+calendar.$inject = ['$location', 'uiCalendarConfig'];
 
-function calendarData($q, $location) {
-    var deferred = $q.defer();
-
-    var loadEvents = function(isAppAuthorized){
-        checkAuth(isAppAuthorized);
-        console.log(deferred);
-        return deferred.promise;
-    };
+function calendarData($location, uiCalendarConfig) {
 
     /**
-     * Check if current user has authorized this application.
+     * La méthode configure() permet d'initialiser communication avec Google. Il est nécessaire de passer
+     * l'id client et la clé d'api récupéré sur console.developers.google.com. On précise également à quels
+     * services on va accéder.
      */
-    var checkAuth = function (isAppAuthorized) {
-        var CLIENT_ID = '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com';
-        var SCOPES = ["https://www.googleapis.com/auth/calendar"];
-        if (gapi.auth !== undefined && isAppAuthorized === false) {
-            gapi.auth.authorize(
-                {
-                    'client_id': CLIENT_ID,
-                    'scope': SCOPES.join(' '),
-                    'immediate': true
-                }, handleAuthResult);
+    /*gapi_helper.configure({
+        clientId: '439470814773-juh9o6vamn71r0qrlqpsjqpcr7ir5gpq.apps.googleusercontent.com',
+        apiKey: 'AIzaSyB2-UqdcvGjNdW464ahiWZsc0HdXmblI20',
+        scopes: "https://www.googleapis.com/auth/calendar",
+        services: {
+            calendar: 'v3'
         }
-    };
-    /**
-     * Handle response from authorization server.
-     *
-     * @param {Object} authResult Authorization result.
-     */
-    function handleAuthResult(authResult) {
-        var authorizeDiv = document.getElementById('authorize-div');
-        if (authResult && !authResult.error) {
-            // Hide auth UI, then load client library.
-            if($location.url() === '/dashboard/calendar'){
-                console.log("on a l'autorisation de google");
-                authorizeDiv.style.display = 'none';
-            }
-            return loadCalendarApi();
-        } else {
-            // Show auth UI, allowing the user to initiate authorization by
-            // clicking authorize button.
-            authorizeDiv.style.display = '*inline';
-        }
-    }
+    });*/
 
-    /**
-     * Initiate auth flow in response to user clicking authorize button.
-     *
-     * @param {Event} event Button click event.
-     */
-    var handleAuthClick = function(event) {
-        gapi.auth.authorize(
-            {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
-            handleAuthResult);
-    };
+    gapi_helper.when('authorized', function () {
+        var authorizeButton = document.getElementById('authorize-button');
+        authorizeButton.style.visibility = 'hidden';
+    });
 
-    /**
-     * Load Google Calendar client library. List upcoming events
-     * once client library is loaded.
-     */
-    function loadCalendarApi() {
-        gapi.client.load('calendar', 'v3', listUpcomingEvents);
-    }
+    gapi_helper.when('authFailed', function () {
+        var authorizeButton = document.getElementById('authorize-button');
+        authorizeButton.style.visibility = '';
+        authorizeButton.onclick = gapi_helper.requestAuth;
+    });
 
-    function listCalendars(){
-        var request = gapi.client.calendar.calendarList.list({});
-        request.execute(function(resp){
-           console.log(resp.items);
-        });
-    }
+    gapi_helper.when('calendarLoaded', function () {
+        uiCalendarConfig.calendars.myCalendar.fullCalendar('removeEvents');
+        loadPersonnalCalendar();
+        loadCompanyCalendar();
+    });
+
 
     function loadPersonnalCalendar() {
-        var personnalEvents = [];
+        var personnalEvents = {
+            events:[],
+            color : 'royalBlue',
+            textColor: 'black'
+        };
         var request = gapi.client.calendar.events.list({
             'calendarId': 'primary',
             'timeMin': (new Date()).toISOString(),
@@ -91,27 +58,17 @@ function calendarData($q, $location) {
         });
 
         request.execute(function (resp) {
-            var events = resp.items;
-
-            for (var i = 0; i < events.length; i++) {
-                var singleEvent = {
-                    title: events[i].summary,
-                    start: new Date(events[i].start.dateTime),
-                    end: new Date(events[i].end.dateTime),
-                    description: events[i].description,
-                    location: events[i].location,
-                    reminders: events[i].reminders,
-                    id: events[i].id
-                };
-                console.log(singleEvent);
-                personnalEvents.push(singleEvent);
-            }
-            return personnalEvents;
+            personnalEvents.events = formatGoogleEventsToFullCalendar(resp.items, 'primary');
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', personnalEvents);
         });
     }
 
     function loadCompanyCalendar() {
-        var companyEvents = [];
+        var companyEvents = {
+            events:[],
+            color : 'springGreen',
+            textColor: 'black'
+        };
         var request = gapi.client.calendar.events.list({
             'calendarId': 'm85on1nu9kuaqavesiv5ov3sgo@group.calendar.google.com',
             'timeMin': (new Date()).toISOString(),
@@ -123,105 +80,35 @@ function calendarData($q, $location) {
 
         request.execute(function (resp) {
             var events = resp.items;
-
-            for (var i = 0; i < events.length; i++) {
-                var singleEvent = {
-                    title: events[i].summary,
-                    start: new Date(events[i].start.dateTime),
-                    end: new Date(events[i].end.dateTime),
-                    description: events[i].description,
-                    location: events[i].location,
-                    reminders: events[i].reminders,
-                    id: events[i].id
-                };
-                console.log(singleEvent);
-                companyEvents.push(singleEvent);
-            }
-            return companyEvents;
+            companyEvents.events = formatGoogleEventsToFullCalendar(events, 'm85on1nu9kuaqavesiv5ov3sgo@group.calendar.google.com');
+            uiCalendarConfig.calendars.myCalendar.fullCalendar('addEventSource', companyEvents);
         });
     }
 
-    /**
-     * Renvoie les events récupérés.
-     */
-    function listUpcomingEvents () {
-        /*var personnalEvents = loadPersonnalCalendar();
-        var companyEvents = loadCompanyCalendar();
-        var formattedEvents = {
-            personnalEvents: personnalEvents,
-            companyEvents: companyEvents
-        };*/
-
-
-        var companyEvents = [];
-        var request = gapi.client.calendar.events.list({
-            'calendarId': 'm85on1nu9kuaqavesiv5ov3sgo@group.calendar.google.com',
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': 10,
-            'orderBy': 'startTime'
-        });
-
-        request.execute(function (resp) {
-            var events = resp.items;
-
-            for (var i = 0; i < events.length; i++) {
-                var singleEvent = {
-                    title: events[i].summary,
-                    start: new Date(events[i].start.dateTime),
-                    end: new Date(events[i].end.dateTime),
-                    description: events[i].description,
-                    location: events[i].location,
-                    reminders: events[i].reminders,
-                    id: events[i].id
-                };
-                console.log(singleEvent);
-                companyEvents.push(singleEvent);
-            }
-        });
-
-        var personnalEvents = [];
-        var secondRequest = gapi.client.calendar.events.list({
-            'calendarId': 'primary',
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': 10,
-            'orderBy': 'startTime'
-        });
-
-        secondRequest.execute(function (resp) {
-            var events = resp.items;
-
-            for (var i = 0; i < events.length; i++) {
-                var singleEvent = {
-                    title: events[i].summary,
-                    start: new Date(events[i].start.dateTime),
-                    end: new Date(events[i].end.dateTime),
-                    description: events[i].description,
-                    location: events[i].location,
-                    reminders: events[i].reminders,
-                    id: events[i].id
-                };
-                console.log(singleEvent);
-                personnalEvents.push(singleEvent);
-            }
-        });
-        var formattedEvents = {
-            personnalEvents: personnalEvents,
-            companyEvents: companyEvents
-        };
-        console.log(formattedEvents);
-        deferred.resolve(formattedEvents);
+    function formatGoogleEventsToFullCalendar(events, calendarId){
+        var formattedEvents = [];
+        for (var i = 0; i < events.length; i++) {
+            console.log(events[0]);
+            var singleEvent = {
+                title: events[i].summary,
+                calendarId : calendarId,
+                start: new Date(events[i].start.dateTime),
+                end: new Date(events[i].end.dateTime),
+                description: events[i].description,
+                location: events[i].location,
+                reminders: events[i].reminders,
+                id: events[i].id
+            };
+            console.log(singleEvent);
+            formattedEvents.push(singleEvent);
+        }
+        return formattedEvents;
     }
 
     function sendEvent (event, typeRequest) {
-        var minutes = '';
-        var reminders = {};
-        if(event.durationReminder !== undefined){
-            minutes = calculateReminderTime(event.timeUnityReminder, event.durationReminder);
-            reminders = {
+        if(event.durationReminder != undefined){
+            var minutes = calculateReminderTime(event.timeUnityReminder, event.durationReminder);
+            var reminders = {
                 useDefault: false,
                 overrides: [{
                     method: 'popup',
@@ -230,9 +117,8 @@ function calendarData($q, $location) {
             };
         }
 
-
         var body = {
-            'calendarId': 'primary',
+            'calendarId': event.calendarId,
             'summary': event.title,
             'start': {dateTime: event.start},
             'end': { dateTime: event.end},
@@ -282,8 +168,7 @@ function calendarData($q, $location) {
     }
 
     return {
-        loadEvents : loadEvents,
         sendEvent : sendEvent,
         deleteEvent : deleteEvent
-    };
+    }
 }

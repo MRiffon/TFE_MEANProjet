@@ -89,7 +89,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         getLastMessage();
         tempRoom = $scope.selectedRoom;
     };
-    
+
     $scope.getPrivateRoom = function(user){
         console.log($scope.userRooms.privateRooms.length);
         for(var i = 0; i < $scope.userRooms.privateRooms.length; i++){
@@ -161,13 +161,13 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
                 }
                 content += ' de ' + username;
                 console.log(content);
-                
+
                 for(var i = 0; i < usersConcerned.length; i++){
                     if(usersConcerned[i].username === username){
                         usersConcerned.splice(i, 1);
                     }
                 }
-                
+
                 var addNotif = {
                     users : usersConcerned,
                     identifier : 'Chat',
@@ -196,7 +196,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
             return $sessionStorage.user.username !== username;
         }
     };
-    
+
     $scope.animationsEnabled = true;
     $scope.open = function (size) {
 
@@ -222,7 +222,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
             $scope.selected = selectedItem;
         });
     };
-    
+
     // Fonctions internes
     getLastMessage = function(){
         chatData.lastMessages($scope.$storage.currentChatRoom).then(function(response){
