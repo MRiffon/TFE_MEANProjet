@@ -28,7 +28,7 @@ var ticketSchema = new Schema({
     },
     status : {
         type : String,
-        default: "Open",
+        default: "Pending",
         required : true
     },
     department : {

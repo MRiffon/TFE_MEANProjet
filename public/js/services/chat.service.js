@@ -72,14 +72,22 @@ function chatData($http, userData, $sessionStorage){
     var updateUsersRoom = function(req){
         console.log("user rooms updated");
         console.log(req);
-         $http.put('/api/updateRooms', req);
-
+         return $http.put('/api/updateRooms', req).then(function(response){
+             return response;
+         });
+    };
+    
+    searchRoom = function(req){
+        return $http.post('/api/searchRoom', {chatroom: req}).then(function(response){
+            return response;
+        });
     };
 
     return {
         userRooms: userRooms,
         lastMessages: lastMessages,
         createNewRoom : createNewRoom,
-        updateUsersRoom : updateUsersRoom
+        updateUsersRoom : updateUsersRoom,
+        searchRoom : searchRoom
     };
 }

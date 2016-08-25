@@ -36,6 +36,7 @@ angular.module('addGroupModalCtrl', []).controller('modalAddGroupController', fu
                 type : 'Group',
                 created : new Date()
             };
+            $scope.items.room = newRoom;
             chatData.createNewRoom(newRoom).then(function(response){
                 var roomToNotif = response.data;
                 //$scope.items.groupChatRooms.push(response.data);
@@ -44,41 +45,44 @@ angular.module('addGroupModalCtrl', []).controller('modalAddGroupController', fu
                     users : $scope.addGroup.users,
                     chatRoom: newRoom.name,
                     action : 'add'
-                });
-
-                var infos = {
-                    type : 'ChatRoom',
-                    infosToSearch : $scope.addGroup.name
-                };
-
-                adminData.searchedUsers(infos).then(function(response){
-                    var usersConcerned = response.data;
-                    for(var i = 0; i < usersConcerned.length; i++){
-                        if(usersConcerned[i].username === $sessionStorage.user.username){
-                            usersConcerned.splice(i, 1);
-                        }
-                    }
-
-                    var content = 'Vous avez été invité dans une nouvelle conversation de groupe : ' + $scope.addGroup.name;
-                    var addGroupNotif = {
-                        users : usersConcerned,
-                        identifier : 'Chat',
-                        content : content
+                }).then(function(){
+                    console.log($scope.addGroup.name);
+                    var infos = {
+                        type : 'ChatRoom',
+                        infosToSearch : $scope.addGroup.name
                     };
+                    console.log(infos);
 
-                    console.log(addGroupNotif);
+                    adminData.searchedUsers(infos).then(function(response){
+                        console.log(response.data);
+                        var usersConcerned = response.data;
+                        for(var i = 0; i < usersConcerned.length; i++){
+                            if(usersConcerned[i].username === $sessionStorage.user.username){
+                                usersConcerned.splice(i, 1);
+                            }
+                        }
 
-                    notificationData.createNotification(addGroupNotif).then(function(response){
-                        Socket.emit('notif-newRoom', {
-                         users : $scope.addGroup.users,
-                         chatRoom:  roomToNotif,
-                         typeRoom : 'Group',
-                         message : content,
-                         identifier : 'Chat'
-                         });
+                        console.log(usersConcerned);
+                        var content = 'Vous avez été invité dans une nouvelle conversation de groupe : ' + $scope.addGroup.name;
+                        var addGroupNotif = {
+                            users : usersConcerned,
+                            identifier : 'Chat',
+                            content : content
+                        };
+
+                        console.log(addGroupNotif);
+
+                        notificationData.createNotification(addGroupNotif).then(function(response){
+                            Socket.emit('notif-newRoom', {
+                                users : $scope.addGroup.users,
+                                chatRoom:  roomToNotif,
+                                typeRoom : 'Group',
+                                message : content,
+                                identifier : 'Chat'
+                            });
+                        });
                     });
                 });
-
             });
 
             $uibModalInstance.close();

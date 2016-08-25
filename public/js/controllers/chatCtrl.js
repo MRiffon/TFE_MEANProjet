@@ -5,13 +5,37 @@
 angular.module('chatCtrl', []).controller('chatController', function($scope, Socket, userData, chatData, $sessionStorage, $uibModal, notificationData, adminData){
 
     console.log('USER : ' + $sessionStorage.user.chatRooms);
+    
+    $scope.showGlobal = true;
+    $scope.showGroups = false;
+    $scope.showUsers = false;
+    
+    $scope.conversGlobal = "Global";
+    $scope.conversGroup = "Group";
+    $scope.conversUsers = "Users";
+    
+    $scope.changeTypeConvers = function(type){
+        if(type === 'Group'){
+            $scope.showGroups = true;
+            $scope.showGlobal = false;
+            $scope.showUsers = false;
+        } else if(type === 'Users'){
+            $scope.showUsers = true;
+            $scope.showGroups = false;
+            $scope.showGlobal = false;
+        } else {
+            $scope.showGlobal = true;
+            $scope.showGroups = false;
+            $scope.showUsers = false;
+        }
+    };
 
     var tempRoom = {};
     $scope.selectedRoom = {};
     $scope.$storage = $sessionStorage;
     $scope.chatRoomName = '';
-    $scope.userRooms = {};
 
+    $scope.userRooms = {};
 
     $scope.disconnectedUsersName = [];
     $scope.allUsersName = [];
@@ -31,9 +55,11 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
     chatData.userRooms().then(function(response){
         $scope.userRooms = response;
-        $scope.$storage = $sessionStorage.$default({
-            currentChatRoom: $scope.userRooms.globalRooms[0]
-        });
+        if($sessionStorage.currentChatRoom === undefined){
+            $scope.$storage = $sessionStorage.$default({
+                currentChatRoom: $scope.userRooms.globalRooms[0]
+            });
+        }
 
         $scope.selectedRoom = $scope.$storage.currentChatRoom;
         $scope.chatRoomName = getRoomName($scope.selectedRoom);
@@ -135,13 +161,14 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     };
 
     $scope.sendMessage = function(msg){
+        console.log(msg);
         var message = {
             message: msg,
             room: $scope.selectedRoom.name,
             sender: username
         };
         //$scope.messages.push(msg);
-        if(msg !== null && msg !== ''){
+        if(message.message !== null && message.message !== '' && message.message !== undefined){
             Socket.emit('message sended', message);
 
             var usersConcerned = [];
@@ -203,7 +230,8 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         $scope.items = {
             users : Object.create($scope.allUsersName),
             groupChatRooms : $scope.userRooms.groupRooms,
-            currentUserRooms : $scope.$storage.user.chatRooms
+            currentUserRooms : $scope.$storage.user.chatRooms,
+            room : ''
         };
 
         var modalInstance = $uibModal.open({
@@ -220,6 +248,7 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
         modalInstance.result.then(function (selectedItem) {
             $scope.selected = selectedItem;
+            $scope.switchRoom($scope.items.room);
         });
     };
 

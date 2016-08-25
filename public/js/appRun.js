@@ -9,6 +9,8 @@ angular.module('appRun', []).run(function($rootScope, $location, userData, $stat
             $rootScope.$evalAsync(function() {
                 $location.path('/');
             });
+        } else if(userData.loggedIn() && $location.url() === '/'){
+            $location.path('/dashboard');
         }
     });
 

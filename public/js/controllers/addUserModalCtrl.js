@@ -2,12 +2,14 @@
  * Created by micka on 25-07-16.
  */
 
-angular.module('addUserModalCtrl', []).controller('modalAddUserController', function ($scope, $uibModalInstance, items, adminData) {
+angular.module('addUserModalCtrl', []).controller('modalAddUserController', function ($scope, $uibModalInstance, items, adminData, $http) {
     $scope.addUser = {
         username: '',
         email : '',
         department: '',
         chatRooms : [],
+        lastname: '',
+        firstname: '',
         password : ''
     };
 
@@ -25,24 +27,36 @@ angular.module('addUserModalCtrl', []).controller('modalAddUserController', func
     $scope.saveUser = function(isValid){
         $scope.submitted = true;
         if(isValid){
+            var tabSpecialChar = ['@', '#', '~', '%', '!', '?', '$'];
+
+            var randNumber = Math.floor((Math.random() + 1) * 10000);
+            var password = 'Pass' + randNumber + tabSpecialChar[Math.floor(Math.random() * 7)];
+
             $scope.addUser.department = $scope.selectedDepartment.name;
             var addUser = [];
             addUser.push($scope.addUser);
-            addUser[0].chatRooms = ['Global', $scope.selectedDepartment.name];
+            addUser[0].chatRooms = ['General', $scope.selectedDepartment.name];
+            addUser[0].password = password;
             console.log(addUser[0]);
             $scope.items.user = $scope.addUser;
             $scope.items.status = 'userAdded';
             adminData.createUser(addUser).then(function(response){
                 
-                // ajouter le ticket à l'utilisateur !
                 var msg = response.data.message;
+                console.log(msg);
                 if(msg === 'Created!'){
+                    $http.get('/api/sendEmail', { params: {
+                        to: addUser[0].email,
+                        subject: 'Nouveau compte utilisateur',
+                        text: 'Votre compte a été créé. Voici votre mot de passe de connexion (à changer dès que possible) : ' + password
+                    }});
+
                     $uibModalInstance.close();
                     alert('Utilisateur créé');
                 } else {
                     console.log('Error');
                     $scope.dataLoginInvalid = true;
-                    $scope.msgError = 'Duplication ! Informations redondantes en base de données.';
+                    $scope.msgError = "Tentative de duplication ! Username ou email déjà utilisé dans l'entreprise";
                 }
             });
         }

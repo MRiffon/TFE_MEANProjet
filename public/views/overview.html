@@ -10,7 +10,7 @@
                     <ul class="list-group">
                         <li ng-repeat="notif in chatNotifs" style="list-style: none;" class="list-group-item">
                             <p style="font-size:12px; margin-bottom: 5px;"><b>Il y a {{ notif.created }}</b></p>
-                            <span>{{ notif.content }}</span>
+                            <span><a ng-click="goToConvers(notif)" class="linkPointer" ui-sref="chatroom">{{ notif.content }}</a></span>
                         </li>
                     </ul>
                 </div>

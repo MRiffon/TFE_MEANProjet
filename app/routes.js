@@ -18,7 +18,7 @@ var configjwt = require('../config/jwt.js');
 // permet de vérifier l'authenication d'un user avant d'utiliser une API, pas utile pour toute
 var authentication = jwt({ secret: configjwt.secret, userProperty: 'payload'});
 
-module.exports = function(app, upload){
+module.exports = function(app, upload, smtpTransport){
 
     app.use(function(req, res, next){
         next();
@@ -32,16 +32,18 @@ module.exports = function(app, upload){
     .post('/api/login', userHandler.login)
     .get('/api/profil', authentication, userHandler.readProfil)
     .put('/api/profil', authentication, userHandler.editProfil)
+    .post('/api/resetPwd', authentication, userHandler.resetPassword)
     .put('/api/updateRooms', userHandler.updateChatrooms)
     .get('/api/logout', function(req, res){
         req.logOut();
         res.redirect('/');
     })
 
-    // Api chat
+    // Api chatrooms
     .post('/api/getMsgs', chatRoomHandler.getMsgs)
     .get('/api/getRooms', chatRoomHandler.getRooms)
     .post('/api/newRoom', chatRoomHandler.newRoom)
+    .post('/api/searchRoom', chatRoomHandler.searchRoom)
 
     // Api setup models mongoose
     .post('/api/setupAdmin', setupHandler.setupAdmin)
@@ -94,6 +96,23 @@ module.exports = function(app, upload){
                 res.json({error_code:1,err_desc:err});
             } else {
                 res.json({error_code:0,err_desc:null});
+            }
+        })
+    })
+
+    .get('/api/sendEmail',function(req, res){
+        console.log(req.query);
+        var mailOptions={
+            to : req.query.to,
+            subject : req.query.subject,
+            text : req.query.text
+        };
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+            if(error){
+                res.end("error");
+            } else {
+                res.end("sent");
             }
         })
     })

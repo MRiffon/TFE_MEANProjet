@@ -29,9 +29,20 @@ function profilData($http, userData){
             return response;
         });
     };
+    
+    resetPassword = function(user){
+        return $http.post('/api/resetPwd', user, {
+            headers: {
+                Authorization: 'Bearer ' + userData.getToken()
+            }
+        }).then(function(response){
+            return response;
+        });
+    };
 
     return {
         getProfil: getProfil,
-        updateProfil: updateProfil
+        updateProfil: updateProfil,
+        resetPassword: resetPassword
     };
 }

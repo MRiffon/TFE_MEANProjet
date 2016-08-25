@@ -38,5 +38,16 @@ module.exports = {
                 res.send(err);
             res.json(newRoom);
         });
+    },
+    
+    searchRoom: function(req, res){
+        console.log(req.body.chatroom);
+        ChatRoom.find({ name: req.body.chatroom }).exec(function(err, chatroom){
+            if(err){
+                res.send(err);
+            } else {
+                res.status(200).json(chatroom);
+            }
+        })
     }
 };

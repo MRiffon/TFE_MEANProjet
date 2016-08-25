@@ -40,15 +40,17 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
     $scope.saveEdit = function(isValid){
         if(isValid && $scope.userEdit.password === $scope.userEdit.confirmPassword){
             $scope.userEdit.location = 'profil';
-            profilData.updateProfil($scope.userEdit).then(function(response){
+            profilData.resetPassword($scope.userEdit).then(function(response){
+                console.log($scope.userEdit);
                 var status = response.status;
-                if(status === 200 && response.data.message === "Updated!"){
+                if(status === 200 && response.data.message === "Reset!"){
+                    alert('Mot de passe reset !');
                     $scope.editOff();
                     getProfilData();
-                }
-                if(status === 200 && response.data.name !== "" && response.data.name === "MongoError"){
+                } else if(status === 200 && response.data.message === "Mauvais ancien mot de passe !"){
                     $scope.dataEditProfilInvalid = true;
-                    $scope.msgError = "Username déjà utilisé !";
+                    $scope.msgError = response.data.message;
+                    $scope.userEdit.oldPassword = null;
                     $scope.userEdit.password = null;
                     $scope.userEdit.confirmPassword = null;
                 }

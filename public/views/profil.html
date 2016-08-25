@@ -64,15 +64,9 @@
                     <form name="editProfilForm" role="form" ng-submit="saveEdit(editProfilForm.$valid)" novalidate class="form-horizontal">
                             <div class="form-content">
                                 <div class="profil-content">
-
                                     <div class="form-group">
-                                        <b>Nom : </b>
-                                        <input class="form-control" type="text" id="firstname" name="firstname" ng-value="user.firstname" ng-model="userEdit.firstname" ng-required="false" ng-pattern ="/^[a-zA-Z\s]*$/">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <b>Prénom : </b>
-                                        <input class="form-control" type="text" id="lastname" name="lastname" ng-value="user.lastname" ng-model="userEdit.lastname" ng-required="false" ng-pattern ="/^[a-zA-Z]*$/">
+                                        <b>Ancien mot de passe : </b>
+                                        <input class="form-control" type="password" id="oldPassword" name="oldPassword" placeholder="Ancien mot de passe" ng-model="userEdit.oldPassword" ng-required="false" ng-minlength="8">
                                     </div>
 
                                     <div class="form-group">

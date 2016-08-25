@@ -21,11 +21,11 @@ var userSchema = new Schema({
     },
     firstname: {
         type: String,
-        default:''
+        required: true
     },
     lastname: {
         type: String,
-        default:''
+        required: true
     },
     status: {
         type: String,
