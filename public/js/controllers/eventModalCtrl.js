@@ -5,7 +5,7 @@
 // Please note that $uibModalInstance represents a modal window (instance) dependency.
 // It is not the same as the $uibModal service used above.
 
-angular.module('eventModalCtrl', []).controller('modalCalendarController', function ($scope, $uibModalInstance, uiCalendarConfig, calendarData, items) {
+angular.module('eventModalCtrl', []).controller('modalCalendarController', function ($scope, $uibModalInstance, uiCalendarConfig, calendarData, items, userData) {
 
     $scope.timeOptions = ['Minutes', 'Heures', 'Jours'];
     $scope.userRole = userData.currentUser().role;
@@ -20,8 +20,7 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
     $scope.items = items;
 
     $scope.isAdmin = function(){
-        //TODO: remplacer par $scope.userRole === 'Admin'
-        return(userData.currentUser().username === 'admin');
+        return($scope.userRole === 'Admin');
     };
 
     $scope.isAlreadyCreated = function(){
@@ -113,8 +112,8 @@ angular.module('eventModalCtrl', []).controller('modalCalendarController', funct
                 $scope.editEvent.end.setMinutes($scope.times.endTime.getMinutes());
                 typeRequest = 'update';
             }
-            //TODO: à modifier ! On doit se baser sur le role, pas sur le username.
-            if(userData.currentUser().username === "admin"){
+
+            if($scope.userRole === "Admin"){
                 if($scope.editEvent.calendarName === $scope.calendarsNames[0]){
                     $scope.editEvent.calendarId = $scope.calendarsId.personalCalendarId;
                 }
