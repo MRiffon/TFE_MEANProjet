@@ -50,9 +50,17 @@ var upload = multer({
 // Chargement config environnement
 var config = require('./config/config.js');
 
+var fs = require('fs');
+
+var options = {
+    key: fs.readFileSync('./certif/bindingnetwork.key'),
+    cert: fs.readFileSync('./certif/bindingnetwork.crt')
+};
+
 // Initialisation serveur http avec socket.io
-var server = require('http').Server(app);
+var server = require('https').createServer(options, app);
 var io = require('socket.io')(server);
+
 
 // cors pour les requêtes interdomaines (pour les fonts par exemple)
 var cors = require("cors");
