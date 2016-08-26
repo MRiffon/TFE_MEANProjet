@@ -2,16 +2,17 @@
  * Created by Michaël and Martin on 08-04-16.
  */
 
-angular.module('profilCtrl', []).controller('profilController', function($scope, $location, profilData, Upload){
+angular.module('profilCtrl', []).controller('profilController', function($scope, $window, $location, profilData, Upload, $sessionStorage){
 
     $scope.user = {};
     $scope.userEdit = {};
     $scope.editStatus = false;
+    $scope.$storage = $sessionStorage;
 
     getProfilData = function(){
         profilData.getProfil().then(function(response){
             $scope.user = response.data;
-            $scope.urlImg = "./img/clients/avatar/" + $scope.user._id + ".jpg";
+            $scope.$storage.urlImg = "./img/clients/avatar/" + $scope.user._id + ".jpg";
             console.log($scope.urlImg);
         }, function(response){
             $location.path('/');
@@ -44,7 +45,9 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
                 console.log($scope.userEdit);
                 var status = response.status;
                 if(status === 200 && response.data.message === "Reset !"){
-                    alert('Mot de passe reset !');
+                    $scope.userEdit.oldPassword = null;
+                    $scope.userEdit.password = null;
+                    $scope.userEdit.confirmPassword = null;
                     $scope.editOff();
                     getProfilData();
                 } else if(status === 200 && response.data.message === "Mauvais ancien mot de passe !"){
@@ -77,7 +80,8 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
         }).then(function(response){
             if(response.data.error_code === 0){
                 $scope.successImgUpload = true;
-                $location.path('/dashboard/profil');
+                $scope.editStatus = false;
+                $window.location.reload();
             } else {
                 console.log("Error uplaod : " + response.data.err_desc);
                 $scope.failedImgUpload = true;
