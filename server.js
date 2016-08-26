@@ -58,7 +58,7 @@ var options = {
 };
 
 // Initialisation serveur http avec socket.io
-var server = require('http').createServer(app);
+var server = require('https').createServer(app, options);
 var io = require('socket.io')(server);
 
 

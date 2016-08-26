@@ -43,7 +43,7 @@ angular.module('profilCtrl', []).controller('profilController', function($scope,
             profilData.resetPassword($scope.userEdit).then(function(response){
                 console.log($scope.userEdit);
                 var status = response.status;
-                if(status === 200 && response.data.message === "Reset!"){
+                if(status === 200 && response.data.message === "Reset !"){
                     alert('Mot de passe reset !');
                     $scope.editOff();
                     getProfilData();
