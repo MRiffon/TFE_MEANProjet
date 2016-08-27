@@ -303,11 +303,13 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
     Socket.on('userConnected', function(data){
         $scope.users.push(data.username);
+        $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf(data.username), 1);
         console.log('New Users connected : ' + $scope.users);
     });
 
     Socket.on('userDisconnected', function(data){
         $scope.users.splice($scope.users.indexOf(data.username), 1);
+        $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf(data.username), 1);
         console.log('Users after disconnected : ' + $scope.users);
     });
 
