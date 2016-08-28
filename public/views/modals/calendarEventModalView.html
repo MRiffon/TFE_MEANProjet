@@ -2,12 +2,14 @@
 <div class="modal-header">
     <h3 class="modal-title">{{title}}</h3>
 </div>
-<form name="editEventForm" role="form" ng-submit="saveEvent(editEventForm.$valid)" novalidate class="form-horizontal col-lg-1">
+<div class="row">
+<div class="col-sm-1"></div>
+<form name="editEventForm" role="form" ng-submit="saveEvent(editEventForm.$valid)" novalidate class="form-horizontal col-md-10">
     <div class="modal-body">
         <div class="form-content">
             <div class="form-group">
                 <b>Titre :</b>
-                <input class="form-control" type="text" id="title" ng-readonly="isReadOnly()" name="title" ng-value="items.calEvent.title" ng-model="editEvent.title" ng-required="true   ">
+                <input class="form-control" type="text" id="title" ng-readonly="isReadOnly()" name="title" ng-value="items.calEvent.title" ng-model="editEvent.title" ng-required="true">
                 <span ng-show="editEventForm.title.$invalid && submitted">Titre requis !</span>
             </div>
 
@@ -30,18 +32,19 @@
                         <span> à </span>
                     </div>
                     <div class="col-md-3">
-                        <input class="form-control" type="time" id="endTime" name="endTime" ng-readonly="isReadOnly()" ng-model="times.endTime" ng-value=" times.endTime">
+                        <input class="form-control" type="time" id="endTime" name="endTime" ng-readonly="isReadOnly()" ng-model="times.endTime" ng-value="times.endTime">
                     </div>
+                    <span ng-show="intervalTimeValidation()">Intervalle de temps invalide !</span>
                 </div>
             </div>
 
             <div class="form-group">
                 <b>Rappel :</b>
                 <div class="form-group row">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <input class="form-control" type="number" id="eventReminder" ng-readonly="isReadOnly()" name="eventReminder" ng-model="editEvent.durationReminder" ng-value="editEvent.reminders.overrides[0].minutes" ng-required="false" min="0">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <select class="form-control" id="timeUnityReminder" name="timeUnityReminder" ng-readonly="isReadOnly()" ng-options="item for item in timeOptions" ng-model="editEvent.timeUnityReminder">
                         </select>
                     </div>
@@ -66,3 +69,5 @@
         <button class="btn btn-primary" ng-click="deleteEvent()" ng-show="editButton && !isReadOnly()">Supprimer</button>
     </div>
 </form>
+<div class="col-md-1"></div>
+</div>

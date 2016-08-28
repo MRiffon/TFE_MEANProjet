@@ -69,7 +69,6 @@ module.exports = function(io){
             if(users.indexOf(data.username) == -1){
                 // envoi signal à tout le monde
                 io.emit('userConnected', {username: data.username});
-                username = data.username;
                 users.push(data.username);
                 console.log('Liste des users connectés après connexion : ' + users);
                 console.log('Liste des sockets : ' + usersSocket.length);
@@ -77,10 +76,10 @@ module.exports = function(io){
         });
 
         // Signal d'un utilisateur qui a déconnecté
-        socket.on('userDisconnected', function(data){
+        socket.on('disconnect', function(data){
             console.log(data.username + ' has disconnected');
             users.splice(users.indexOf(data.username), 1);
-            usersSocket.splice(users.indexOf(data.username), 1);
+            usersSocket.splice(usersSocket.indexOf(socket), 1);
             console.log('Users après disconnect : ' + users);
             io.emit('userDisconnected', {username: data.username});
         });
@@ -100,8 +99,6 @@ module.exports = function(io){
             console.log('notif-newMessage serverside : ' + data.users[0]);
             var usersToNotif = fillInUsersConnectedToNotif(data.users, users);
             for(var i = 0; i < usersToNotif.length; i++){
-                console.log(i);
-                console.log(usersSocket[0]);
                 usersSocket[usersToNotif[i]].emit('newMessage', data);
                 usersSocket[usersToNotif[i]].emit('newNotif');
             }
@@ -111,7 +108,6 @@ module.exports = function(io){
             console.log('notif-newTicket serverside : ' + data.users[0]);
             var usersToNotif = fillInUsersConnectedToNotif(data.users, users);
             for(var i = 0; i < usersToNotif.length; i++){
-                console.log(i);
                 console.log(usersSocket[0]);
                 usersSocket[usersToNotif[i]].emit('notifTicket', data);
                 usersSocket[usersToNotif[i]].emit('newNotif');

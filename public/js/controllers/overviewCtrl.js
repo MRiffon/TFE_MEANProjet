@@ -29,8 +29,7 @@ angular.module('overviewCtrl', []).controller('overviewController', function($sc
                 }
             }
         } else {
-            tmpArray = notif.content.split(' ');
-            chatRoom = tmpArray[tmpArray.indexOf(':') + 1];
+            chatRoom = notif.content.substring(notif.content.indexOf(':') + 2, notif.content.length);
         }
         chatData.searchRoom(chatRoom).then(function(response){
             $sessionStorage.currentChatRoom = response.data[0];

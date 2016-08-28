@@ -16,7 +16,6 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
     $scope.isAppAuthorized = false;
     $scope.isEventsLoaded = false;
 
-
     /* event sources array*/
     $scope.eventSources = [];
 
@@ -80,6 +79,7 @@ angular.module('calendarCtrl', []).controller('calendarController', function($sc
             editable: true,
             timezone: 'local',
             lang:'fr',
+            scrollTime:'10:00:00',
             defaultView:'agendaWeek',
             header:{
                 left: 'title',

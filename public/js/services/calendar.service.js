@@ -23,6 +23,8 @@ function calendarData($location, uiCalendarConfig) {
             calendar: 'v3'
         }
     });*/
+    var date = new Date();
+    date.setDate(date.getDate() - 7);
 
     gapi_helper.when('authorized', function () {
         var authorizeButton = document.getElementById('authorize-button');
@@ -50,7 +52,7 @@ function calendarData($location, uiCalendarConfig) {
         };
         var request = gapi.client.calendar.events.list({
             'calendarId': 'primary',
-            'timeMin': (new Date()).toISOString(),
+            'timeMin': date.toISOString(),
             'showDeleted': false,
             'singleEvents': true,
             'maxResults': 10,
@@ -74,7 +76,7 @@ function calendarData($location, uiCalendarConfig) {
             'timeMin': (new Date()).toISOString(),
             'showDeleted': false,
             'singleEvents': true,
-            'maxResults': 10,
+            'maxResults': 30,
             'orderBy': 'startTime'
         });
 
@@ -88,7 +90,6 @@ function calendarData($location, uiCalendarConfig) {
     function formatGoogleEventsToFullCalendar(events, calendarId){
         var formattedEvents = [];
         for (var i = 0; i < events.length; i++) {
-            console.log(events[0]);
             var singleEvent = {
                 title: events[i].summary,
                 calendarId : calendarId,
@@ -99,7 +100,6 @@ function calendarData($location, uiCalendarConfig) {
                 reminders: events[i].reminders,
                 id: events[i].id
             };
-            console.log(singleEvent);
             formattedEvents.push(singleEvent);
         }
         return formattedEvents;
@@ -138,7 +138,7 @@ function calendarData($location, uiCalendarConfig) {
 
 
         request.execute(function(resp) {
-            console.log(resp);
+            console.log('Evénement enregistré.');
         });
     }
 
@@ -154,15 +154,15 @@ function calendarData($location, uiCalendarConfig) {
         }
     }
 
-    function deleteEvent(eventId){
+    function deleteEvent(eventId, calendarId){
         var body = {
-            'calendarId': 'primary',
+            'calendarId': calendarId,
             'eventId': eventId
         };
 
         request = gapi.client.calendar.events.delete(body);
         request.execute(function(resp) {
-            console.log(resp);
+            console.log('Evénement supprimé.');
         });
 
     }
