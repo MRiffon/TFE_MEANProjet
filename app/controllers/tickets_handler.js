@@ -80,6 +80,20 @@ module.exports = {
         }
     },
 
+    get: function(req, res){
+        if(!req.payload._id){
+            res.status(401).json({message: "Authentication failure !"});
+        } else {
+            Ticket.find({ _id: req.params.ticket_id}).exec(function(err, ticket){
+                if(err){
+                    res.send(err);
+                } else {
+                    res.status(200).json(ticket);
+                }
+            })
+        }
+    },
+
     creation: function(req, res){
         if(!req.payload._id){
             res.status(401).json({message: "Authentication failure !"});

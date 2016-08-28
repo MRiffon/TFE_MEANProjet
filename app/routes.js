@@ -81,7 +81,7 @@ module.exports = function(app, upload, smtpTransport){
     .delete('/api/tickets/:ticket_id', authentication, ticketHandler.delete)
     .post('/api/tickets', authentication, ticketHandler.creation)
     .put('/api/editTicket', authentication, ticketHandler.edit)
-
+    .get('/api/ticket/:ticket_id', authentication, ticketHandler.get)
     // Api notifications
 
     .delete('/api/notifs/:notif_id', authentication, notifHandler.delete)
