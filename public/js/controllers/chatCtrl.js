@@ -302,21 +302,33 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     });
 
     Socket.on('userConnected', function(data){
+        console.log('userConnected-print : BEFORE connected : ' + $scope.users);
+        console.log('userConnected-print : BEFORE disconnected : ' + $scope.disconnectedUsersName);
         if($scope.users.indexOf(data.username) === -1){
+            console.log("on push le nouvel utilisateur dans users");
             $scope.users.push(data.username);
             if($scope.disconnectedUsersName.indexOf(data.username) !== -1){
+                console.log('on retire le user des disconnectedUserName');
                 $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf(data.username), 1);
             }
         }
+        console.log('userConnected-print : AFTER connected : ' + $scope.users);
+        console.log('userConnected-print : AFTER disconnected : ' + $scope.disconnectedUsersName);
     });
 
     Socket.on('userDisconnected', function(data){
+        console.log('userDisconnectedt-print : BEFORE connected : ' + $scope.users);
+        console.log('userDisconnected-print : BEFORE disconnected : ' + $scope.disconnectedUsersName);
         if($scope.users.indexOf(data.username) !== -1){
+            console.log('on vire le user qui se déconnecte dans users');
             $scope.users.splice($scope.users.indexOf(data.username), 1);
             if($scope.disconnectedUsersName.indexOf(data.username) === -1){
+                console.log('on push le username du gars qui s est deco dans disconnectedUsersName');
                 $scope.disconnectedUsersName.push(data.username);
             }
         }
+        console.log('userDisconnectedt-print : AFTER connected : ' + $scope.users);
+        console.log('userDisconnected-print : AFTER disconnected : ' + $scope.disconnectedUsersName);
     });
 
     Socket.emit('requestUsers', {});
