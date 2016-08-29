@@ -54,7 +54,7 @@ var fs = require('fs');
 
 var options = {
     key: fs.readFileSync('./certif/bindingnetwork.key'),
-    cert: fs.readFileSync('./certif/bindingnetwork.crt')
+    cert: fs.readFileSync('./certif/www_bindingnetwork_pw.crt')
 };
 
 // Initialisation serveur http avec socket.io
