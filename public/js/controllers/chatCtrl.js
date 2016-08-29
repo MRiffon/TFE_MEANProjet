@@ -302,15 +302,33 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     });
 
     Socket.on('userConnected', function(data){
-        $scope.users.push(data.username);
-        $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf(data.username), 1);
-        console.log('New Users connected : ' + $scope.users);
+        console.log('userConnected-print : BEFORE connected : ' + $scope.users);
+        console.log('userConnected-print : BEFORE disconnected : ' + $scope.disconnectedUsersName);
+        if($scope.users.indexOf(data.username) === -1){
+            console.log("on push le nouvel utilisateur dans users");
+            $scope.users.push(data.username);
+            if($scope.disconnectedUsersName.indexOf(data.username) !== 1){
+                console.log('on retire le user des disconnectedUserName');
+                $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf(data.username), 1);
+            }
+        }
+        console.log('userConnected-print : AFTER connected : ' + $scope.users);
+        console.log('userConnected-print : AFTER disconnected : ' + $scope.disconnectedUsersName);
     });
 
     Socket.on('userDisconnected', function(data){
-        $scope.users.splice($scope.users.indexOf(data.username), 1);
-        $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf(data.username), 1);
-        console.log('Users after disconnected : ' + $scope.users);
+        console.log('userDisconnectedt-print : BEFORE connected : ' + $scope.users);
+        console.log('userDisconnected-print : BEFORE disconnected : ' + $scope.disconnectedUsersName);
+        if($scope.users.indexOf(data.username) !== -1){
+            console.log('on vire le user qui se déconnecte dans users');
+            $scope.users.splice($scope.users.indexOf(data.username), 1);
+            if($scope.disconnectedUsersName.indexOf(data.username) === -1){
+                console.log('on push le username du gars qui s est deco dans disconnectedUsersName');
+                $scope.disconnectedUsersName.push(data.username);
+            }
+        }
+        console.log('userDisconnectedt-print : AFTER connected : ' + $scope.users);
+        console.log('userDisconnected-print : AFTER disconnected : ' + $scope.disconnectedUsersName);
     });
 
     Socket.emit('requestUsers', {});
@@ -318,14 +336,18 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     Socket.on('listUsers', function(data){
         $scope.users = data.users;
         console.log('Liste des users : ' + $scope.users);
-
+        console.log($scope.users.length);
         for(var j = 0; j < $scope.users.length; j++){
-            $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf($scope.users[j]), 1);
+            console.log($scope.disconnectedUsersName.indexOf($scope.users[j]) != -1);
+            if($scope.disconnectedUsersName.indexOf($scope.users[j]) !== -1){
+                console.log('splicing : ' + $scope.disconnectedUsersName[$scope.disconnectedUsersName.indexOf($scope.users[j])]);
+                $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf($scope.users[j]), 1);
+            }
         }
         console.log($scope.disconnectedUsersName);
     });
 
-    Socket.on('user joined default',function(data){
+    /*Socket.on('user joined default',function(data){
         console.log(data.username + " has joined " + data.defaultChatRoom.name);
     });
 
@@ -334,5 +356,5 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
     });
     Socket.on('user has left',function(data){
         console.log(data.username + " has left " + data.oldChatRoom);
-    });
+    });*/
 });

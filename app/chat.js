@@ -25,12 +25,11 @@ module.exports = function(io){
     };
 
     io.on('connection', function(socket){
-
         //listen for new users
         socket.on('new user', function(data){
             var defaultChat = data.defaultChatRoom;
             socket.join(defaultChat.name);
-            io.in(defaultChat.name).emit('user joined default', data);
+            /*io.in(defaultChat.name).emit('user joined default', data);*/
         });
 
         socket.on('switch room', function(data){
@@ -71,7 +70,6 @@ module.exports = function(io){
                 io.emit('userConnected', {username: data.username});
                 users.push(data.username);
                 console.log('Liste des users connectés après connexion : ' + users);
-                console.log('Liste des sockets : ' + usersSocket.length);
             }
         });
 

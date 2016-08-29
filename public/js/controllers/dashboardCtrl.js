@@ -5,6 +5,8 @@
 angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, userData, Socket, $sessionStorage, ngAudio, webNotification){
 
     $scope.$storage = $sessionStorage;
+    Socket.connect();
+    Socket.emit('userConnected', {username: userData.currentUser().username});
 
     var showNotification = function(data){
         console.log('ca ouvre une notif');
@@ -37,8 +39,11 @@ angular.module('dashboardCtrl', []).controller('dashboardController', function($
     $scope.isAdmin = userData.isAdmin();
     $scope.$storage.urlImg = "./img/clients/avatar/" + $scope.currentUser._id + ".jpg" + "?" + new Date().getTime();
     $scope.logout = function(){
+        var username = userData.currentUser().username;
         return $http.get('/api/logout').then(function(){
             userData.logout(userData.currentUser().username);
+            Socket.emit('userDisconnected', {username : username});
+            Socket.disconnect();
             $location.path('/');
         }, function(response){
             console.log(response);
