@@ -76,14 +76,15 @@ module.exports = function(io){
         });
 
         // Signal d'un utilisateur qui a déconnecté
-        socket.on('disconnect', function(data){
+        socket.on('userDisconnected', function(data){
             console.log(data.username + ' has disconnected');
             users.splice(users.indexOf(data.username), 1);
             usersSocket.splice(usersSocket.indexOf(socket), 1);
             console.log('Users après disconnect : ' + users);
             io.emit('userDisconnected', {username: data.username});
         });
-        
+
+
         // Notif à un certain utilisateur qu'une room le concernant a été créée
         socket.on('notif-newRoom', function(data){
             console.log('notif-newRoom serverside dataRoom : ' + data.chatRoom);
