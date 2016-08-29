@@ -30,7 +30,8 @@ function userData($http, $window, Socket, $sessionStorage){
             payload = token.split('.')[1];
             payload = $window.atob(payload);
             payload = JSON.parse(payload);
-
+            Socket.connect();
+            Socket.emit('userConnected', {username: payload.username});
             return payload.expire > Date.now()/1000;
         } else return false;
     };
