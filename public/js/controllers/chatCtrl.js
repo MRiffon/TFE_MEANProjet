@@ -340,9 +340,11 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
 
         for(var j = 0; j < $scope.users.length; j++){
             console.log($scope.disconnectedUsersName.indexOf($scope.users[j]) != -1);
-            if($scope.disconnectedUsersName.indexOf($scope.users[j]) !== -1){
+            for (var i = 0; i < $scope.disconnectedUsersName.length; i++){
                 console.log('splicing : ' + $scope.disconnectedUsersName[$scope.disconnectedUsersName.indexOf($scope.users[j])]);
-                $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf($scope.users[j]), 1);
+                if($scope.disconnectedUsersName[i] == $scope.users[j]){
+                    $scope.disconnectedUsersName.splice(i, 1);
+                }
             }
         }
         console.log($scope.disconnectedUsersName);

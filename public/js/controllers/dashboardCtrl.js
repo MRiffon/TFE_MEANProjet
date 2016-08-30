@@ -41,10 +41,10 @@ angular.module('dashboardCtrl', []).controller('dashboardController', function($
     $scope.$storage.urlImg = "./img/clients/avatar/" + $scope.currentUser._id + ".jpg" + "?" + new Date().getTime();
     $scope.logout = function(){
         var username = userData.currentUser().username;
+        Socket.emit('userDisconnected', {username : username});
+        Socket.disconnect(true);
         return $http.get('/api/logout').then(function(){
             userData.logout(userData.currentUser().username);
-            Socket.emit('userDisconnected', {username : username});
-            Socket.disconnect(true);
             $location.path('/');
         }, function(response){
             console.log(response);
