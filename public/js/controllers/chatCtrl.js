@@ -307,11 +307,12 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         if($scope.users.indexOf(data.username) === -1){
             console.log("on push le nouvel utilisateur dans users");
             $scope.users.push(data.username);
-            if($scope.disconnectedUsersName.indexOf(data.username) !== -1){
-                console.log('on retire le user des disconnectedUserName');
-                $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf(data.username), 1);
-            }
         }
+        if($scope.disconnectedUsersName.indexOf(data.username) !== -1){
+            console.log('on retire le user des disconnectedUserName');
+            $scope.disconnectedUsersName.splice($scope.disconnectedUsersName.indexOf(data.username), 1);
+        }
+
         console.log('userConnected-print : AFTER connected : ' + $scope.users);
         console.log('userConnected-print : AFTER disconnected : ' + $scope.disconnectedUsersName);
     });
@@ -322,10 +323,10 @@ angular.module('chatCtrl', []).controller('chatController', function($scope, Soc
         if($scope.users.indexOf(data.username) !== -1){
             console.log('on vire le user qui se déconnecte dans users');
             $scope.users.splice($scope.users.indexOf(data.username), 1);
-            if($scope.disconnectedUsersName.indexOf(data.username) === -1){
-                console.log('on push le username du gars qui s est deco dans disconnectedUsersName');
-                $scope.disconnectedUsersName.push(data.username);
-            }
+        }
+        if($scope.disconnectedUsersName.indexOf(data.username) === -1){
+            console.log('on push le username du gars qui s est deco dans disconnectedUsersName');
+            $scope.disconnectedUsersName.push(data.username);
         }
         console.log('userDisconnectedt-print : AFTER connected : ' + $scope.users);
         console.log('userDisconnected-print : AFTER disconnected : ' + $scope.disconnectedUsersName);
