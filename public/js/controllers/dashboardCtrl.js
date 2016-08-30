@@ -5,6 +5,7 @@
 angular.module('dashboardCtrl', []).controller('dashboardController', function($scope, $location, $http, userData, Socket, $sessionStorage, ngAudio, webNotification){
 
     $scope.$storage = $sessionStorage;
+    console.log("connection to socket server");
     Socket.connect();
     Socket.emit('userConnected', {username: userData.currentUser().username});
 
@@ -43,7 +44,7 @@ angular.module('dashboardCtrl', []).controller('dashboardController', function($
         return $http.get('/api/logout').then(function(){
             userData.logout(userData.currentUser().username);
             Socket.emit('userDisconnected', {username : username});
-            Socket.disconnect();
+            Socket.disconnect(true);
             $location.path('/');
         }, function(response){
             console.log(response);
